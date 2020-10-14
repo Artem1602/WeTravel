@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">WeTravel</string>
-    <string name="enter_phone_number">Enter phone number</string>
-    <string name="enter_code">Enter code</string>
+    <string name="enter_phone_number">Enter phone email</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_password_again">Repeat password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="isnt_valid_mail">Mail isn\'t valid</string>
     <string name="empty_password">Please enter a password</string>
+    <string name="restore_password">Forgot password? Restore it.</string>
+    <string name="accept">Accept</string>
 </resources>

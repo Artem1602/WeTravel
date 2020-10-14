@@ -5,4 +5,5 @@
     <color name="primaryDarkColor">#12005e</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="non_active">#3C3F41</color>
+    <color name="background">#614FAF</color>
 </resources>
