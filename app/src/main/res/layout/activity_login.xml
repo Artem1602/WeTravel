@@ -35,7 +35,7 @@
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phone_number_ed"
+                    android:id="@+id/mail_ed"
                     android:fontFamily="@font/rubik"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/verif_code_ed"
+                    android:id="@+id/passw_ed"
                     android:fontFamily="@font/rubik"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="5dp"
                     android:layout_weight="5"
-                    android:onClick="onLoginBtnClick"
+                    android:onClick="onRegisterBtnClick"
                     android:text="@string/register"
                     android:textColor="@color/primaryTextColor" />
 
