@@ -1,12 +1,11 @@
 package ua.pkk.wetravel.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +14,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import ua.pkk.wetravel.R;
 
@@ -54,11 +61,40 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void reset_password() {
-    Toast.makeText(getActivity(),"hello",Toast.LENGTH_LONG).show();
+        //TODO go to reset activity
     }
 
-    private void sign_in(String email, String password) {
-        Toast.makeText(getActivity(),"hello",Toast.LENGTH_LONG).show();
+    private void sign_in(final String email, final String password) {
+        if (!isValidEmail(email)) {
+            user_login.setError(getContext().getResources().getString(R.string.isnt_valid_mail));
+            return;
+        } else if (password.isEmpty()) {
+            user_password.setError(getContext().getResources().getString(R.string.empty_password));
+        }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot i : snapshot.getChildren()) {
+                    Map<String, String> user;
+                    user = (Map<String, String>) i.getValue();
+                    if (user.get("mail").equals(email) && user.get("password").equals(password)){
+                        user.put("id", i.getKey());
+                        Log.d("TAG",user.toString());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //TODO maybe Toast or something else...
+            }
+        });
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
 }

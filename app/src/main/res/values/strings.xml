@@ -7,6 +7,7 @@
     <string name="register">Register</string>
     <string name="isnt_valid_mail">Mail isn\'t valid</string>
     <string name="empty_password">Please enter a password</string>
+    <string name="password_dont_match">Password don\`t match</string>
     <string name="restore_password">Forgot password? Restore it.</string>
-    <string name="accept">Accept</string>
+    <string name="accept">Login</string>
 </resources>
