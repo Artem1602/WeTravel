@@ -1,4 +1,4 @@
-package ua.pkk.wetravel.login;
+package ua.pkk.wetravel.fragments.login;
 
 import android.util.Log;
 

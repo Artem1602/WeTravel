@@ -1,4 +1,4 @@
-package ua.pkk.wetravel.login;
+package ua.pkk.wetravel.fragments.login;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,7 +33,6 @@ public class LoginFragment extends Fragment {
 
     private void onAccept() {
         if (!viewModel.isValidEmail(binding.mailEdLog.getText())) {
-            ;
             binding.mailEdLog.setError(getContext().getResources().getString(R.string.isnt_valid_mail));
             return;
         } else if (binding.passwEdLog.getText().toString().isEmpty()) {
@@ -45,8 +44,9 @@ public class LoginFragment extends Fragment {
     private void reset_password() {
         //TODO go to reset activity
     }
-
 }
+
+//TODO Screen rotation
 
 //    @Override
 //    public void onStop() {

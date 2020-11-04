@@ -1,4 +1,4 @@
-package ua.pkk.wetravel;
+package ua.pkk.wetravel.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,6 +18,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+
+import ua.pkk.wetravel.R;
 
 public class MainActivity extends AppCompatActivity {
 
