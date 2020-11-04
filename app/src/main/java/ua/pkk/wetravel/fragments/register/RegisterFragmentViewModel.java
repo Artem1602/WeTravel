@@ -16,11 +16,11 @@ public class RegisterFragmentViewModel extends ViewModel {
     public MutableLiveData<Boolean> isSuccessRegister;
 
     {
-     _isSuccessRegister.setValue(false);
-     isSuccessRegister = _isSuccessRegister;
+        _isSuccessRegister.setValue(false);
+        isSuccessRegister = _isSuccessRegister;
     }
 
-    private void successRegister(){
+    private void successRegister() {
         _isSuccessRegister.setValue(true);
     }
 

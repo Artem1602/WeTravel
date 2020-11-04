@@ -24,7 +24,7 @@ public class LoginFragmentViewModel extends ViewModel {
         Log.d("TAG", "LoginFragmentViewModel CREATED");
     }
 
-    private void onLogin(){
+    private void onLogin() {
         _eventIsLogin.setValue(true);
     }
 

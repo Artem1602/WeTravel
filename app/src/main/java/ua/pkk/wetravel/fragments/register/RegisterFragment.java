@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.activity.LoginActivity;
-import ua.pkk.wetravel.activity.MainActivity;
 import ua.pkk.wetravel.databinding.FragmentRegistrationBinding;
 
 public class RegisterFragment extends Fragment {
@@ -32,7 +31,7 @@ public class RegisterFragment extends Fragment {
         viewModel.isSuccessRegister.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if (aBoolean){
+                if (aBoolean) {
                     successRegistration();
                 }
             }
@@ -52,8 +51,8 @@ public class RegisterFragment extends Fragment {
     }
 
     //TODO do something. It maybe incorrect
-    private void successRegistration(){
-        Toast.makeText(this.getContext(),"Success registration",Toast.LENGTH_SHORT).show();
+    private void successRegistration() {
+        Toast.makeText(this.getContext(), "Success registration", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this.getContext(), LoginActivity.class));
         this.getActivity().finish();
     }
