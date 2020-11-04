@@ -28,8 +28,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        //startActivity(new Intent(getBaseContext(), MainActivity.class));
-
         register = findViewById(R.id.register_btn_log);
         login = findViewById(R.id.login_btn_log);
         register.setOnClickListener(v -> onRegister());

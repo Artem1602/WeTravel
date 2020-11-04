@@ -24,6 +24,10 @@ public class RegisterFragmentViewModel extends ViewModel {
         _isSuccessRegister.setValue(true);
     }
 
+    public void successRegisterComplete(){
+        _isSuccessRegister.setValue(false);
+    }
+
     public void create_account(String email, String password, String password_again) {
         Map<String, String> new_user = new HashMap<>();
         new_user.put("email", email);

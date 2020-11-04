@@ -48,6 +48,7 @@ public class RegisterFragment extends Fragment {
         viewModel.create_account(binding.mailEdReg.getText().toString(),
                 binding.passwEdReg.getText().toString(),
                 binding.passwAgainEdReg.getText().toString());
+        //TODO viewModel.loginComplete();
     }
 
     //TODO do something. It maybe incorrect
@@ -55,6 +56,7 @@ public class RegisterFragment extends Fragment {
         Toast.makeText(this.getContext(), "Success registration", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this.getContext(), LoginActivity.class));
         this.getActivity().finish();
+        viewModel.successRegisterComplete();
     }
 
 }
