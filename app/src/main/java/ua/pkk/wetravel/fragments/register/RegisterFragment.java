@@ -30,7 +30,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     private TextInputEditText new_user_password;
     private TextInputEditText new_user_password_again;
 
-    private TextView restore_password;
 
     private View view;
 

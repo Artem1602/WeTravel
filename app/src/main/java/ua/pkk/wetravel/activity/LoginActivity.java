@@ -1,5 +1,6 @@
-package ua.pkk.wetravel;
+package ua.pkk.wetravel.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +13,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ua.pkk.wetravel.MainActivity;
+import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.fragments.LoginFragment;
 import ua.pkk.wetravel.fragments.RegisterFragment;
 
-public class EnterActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button register;
     private Button login;
@@ -29,6 +32,8 @@ public class EnterActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+       //startActivity(new Intent(getBaseContext(), MainActivity.class));
 
         register = findViewById(R.id.register_btn_log);
         register.setOnClickListener(this);
