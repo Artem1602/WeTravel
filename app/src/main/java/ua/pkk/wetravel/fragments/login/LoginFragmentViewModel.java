@@ -3,6 +3,7 @@ package ua.pkk.wetravel.fragments.login;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.database.DataSnapshot;
@@ -14,11 +15,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Map;
 
 public class LoginFragmentViewModel extends ViewModel {
-    public String email = "";
-    public String password = "";
+    private MutableLiveData<Boolean> _eventIsLogin = new MutableLiveData<>();
+    public MutableLiveData<Boolean> eventIsLogin;
 
     {
+        _eventIsLogin.setValue(false);
+        eventIsLogin = _eventIsLogin;
         Log.d("TAG", "LoginFragmentViewModel CREATED");
+    }
+
+    private void onLogin(){
+        _eventIsLogin.setValue(true);
     }
 
     public void sign_in(final String email, final String password) {
@@ -31,7 +38,7 @@ public class LoginFragmentViewModel extends ViewModel {
                     Map<String, String> user = (Map<String, String>) i.getValue();
                     if (user.get("email").equals(email) && user.get("password").equals(password)) {
                         user.put("id", i.getKey());
-                        //TODO go next
+                        onLogin();
                         Log.d("TAG", user.toString());
                     }
                 }

@@ -1,5 +1,6 @@
 package ua.pkk.wetravel.fragments.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import ua.pkk.wetravel.R;
+import ua.pkk.wetravel.activity.MainActivity;
 import ua.pkk.wetravel.databinding.FragmentLoginBinding;
 
 public class LoginFragment extends Fragment {
@@ -24,6 +26,13 @@ public class LoginFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
         binding.acceptBtnLog.setOnClickListener(v -> onAccept());
         binding.restorePasswordLog.setOnClickListener(v -> onRestore());
+
+        viewModel.eventIsLogin.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                userIsLogIn();
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -44,6 +53,12 @@ public class LoginFragment extends Fragment {
     private void reset_password() {
         //TODO go to reset activity
     }
+
+    private void userIsLogIn() {
+        startActivity(new Intent(this.getContext(), MainActivity.class));
+        //TODO Work with activity stack
+    }
+
 }
 
 //TODO Screen rotation

@@ -1,5 +1,6 @@
 package ua.pkk.wetravel.fragments.register;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import ua.pkk.wetravel.R;
+import ua.pkk.wetravel.activity.MainActivity;
 import ua.pkk.wetravel.databinding.FragmentRegistrationBinding;
 
 public class RegisterFragment extends Fragment {
@@ -22,8 +25,16 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_registration, container, false);
         viewModel = new ViewModelProvider(this).get(RegisterFragmentViewModel.class);
-        viewModel.context = getContext();
         binding.acceptBtnReg.setOnClickListener(v -> onAccept());
+
+        viewModel.isSuccessRegister.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean){
+                    successRegistration();
+                }
+            }
+        });
         return binding.getRoot();
     }
 
@@ -36,6 +47,12 @@ public class RegisterFragment extends Fragment {
         viewModel.create_account(binding.mailEdReg.getText().toString(),
                 binding.passwEdReg.getText().toString(),
                 binding.passwAgainEdReg.getText().toString());
+    }
+
+    //TODO do something. It maybe incorrect
+    private void successRegistration(){
+        startActivity(new Intent(this.getContext(), MainActivity.class));
+        this.getActivity().finish();
     }
 
 }
