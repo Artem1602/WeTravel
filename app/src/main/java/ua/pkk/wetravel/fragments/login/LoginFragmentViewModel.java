@@ -36,6 +36,10 @@ public class LoginFragmentViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot i : snapshot.getChildren()) {
                     Map<String, String> user = (Map<String, String>) i.getValue();
+                    if(user.get("email") == null){
+                        //TODO Wrong data
+                        break;
+                    }
                     if (user.get("email").equals(email) && user.get("password").equals(password)) {
                         user.put("id", i.getKey());
                         onLogin();
