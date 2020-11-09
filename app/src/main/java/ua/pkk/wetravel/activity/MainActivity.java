@@ -21,22 +21,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void addVideo(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-
         startActivityForResult(intent, 1);
-
-    }
-
-    public void showMap(View view) {
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (data == null) return;
-
         Uri file = data.getData();
-
-
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 }

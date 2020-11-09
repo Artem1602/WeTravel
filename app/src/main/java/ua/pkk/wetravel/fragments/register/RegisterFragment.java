@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import ua.pkk.wetravel.R;
@@ -28,12 +27,9 @@ public class RegisterFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(RegisterFragmentViewModel.class);
         binding.acceptBtnReg.setOnClickListener(v -> onAccept());
 
-        viewModel.isSuccessRegister.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    successRegistration();
-                }
+        viewModel.isSuccessRegister.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                successRegistration();
             }
         });
         return binding.getRoot();

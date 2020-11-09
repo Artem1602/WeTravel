@@ -24,7 +24,7 @@ public class RegisterFragmentViewModel extends ViewModel {
         _isSuccessRegister.setValue(true);
     }
 
-    public void successRegisterComplete(){
+    public void successRegisterComplete() {
         _isSuccessRegister.setValue(false);
     }
 

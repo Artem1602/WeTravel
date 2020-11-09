@@ -1,6 +1,7 @@
 package ua.pkk.wetravel.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -27,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        // Enable Storage
+
 
         register = findViewById(R.id.register_btn_log);
         login = findViewById(R.id.login_btn_log);
@@ -57,5 +60,4 @@ public class LoginActivity extends AppCompatActivity {
             check_fragment = false;
         }
     }
-
 }
