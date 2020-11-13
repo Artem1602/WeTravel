@@ -28,19 +28,11 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
         binding.showMap.setOnClickListener(v -> goToLoadVideoMap());
-        binding.loadVideo.setOnClickListener(this::tryLoad);
         return binding.getRoot();
     }
 
     private void goToLoadVideoMap() {
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(MainFragmentDirections.actionMainFragmentToLoadVideomapsFragment());
-    }
-
-
-
-
-    private void tryLoad(View v) {
-        startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*"), "Choose Video"), 1);
     }
 
     //TODO sign up anonymously
