@@ -6,7 +6,7 @@
         android:layout_height="fill_parent">
 
         <Button
-            android:id="@+id/btn"
+            android:id="@+id/loadVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -18,5 +18,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="show map" />
+
+        <Button
+            android:id="@+id/showMyVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/load_video" />
     </LinearLayout>
 </layout>

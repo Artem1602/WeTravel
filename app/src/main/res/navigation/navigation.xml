@@ -11,12 +11,12 @@
         tools:layout="@layout/fragment_main"
         android:label="MainFragment" >
         <action
-            android:id="@+id/action_mainFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
+            android:id="@+id/action_mainFragment_to_loadVideomapsFragment"
+            app:destination="@id/loadVideoMapsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/mapsFragment"
-        android:name="ua.pkk.wetravel.fragments.map.MapsFragment"
+        android:id="@+id/loadVideoMapsFragment"
+        android:name="ua.pkk.wetravel.fragments.map.LoadVideoMapsFragment"
         android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_loadvideo_maps" />
 </navigation>

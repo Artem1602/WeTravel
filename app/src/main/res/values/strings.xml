@@ -10,4 +10,8 @@
     <string name="password_dont_match">Password don\`t match</string>
     <string name="restore_password">Forgot password? Restore it.</string>
     <string name="accept">Login</string>
+    <string name="load_video">Load video</string>
+    <string name="addMarker">Please put the marker somewhere</string>
+    <string name="select_video">Select video</string>
+    <string name="explain_what_todo_header">Explain what TODO + header</string>
 </resources>
