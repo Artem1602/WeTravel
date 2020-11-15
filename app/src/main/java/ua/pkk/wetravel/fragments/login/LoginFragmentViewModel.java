@@ -1,8 +1,7 @@
 package ua.pkk.wetravel.fragments.login;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -14,18 +13,21 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
+import ua.pkk.wetravel.utils.User;
+
 public class LoginFragmentViewModel extends ViewModel {
     private MutableLiveData<Boolean> _eventIsLogin = new MutableLiveData<>();
-    public MutableLiveData<Boolean> eventIsLogin;
+    public LiveData<Boolean> eventIsLogin;
 
     {
         _eventIsLogin.setValue(false);
         eventIsLogin = _eventIsLogin;
-        Log.d("TAG", "LoginFragmentViewModel CREATED");
     }
 
-    private void onLogin() {
+    private void onLogin(Map<String, String> user) {
         _eventIsLogin.setValue(true);
+        //TODO only id
+        User.getInstance().setId(user.get("id"));
     }
 
     public void sign_in(final String email, final String password) {
@@ -36,14 +38,13 @@ public class LoginFragmentViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot i : snapshot.getChildren()) {
                     Map<String, String> user = (Map<String, String>) i.getValue();
-                    if(user.get("email") == null){
+                    if (user.get("email") == null) {
                         //TODO Wrong data
                         break;
                     }
                     if (user.get("email").equals(email) && user.get("password").equals(password)) {
                         user.put("id", i.getKey());
-                        onLogin();
-                        Log.d("TAG", user.toString());
+                        onLogin(user);
                     }
                 }
             }

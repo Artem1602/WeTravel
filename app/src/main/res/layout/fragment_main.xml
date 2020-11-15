@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
@@ -10,20 +9,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="Add video" />
+            android:text="@string/show_map" />
 
         <Button
             android:id="@+id/showMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="show map" />
+            android:text="@string/load_video" />
 
         <Button
             android:id="@+id/showMyVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="@string/load_video" />
+            android:text="@string/my_video" />
     </LinearLayout>
 </layout>

@@ -1,6 +1,5 @@
 package ua.pkk.wetravel.fragments.register;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import ua.pkk.wetravel.R;
-import ua.pkk.wetravel.activity.LoginActivity;
 import ua.pkk.wetravel.databinding.FragmentRegistrationBinding;
+import ua.pkk.wetravel.fragments.test.LoginPageFragmentDirections;
 
 public class RegisterFragment extends Fragment {
     private FragmentRegistrationBinding binding;
@@ -32,6 +32,7 @@ public class RegisterFragment extends Fragment {
                 successRegistration();
             }
         });
+
         return binding.getRoot();
     }
 
@@ -44,14 +45,12 @@ public class RegisterFragment extends Fragment {
         viewModel.create_account(binding.mailEdReg.getText().toString(),
                 binding.passwEdReg.getText().toString(),
                 binding.passwAgainEdReg.getText().toString());
-        //TODO viewModel.loginComplete();
+
     }
 
-    //TODO do something. It maybe incorrect
     private void successRegistration() {
         Toast.makeText(this.getContext(), "Success registration", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this.getContext(), LoginActivity.class));
-        this.getActivity().finish();
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentSelf());
         viewModel.successRegisterComplete();
     }
 

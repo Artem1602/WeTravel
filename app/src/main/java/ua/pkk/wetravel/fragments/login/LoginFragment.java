@@ -11,10 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.activity.MainActivity;
 import ua.pkk.wetravel.databinding.FragmentLoginBinding;
+import ua.pkk.wetravel.fragments.main.MainFragmentDirections;
+import ua.pkk.wetravel.fragments.test.LoginPageFragmentDirections;
 
 public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
@@ -32,7 +35,6 @@ public class LoginFragment extends Fragment {
                 userIsLogIn();
             }
         });
-
         return binding.getRoot();
     }
 
@@ -55,25 +57,8 @@ public class LoginFragment extends Fragment {
     }
 
     private void userIsLogIn() {
-        startActivity(new Intent(this.getContext(), MainActivity.class));
-        //TODO Work with activity stack
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentToMainFragment());
     }
 
 }
-
 //TODO Screen rotation
-
-//    @Override
-//    public void onStop() {
-//        viewModel.email = user_login.getText().toString();
-//        viewModel.password = user_password.getText().toString();
-//        super.onStop();
-//    }
-//
-//    @Override
-//    public void onResume() {
-//        Log.d("TAG", viewModel.email + " " + viewModel.password);
-//        user_login.getText().append(viewModel.email);
-//        user_password.getText().append(viewModel.password);
-//        super.onResume();
-//    }

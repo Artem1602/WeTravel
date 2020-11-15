@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/loginPageFragment">
 
     <fragment
         android:id="@+id/mainFragment"
@@ -19,4 +19,19 @@
         android:name="ua.pkk.wetravel.fragments.map.LoadVideoMapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_loadvideo_maps" />
+    <fragment
+        android:id="@+id/loginPageFragment"
+        android:name="ua.pkk.wetravel.fragments.test.LoginPageFragment"
+        android:label="LoginPageFragment" >
+        <action
+            android:id="@+id/action_loginPageFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/loginPageFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginPageFragment_self"
+            app:destination="@id/loginPageFragment"
+            app:popUpTo="@id/loginPageFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
