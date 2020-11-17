@@ -25,9 +25,8 @@ public class LoginFragmentViewModel extends ViewModel {
     }
 
     private void onLogin(Map<String, String> user) {
-        _eventIsLogin.setValue(true);
-        //TODO only id
         User.getInstance().setId(user.get("id"));
+        _eventIsLogin.setValue(true);
     }
 
     public void sign_in(final String email, final String password) {

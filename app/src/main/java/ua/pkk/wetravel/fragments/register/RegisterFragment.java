@@ -15,7 +15,7 @@ import androidx.navigation.Navigation;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentRegistrationBinding;
-import ua.pkk.wetravel.fragments.test.LoginPageFragmentDirections;
+import ua.pkk.wetravel.fragments.loginPage.LoginPageFragmentDirections;
 
 public class RegisterFragment extends Fragment {
     private FragmentRegistrationBinding binding;

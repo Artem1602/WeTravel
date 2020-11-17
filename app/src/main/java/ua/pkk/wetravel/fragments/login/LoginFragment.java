@@ -1,6 +1,7 @@
 package ua.pkk.wetravel.fragments.login;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import ua.pkk.wetravel.R;
-import ua.pkk.wetravel.activity.MainActivity;
 import ua.pkk.wetravel.databinding.FragmentLoginBinding;
-import ua.pkk.wetravel.fragments.main.MainFragmentDirections;
-import ua.pkk.wetravel.fragments.test.LoginPageFragmentDirections;
+import ua.pkk.wetravel.fragments.loginPage.LoginPageFragmentDirections;
+import ua.pkk.wetravel.utils.User;
 
 public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
@@ -57,8 +57,12 @@ public class LoginFragment extends Fragment {
     }
 
     private void userIsLogIn() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userID", User.getInstance().getId());
+        editor.apply();
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentToMainFragment());
     }
 
 }
-//TODO Screen rotation
+

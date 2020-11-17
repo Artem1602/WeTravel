@@ -1,20 +1,23 @@
-package ua.pkk.wetravel.fragments.test;
+package ua.pkk.wetravel.fragments.loginPage;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentLoginPageBinding;
 import ua.pkk.wetravel.fragments.login.LoginFragment;
 import ua.pkk.wetravel.fragments.register.RegisterFragment;
+import ua.pkk.wetravel.utils.User;
 
 
 public class LoginPageFragment extends Fragment {
@@ -36,7 +39,16 @@ public class LoginPageFragment extends Fragment {
         registerFragment = new RegisterFragment();
         getParentFragmentManager().beginTransaction().add(R.id.frame, loginFragment).commit();
 
+        checkSharedPreferences();
         return binding.getRoot();
+    }
+
+    private void checkSharedPreferences() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        String id = sharedPreferences.getString("userID","");
+        if (id.isEmpty()){ return;}
+        User.getInstance().setId(id);
+        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentToMainFragment());
     }
 
     private void onLogin() {
