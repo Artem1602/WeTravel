@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class LoadVideoMapsFragment extends Fragment{
     private LatLng marker;
     public int VIDEO_FILE_REQUEST_CODE = 1;
     private View builderView;
+    private EditText loadVideoName;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         private GoogleMap map;
@@ -105,7 +107,7 @@ public class LoadVideoMapsFragment extends Fragment{
         selectVideoButton.setOnClickListener(v -> {
             startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*"), "Choose Video"), VIDEO_FILE_REQUEST_CODE);
         });
-
+        loadVideoName = builderView.findViewById(R.id.videoName);
         builder.setView(builderView);
         builder.create();
         builder.show();
@@ -116,7 +118,7 @@ public class LoadVideoMapsFragment extends Fragment{
         if (requestCode != 1 || marker == null) {
             super.onActivityResult(requestCode, resultCode, data);
         }
-        viewModel.uploadSelectedVideo(data,marker);
+        viewModel.uploadSelectedVideo(data,marker,loadVideoName.getText().toString());
         super.onActivityResult(requestCode, resultCode, data);
     }
 
