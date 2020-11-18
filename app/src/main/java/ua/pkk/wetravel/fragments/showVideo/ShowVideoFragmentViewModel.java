@@ -48,7 +48,7 @@ public class ShowVideoFragmentViewModel extends ViewModel {
     private void addVideo(List<StorageReference> items) {
         ArrayList<Video> video = new ArrayList<>();
         for (StorageReference reference : items){
-            video.add(new Video(reference.getName()));
+            video.add(new Video(reference,reference.getName()));
         }
         videos.setValue(video);
     }

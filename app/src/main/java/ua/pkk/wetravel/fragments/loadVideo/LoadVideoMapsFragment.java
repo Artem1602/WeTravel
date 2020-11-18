@@ -84,11 +84,11 @@ public class LoadVideoMapsFragment extends Fragment{
         binding.addVideo.setOnClickListener(this::onAddVideo);
         viewModel = new ViewModelProvider(this).get(LoadVideoMapsFragmentViewModel.class);
 
-        viewModel.progress.observe(getViewLifecycleOwner(), this::chengeProgressBar);
+        viewModel.progress.observe(getViewLifecycleOwner(), this::changeProgressBar);
         return binding.getRoot();
     }
 
-    private void chengeProgressBar(Double aLong) {
+    private void changeProgressBar(Double aLong) {
         if (builderView == null) return;
         ProgressBar progressBar = builderView.findViewById(R.id.progressBarLoad);
         Log.d("TAG", Integer.toString(aLong.intValue()));

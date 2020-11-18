@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mainFragment_to_showVideoFragment"
             app:destination="@id/showVideoFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_videoMapsFragment"
+            app:destination="@id/videoMapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/loadVideoMapsFragment"
@@ -41,5 +44,25 @@
         android:id="@+id/showVideoFragment"
         android:name="ua.pkk.wetravel.fragments.showVideo.ShowVideoFragment"
         android:label="fragment_show_video"
-        tools:layout="@layout/fragment_show_video" />
+        tools:layout="@layout/fragment_show_video" >
+        <action
+            android:id="@+id/action_showVideoFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/videoMapsFragment"
+        android:name="ua.pkk.wetravel.fragments.showMap.VideoMapsFragment"
+        android:label="fragment_video_maps"
+        tools:layout="@layout/fragment_video_maps" >
+        <action
+            android:id="@+id/action_videoMapsFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="ua.pkk.wetravel.fragments.videofragment.VideoFragment"
+        android:label="VideoFragment" >
+        <argument android:name="video"
+            app:argType="ua.pkk.wetravel.utils.Video" />
+    </fragment>
 </navigation>

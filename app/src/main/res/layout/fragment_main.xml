@@ -7,14 +7,14 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/loadVideo"
+            android:id="@+id/showMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="@string/show_map" />
 
         <Button
-            android:id="@+id/showMap"
+            android:id="@+id/loadVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -31,7 +31,7 @@
             android:id="@+id/logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Log out" />
+            android:layout_margin="5dp"
+            android:text="@string/log_out" />
     </LinearLayout>
 </layout>
