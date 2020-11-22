@@ -4,6 +4,8 @@ public class User {
     private static User user;
     private String id;
 
+    private User(){};
+
     public void setId(String id) {
         this.id = id;
     }

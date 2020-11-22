@@ -3,6 +3,7 @@ package ua.pkk.wetravel.fragments.login;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void reset_password() {
-        //TODO go to reset activity
+        //TODO go to reset fragment
     }
 
     private void userIsLogIn() {
@@ -62,7 +63,12 @@ public class LoginFragment extends Fragment {
         editor.putString("userID", User.getInstance().getId());
         editor.apply();
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentToMainFragment());
+        //May be it a bad idea...
+        for (Fragment fragment :  getParentFragmentManager().getFragments()) {
+            getParentFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 
 }
+
 

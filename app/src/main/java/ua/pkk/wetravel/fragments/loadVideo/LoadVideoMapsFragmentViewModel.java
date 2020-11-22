@@ -21,7 +21,7 @@ public class LoadVideoMapsFragmentViewModel extends ViewModel {
     }
 
     public void uploadSelectedVideo(Intent data, LatLng position, String loadVideoName) {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(User.getInstance().getId() + "/" + loadVideoName);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child(loadVideoName);
         StorageMetadata.Builder metadata = new StorageMetadata.Builder().setCustomMetadata("position", position.latitude + "/" + position.longitude);
         UploadTask uploadTask = storageReference.putFile(data.getData(),metadata.build());
         uploadTask.addOnProgressListener(snapshot -> progress.setValue((100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount())).addOnCompleteListener(task -> onSuccessDownload());

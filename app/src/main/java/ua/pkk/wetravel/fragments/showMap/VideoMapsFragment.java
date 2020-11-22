@@ -1,31 +1,50 @@
 package ua.pkk.wetravel.fragments.showMap;
 
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ua.pkk.wetravel.R;
-//TODO Add data into Markers https://stackoverflow.com/questions/16997130/adding-custom-property-to-marker-google-map-android-api-v2
+import ua.pkk.wetravel.utils.Keys;
+import ua.pkk.wetravel.utils.Video;
+
 public class VideoMapsFragment extends Fragment {
+    private VideoMapsViewModel viewModel;
+    private GoogleMap map;
+
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            map = googleMap;
+            map.setOnInfoWindowClickListener(this::onInfoWindowClick);
+            LatLng ukraine = new LatLng(33, 32);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(ukraine));
+        }
+        public void onInfoWindowClick(Marker marker) {
+            Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(VideoMapsFragmentDirections.actionVideoMapsFragmentToVideoFragment((Video) marker.getTag(), Keys.VIDEO_FROM_MAP.getValue()));
         }
     };
 
@@ -38,9 +57,25 @@ public class VideoMapsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(VideoMapsViewModel.class);
+        viewModel.getMarkers();
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+        viewModel.markers.observe(getViewLifecycleOwner(), markerOptionsVideoPair -> {
+            if (map != null) {
+                view.findViewById(R.id.map_load_pb).setVisibility(View.GONE);
+                view.findViewById(R.id.map_load_tv).setVisibility(View.GONE);
+                setMarkers(markerOptionsVideoPair);
+            }
+        });
     }
+
+    private void setMarkers(Pair<MarkerOptions, Video> markerVideoHashMap) {
+        Marker marker = map.addMarker(markerVideoHashMap.first);
+        marker.setTag(markerVideoHashMap.second);
+    }
+
+
 }

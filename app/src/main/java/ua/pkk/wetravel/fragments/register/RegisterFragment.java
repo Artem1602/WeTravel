@@ -1,6 +1,7 @@
 package ua.pkk.wetravel.fragments.register;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,24 @@ public class RegisterFragment extends Fragment {
         Toast.makeText(this.getContext(), "Success registration", Toast.LENGTH_SHORT).show();
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentSelf());
         viewModel.successRegisterComplete();
+    }
+
+    @Override
+    public void onStart() {
+        Log.d("TAG", "onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        Log.d("TAG", "onResume");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("TAG", "onPause");
+        super.onPause();
     }
 
 }

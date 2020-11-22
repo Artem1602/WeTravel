@@ -29,6 +29,8 @@ public class LoginFragmentViewModel extends ViewModel {
         _eventIsLogin.setValue(true);
     }
 
+
+
     public void sign_in(final String email, final String password) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("users");

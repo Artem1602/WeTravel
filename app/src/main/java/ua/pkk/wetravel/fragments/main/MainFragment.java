@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentMainBinding;
 import ua.pkk.wetravel.utils.User;
@@ -29,6 +31,10 @@ public class MainFragment extends Fragment {
         binding.showMyVideo.setOnClickListener(v -> goToShowVideo());
         binding.logout.setOnClickListener(v -> logOut());
         binding.showMap.setOnClickListener(v -> goToShowMap());
+
+        //TODO DO SOMETHING WITH IT
+        FirebaseAuth.getInstance().signInAnonymously();
+
         return binding.getRoot();
     }
 
@@ -37,6 +43,7 @@ public class MainFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("userID", "");
         editor.apply();
+        navController.navigate(MainFragmentDirections.actionMainFragmentToLoginPageFragment());
     }
 
     private void goToShowMap() {

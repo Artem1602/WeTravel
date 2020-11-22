@@ -35,21 +35,16 @@ public class LoginPageFragment extends Fragment {
         binding.loginBtnLog.setOnClickListener(v -> onLogin());
         binding.registerBtnLog.setOnClickListener(v -> onRegister());
 
+
+
         loginFragment = new LoginFragment();
         registerFragment = new RegisterFragment();
         getParentFragmentManager().beginTransaction().add(R.id.frame, loginFragment).commit();
 
-        checkSharedPreferences();
         return binding.getRoot();
     }
 
-    private void checkSharedPreferences() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
-        String id = sharedPreferences.getString("userID","");
-        if (id.isEmpty()){ return;}
-        User.getInstance().setId(id);
-        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentToMainFragment());
-    }
+
 
     private void onLogin() {
         if (!check_fragment) {

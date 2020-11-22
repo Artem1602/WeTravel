@@ -3,9 +3,7 @@ package ua.pkk.wetravel.fragments.showVideo;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
@@ -14,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.ItemVideoBinding;
+import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.Video;
 
 import static ua.pkk.wetravel.utils.Video.DIFF_CALLBACK;
@@ -36,14 +35,15 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
         holder.bind(video);
     }
 
-
     static class VideoHolder extends RecyclerView.ViewHolder {
         @SuppressLint("StaticFieldLeak")
         private static ItemVideoBinding binding;
 
         public VideoHolder(@NonNull ItemVideoBinding itemView) {
             super(itemView.getRoot());
-            itemView.getRoot().setOnClickListener(v -> Navigation.findNavController((Activity) itemView.getRoot().getContext(), R.id.nav_host_fragment).navigate(ShowVideoFragmentDirections.actionShowVideoFragmentToVideoFragment(itemView.getVideoItem())));
+            itemView.getRoot().setOnClickListener(v ->
+                    Navigation.findNavController((Activity) itemView.getRoot().getContext(), R.id.nav_host_fragment)
+                            .navigate(ShowVideoFragmentDirections.actionShowVideoFragmentToVideoFragment(itemView.getVideoItem(), Keys.VIDEO_FROM_ADAPTER.getValue())));
         }
 
         public void bind(Video item) {

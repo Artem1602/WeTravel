@@ -1,12 +1,19 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme"  parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorAccent">@color/primaryLightColor</item>
+        <item name="colorAccent">@color/primaryColor</item>
         <item name="android:statusBarColor">@color/primaryColor</item>
     </style>
+
+    <style name="buttons" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="colorAccent">@color/primaryDarkColor</item>
+        <item name="colorControlHighlight">@color/primaryDarkColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="TextAppearance.App.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="fontFamily">@font/rubik</item>
         <item name="android:fontFamily">@font/rubik</item>
