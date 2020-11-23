@@ -1,4 +1,4 @@
-package ua.pkk.wetravel.fragments.videofragment;
+package ua.pkk.wetravel.fragments.videoItem;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.widget.MediaController;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -36,7 +35,7 @@ public class VideoFragment extends Fragment {
         binding.setVideoViewModel(viewModel);
 
         //TODO Add play btn or else...
-        //viewModel.getVideoUri();
+        viewModel.getVideoUri();
 
         viewModel.videoUri.observe(getViewLifecycleOwner(), uri -> {
             if (uri != null) {
@@ -44,19 +43,16 @@ public class VideoFragment extends Fragment {
             }
         });
 
-        viewModel.successDelete.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean){
-                    closeFragment();
-                }
+        viewModel.successDelete.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                closeFragment();
             }
         });
         return binding.getRoot();
     }
 
     private void closeFragment() {
-        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(VideoFragmentDirections.actionVideoFragmentToShowVideoFragment());
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections.actionVideoFragmentToShowVideoFragment());
     }
 
     private void showVideo(Uri uri) {

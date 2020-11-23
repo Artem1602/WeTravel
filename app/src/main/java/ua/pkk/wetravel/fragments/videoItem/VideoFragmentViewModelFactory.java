@@ -1,4 +1,4 @@
-package ua.pkk.wetravel.fragments.videofragment;
+package ua.pkk.wetravel.fragments.videoItem;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

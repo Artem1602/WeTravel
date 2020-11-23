@@ -1,4 +1,4 @@
-package ua.pkk.wetravel.fragments.videofragment;
+package ua.pkk.wetravel.fragments.videoItem;
 
 
 import android.net.Uri;
@@ -39,6 +39,10 @@ public class VideoFragmentViewModel extends ViewModel {
     public void deleteVideo() {
         video.getReference().delete().addOnSuccessListener(aVoid -> onDelete());
         onDelete();
+    }
+
+    public void renameVideo(){
+        //TODO Rename
     }
 
     private void onDelete() {

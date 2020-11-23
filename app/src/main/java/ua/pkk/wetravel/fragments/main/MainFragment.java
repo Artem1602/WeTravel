@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentMainBinding;
-import ua.pkk.wetravel.utils.User;
 
 
 public class MainFragment extends Fragment {
@@ -32,6 +31,8 @@ public class MainFragment extends Fragment {
         binding.logout.setOnClickListener(v -> logOut());
         binding.showMap.setOnClickListener(v -> goToShowMap());
 
+        binding.myAccountBtn.setOnClickListener(v -> goToMyAccount());
+
         //TODO DO SOMETHING WITH IT
         FirebaseAuth.getInstance().signInAnonymously();
 
@@ -44,6 +45,10 @@ public class MainFragment extends Fragment {
         editor.putString("userID", "");
         editor.apply();
         navController.navigate(MainFragmentDirections.actionMainFragmentToLoginPageFragment());
+    }
+
+    private void goToMyAccount() {
+        navController.navigate(MainFragmentDirections.actionMainFragmentToUserAccountFragment());
     }
 
     private void goToShowMap() {

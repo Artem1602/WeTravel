@@ -4,7 +4,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="265dp"
         android:layout_margin="10dp"
         android:background="@drawable/background"
         android:orientation="vertical"
@@ -23,7 +23,7 @@
                 android:id="@+id/mail_ed_reg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primaryTextColor"
+                android:background="@color/textColorPrimary"
                 android:fontFamily="@font/rubik"
                 android:lines="1"
                 android:textColor="@color/primaryDarkColor" />
@@ -43,7 +43,7 @@
                 android:id="@+id/passw_ed_reg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primaryTextColor"
+                android:background="@color/textColorPrimary"
                 android:fontFamily="@font/rubik"
                 android:lines="1"
                 android:textColor="@color/primaryDarkColor" />
@@ -63,7 +63,7 @@
                 android:id="@+id/passw_again_ed_reg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primaryTextColor"
+                android:background="@color/textColorPrimary"
                 android:fontFamily="@font/rubik"
                 android:lines="1"
                 android:textColor="@color/primaryDarkColor" />
@@ -71,9 +71,8 @@
 
         <Button
             android:id="@+id/accept_btn_reg"
-            style="@style/buttons"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
@@ -81,7 +80,7 @@
             android:layout_weight="5"
             android:fontFamily="@font/rubik"
             android:text="@string/register"
-            android:textColor="@color/primaryTextColor" />
+            android:textColor="@color/textColorPrimary" />
     </LinearLayout>
 
 </layout>

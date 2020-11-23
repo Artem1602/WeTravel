@@ -14,10 +14,12 @@ import java.util.Objects;
 public class Video implements Parcelable {
     private StorageReference reference;
     private String name;
+    private String uploadingTime;
 
-    public Video(StorageReference reference, String name) {
+    public Video(StorageReference reference, String name, String uploadingTime) {
         this.reference = reference;
         this.name = name;
+        this.uploadingTime = uploadingTime;
     }
 
     protected Video(Parcel in) {
@@ -32,6 +34,11 @@ public class Video implements Parcelable {
         return name;
     }
 
+    public String getUploadingTime() {
+        return uploadingTime;
+    }
+
+
     @Override
     public int hashCode() {
         return Objects.hash(name);
@@ -41,9 +48,9 @@ public class Video implements Parcelable {
     public boolean equals(@Nullable Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        return Objects.equals(name,((Video) obj).name) && Objects.equals(reference,((Video) obj).reference);  //TODO more fields
+        Video buf = (Video) obj;
+        return Objects.equals(name, buf.name) && Objects.equals(reference, buf.reference) && Objects.equals(uploadingTime, buf.uploadingTime);  //TODO more fields
     }
-
 
 
     public static final DiffUtil.ItemCallback<Video> DIFF_CALLBACK = new DiffUtil.ItemCallback<Video>() {

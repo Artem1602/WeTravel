@@ -1,7 +1,5 @@
 package ua.pkk.wetravel.fragments.loginPage;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +9,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentLoginPageBinding;
 import ua.pkk.wetravel.fragments.login.LoginFragment;
 import ua.pkk.wetravel.fragments.register.RegisterFragment;
-import ua.pkk.wetravel.utils.User;
 
 
 public class LoginPageFragment extends Fragment {

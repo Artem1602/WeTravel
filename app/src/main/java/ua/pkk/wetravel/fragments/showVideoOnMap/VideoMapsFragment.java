@@ -1,17 +1,14 @@
-package ua.pkk.wetravel.fragments.showMap;
+package ua.pkk.wetravel.fragments.showVideoOnMap;
 
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -22,9 +19,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.utils.Keys;
@@ -76,6 +70,4 @@ public class VideoMapsFragment extends Fragment {
         Marker marker = map.addMarker(markerVideoHashMap.first);
         marker.setTag(markerVideoHashMap.second);
     }
-
-
 }

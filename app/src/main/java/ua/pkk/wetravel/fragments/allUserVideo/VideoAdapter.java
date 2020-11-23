@@ -1,4 +1,4 @@
-package ua.pkk.wetravel.fragments.showVideo;
+package ua.pkk.wetravel.fragments.allUserVideo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

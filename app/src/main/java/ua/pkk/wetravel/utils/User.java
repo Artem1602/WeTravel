@@ -3,8 +3,29 @@ package ua.pkk.wetravel.utils;
 public class User {
     private static User user;
     private String id;
+    private String name;
+    private String info;
 
-    private User(){};
+    private User(){
+        name = "User";
+        info = "Empty";
+    };
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -20,4 +41,5 @@ public class User {
         }
         return user;
     }
+
 }

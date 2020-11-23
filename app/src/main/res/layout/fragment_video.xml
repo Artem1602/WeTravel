@@ -9,14 +9,14 @@
             type="ua.pkk.wetravel.utils.Video" />
         <variable
             name="videoViewModel"
-            type="ua.pkk.wetravel.fragments.videofragment.VideoFragmentViewModel" />
+            type="ua.pkk.wetravel.fragments.videoItem.VideoFragmentViewModel" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".fragments.videofragment.VideoFragment">
+        tools:context=".fragments.videoItem.VideoFragment">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -41,6 +41,7 @@
                     android:id="@+id/video_metadata"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@{video.uploadingTime}"
                     android:textSize="20sp" />
 
                 <VideoView
