@@ -19,4 +19,5 @@
     <string name="show_map">Show all video on map</string>
     <string name="my_video">My video</string>
     <string name="log_out">Log out</string>
+    <string name="delete_video">Delete video</string>
 </resources>

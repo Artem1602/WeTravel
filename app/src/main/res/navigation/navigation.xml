@@ -72,5 +72,10 @@
         <argument
             android:name="source_key"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_videoFragment_to_showVideoFragment"
+            app:destination="@id/showVideoFragment"
+            app:popUpTo="@id/showVideoFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

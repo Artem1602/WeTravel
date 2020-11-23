@@ -9,49 +9,69 @@ import android.widget.MediaController;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.gms.tasks.OnSuccessListener;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentVideoBinding;
 import ua.pkk.wetravel.utils.Keys;
-import ua.pkk.wetravel.utils.Video;
 
 //TODO Load video into videoView. Try to stream it. (maybe byte[])...
 public class VideoFragment extends Fragment {
     private FragmentVideoBinding binding;
-    private Video video;
+    private VideoFragmentViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_video, container, false);
         VideoFragmentArgs args = VideoFragmentArgs.fromBundle(getArguments());
-
-        medicateUIbbyKey(args);
-        //TODO
-
-        MediaController mediaController = new MediaController(getContext());
-        mediaController.setAnchorView(binding.videoView);
-        binding.videoView.setMediaController(mediaController);
-
-
         binding.setVideo(args.getVideo());
-        args.getVideo().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                binding.videoView.setVideoURI(uri);
+
+        changeUIbbyKey(args);
+
+        VideoFragmentViewModelFactory factory = new VideoFragmentViewModelFactory(args.getVideo());
+        viewModel = new ViewModelProvider(this, factory).get(VideoFragmentViewModel.class);
+        binding.setVideoViewModel(viewModel);
+
+        //TODO Add play btn or else...
+        //viewModel.getVideoUri();
+
+        viewModel.videoUri.observe(getViewLifecycleOwner(), uri -> {
+            if (uri != null) {
+                showVideo(uri);
             }
         });
-        binding.videoView.requestFocus();
-        binding.videoView.start();
+
+        viewModel.successDelete.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean){
+                    closeFragment();
+                }
+            }
+        });
         return binding.getRoot();
     }
 
-    private void medicateUIbbyKey(VideoFragmentArgs args) {
-        if (args.getSourceKey() == Keys.VIDEO_FROM_MAP.getValue()){
+    private void closeFragment() {
+        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(VideoFragmentDirections.actionVideoFragmentToShowVideoFragment());
+    }
+
+    private void showVideo(Uri uri) {
+        MediaController mediaController = new MediaController(getContext());
+        mediaController.setAnchorView(binding.videoView);
+        binding.videoView.setMediaController(mediaController);
+        binding.videoView.setVideoURI(uri);
+        binding.videoView.requestFocus();
+        binding.videoView.start();
+    }
+
+    private void changeUIbbyKey(VideoFragmentArgs args) {
+        if (args.getSourceKey() == Keys.VIDEO_FROM_MAP.getValue()) {
             binding.videoActions.setVisibility(View.GONE);
-        }else {
+        } else {
             //Do nothing
         }
     }

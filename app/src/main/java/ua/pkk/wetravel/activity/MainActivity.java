@@ -6,11 +6,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import ua.pkk.wetravel.R;
-import ua.pkk.wetravel.fragments.loginPage.LoginPageFragmentDirections;
-import ua.pkk.wetravel.fragments.main.MainFragmentDirections;
 import ua.pkk.wetravel.utils.User;
 
 public class MainActivity extends FragmentActivity {
@@ -20,6 +19,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         checkSharedPreferences(savedInstanceState);
     }
+
     private void checkSharedPreferences(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.getBoolean("isCreated")) return;
         SharedPreferences sharedPreferences = this.getSharedPreferences("user_data", Context.MODE_PRIVATE);
@@ -28,8 +28,11 @@ public class MainActivity extends FragmentActivity {
             return;
         }
         User.getInstance().setId(id);
-        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.mainFragment);
+
+        NavOptions options = new NavOptions.Builder().setPopUpTo(R.id.loginPageFragment, true).build();
+        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.mainFragment, null, options);
     }
+
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean("isCreated", true);

@@ -7,6 +7,9 @@
         <variable
             name="video"
             type="ua.pkk.wetravel.utils.Video" />
+        <variable
+            name="videoViewModel"
+            type="ua.pkk.wetravel.fragments.videofragment.VideoFragmentViewModel" />
     </data>
 
     <LinearLayout
@@ -59,10 +62,11 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/button"
+                        android:id="@+id/delete_btn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Delete video" />
+                        android:onClick="@{() -> videoViewModel.deleteVideo()}"
+                        android:text="@string/delete_video" />
 
                     <Button
                         android:id="@+id/button3"
