@@ -30,10 +30,11 @@ public class VideoMapsViewModel extends ViewModel {
                         reference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
                             @Override
                             public void onSuccess(StorageMetadata storageMetadata) {
+                                if (reference.getName().equals("profile_img")) return;
                                 String[] i = storageMetadata.getCustomMetadata("position").split("/");
                                 LatLng latLng = new LatLng(Double.parseDouble(i[0]), Double.parseDouble(i[1]));
                                 MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(reference.getName());
-                                markers.setValue(new Pair<>(markerOptions, new Video(reference, reference.getName(),storageMetadata.getCustomMetadata("uploadingTime"))));
+                                markers.setValue(new Pair<>(markerOptions, new Video(reference, reference.getName(), storageMetadata.getCustomMetadata("uploadingTime"))));
                             }
                         });
                     }
@@ -42,7 +43,7 @@ public class VideoMapsViewModel extends ViewModel {
         }
     }
 
-    public void getMarkers(){
+    public void getMarkers() {
         storage.getReference().listAll().addOnSuccessListener(listResult -> markers(listResult.getPrefixes()));
     }
 }

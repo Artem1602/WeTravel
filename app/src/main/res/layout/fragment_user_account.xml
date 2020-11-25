@@ -35,20 +35,25 @@
                         android:scaleType="fitXY"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
                         app:srcCompat="@drawable/ic_gradient_gorizontal" />
 
-                    <ImageView
-                        android:id="@+id/imageView3"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/user_img"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
+                        android:src="@drawable/ic_temp_user_icon"
+                        app:civ_border_width="2dp"
                         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.95"
-                        app:srcCompat="@drawable/ic_temp_user_icon" />
+                        app:layout_constraintVertical_bias="0.95" />
+
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
@@ -87,7 +92,6 @@
                     android:layout_margin="8dp"
                     android:textAlignment="textEnd"
                     android:textSize="14sp" />
-
 
             </LinearLayout>
         </ScrollView>

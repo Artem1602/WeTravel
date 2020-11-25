@@ -20,7 +20,6 @@ public class VideoFragmentViewModel extends ViewModel {
     {
         successDelete.setValue(false);
         videoUri.setValue(null);
-
     }
 
     public VideoFragmentViewModel(Video video) {
