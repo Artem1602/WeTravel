@@ -15,7 +15,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -65,7 +64,7 @@ public class UserAccountFragment extends Fragment {
     private void load_img() {
         File user_img = new File(getContext().getFilesDir(), "profile_img");
         if (user_img.length() > 0)
-        binding.userImg.setImageBitmap(BitmapFactory.decodeFile(user_img.getAbsolutePath()));
+            binding.userImg.setImageBitmap(BitmapFactory.decodeFile(user_img.getAbsolutePath()));
     }
 
     private void addUserImg() {

@@ -34,7 +34,11 @@ public class VideoMapsViewModel extends ViewModel {
                                 String[] i = storageMetadata.getCustomMetadata("position").split("/");
                                 LatLng latLng = new LatLng(Double.parseDouble(i[0]), Double.parseDouble(i[1]));
                                 MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(reference.getName());
-                                markers.setValue(new Pair<>(markerOptions, new Video(reference, reference.getName(), storageMetadata.getCustomMetadata("uploadingTime"))));
+                                markers.setValue(new Pair<>(markerOptions,
+                                        new Video(reference,
+                                                reference.getName()
+                                                ,storageMetadata.getCustomMetadata("uploadingTime")
+                                                ,storageMetadata.getCustomMetadata("user_id"))));
                             }
                         });
                     }

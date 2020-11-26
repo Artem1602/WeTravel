@@ -43,7 +43,7 @@ public class ShowVideoFragmentViewModel extends ViewModel {
             reference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
                 @Override
                 public void onSuccess(StorageMetadata storageMetadata) {
-                    video.add(new Video(reference,reference.getName(),storageMetadata.getCustomMetadata("uploadingTime")));
+                    video.add(new Video(reference,reference.getName(),storageMetadata.getCustomMetadata("uploadingTime"),User.getUser().getId()));
                     videos.setValue(video);
                 }
             });

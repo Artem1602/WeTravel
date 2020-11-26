@@ -1,24 +1,27 @@
 package ua.pkk.wetravel.fragments.loadVideo;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,23 +31,33 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentLoadvideoMapsBinding;
+import ua.pkk.wetravel.utils.User;
 
 
-public class LoadVideoMapsFragment extends Fragment{
+public class LoadVideoMapsFragment extends Fragment {
     //TODO Permissions
 
     private FragmentLoadvideoMapsBinding binding;
-    private LoadVideoMapsFragmentViewModel viewModel;
     private LatLng marker;
     public int VIDEO_FILE_REQUEST_CODE = 1;
-    private View builderView;
     private EditText loadVideoName;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         private GoogleMap map;
+
         @Override
         public void onMapReady(GoogleMap googleMap) {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -61,14 +74,17 @@ public class LoadVideoMapsFragment extends Fragment{
         public void onInfoWindowClick(Marker marker) {
             Toast.makeText(getContext(), "onInfoWindowClick", Toast.LENGTH_LONG).show();
         }
+
         public boolean onMarkerClick(Marker marker) {
             Toast.makeText(getContext(), "onMarkerClick", Toast.LENGTH_LONG).show();
             return false;
         }
+
         public boolean onMyLocationButtonClick() {
             Toast.makeText(getContext(), "onMyLocationButtonClick", Toast.LENGTH_LONG).show();
             return false;
         }
+
         public void onMapLongClick(LatLng latLng) {
             marker = latLng;
             map.clear();
@@ -80,37 +96,86 @@ public class LoadVideoMapsFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_loadvideo_maps,container,false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_loadvideo_maps, container, false);
         binding.addVideo.setOnClickListener(this::onAddVideo);
-        viewModel = new ViewModelProvider(this).get(LoadVideoMapsFragmentViewModel.class);
-
-        viewModel.progress.observe(getViewLifecycleOwner(), this::changeProgressBar);
         return binding.getRoot();
     }
 
-    private void changeProgressBar(Double aLong) {
-        if (builderView == null) return;
-        ProgressBar progressBar = builderView.findViewById(R.id.progressBarLoad);
-        Log.d("TAG", Integer.toString(aLong.intValue()));
-        progressBar.setProgress(aLong.intValue());
+    //TODO Look on it and may be fix it)
+    private void showNotification(Intent data, LatLng marker, String s) {
+        String CHANNEL_ID = "SuccessUpload";
+        int NOTIFICATION_ID = new Random().nextInt(256);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID);
+        builder.setContentTitle("Video upload")
+                .setContentText("Upload in progress")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSmallIcon(R.drawable.ic_notification_icon)
+                .setOnlyAlertOnce(true);
+
+        createNotificationChannel(CHANNEL_ID);
+
+        new Thread(() -> {
+            builder.setProgress(100, 0, false);
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
+
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child(s);
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+
+            StorageMetadata.Builder metadata = new StorageMetadata.Builder()
+                    .setCustomMetadata("position", marker.latitude + "/" + marker.longitude);
+            metadata.setCustomMetadata("uploadingTime", formatter.format(date));
+            metadata.setCustomMetadata("user_id", User.getInstance().getId());
+
+            UploadTask uploadTask = storageReference.putFile(data.getData(), metadata.build());
+            uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    if (snapshot.getBytesTransferred() == snapshot.getTotalByteCount()) {
+                        builder.setProgress(0, 0, false);
+                        builder.setContentText("Upload complete");
+                        notificationManager.notify(NOTIFICATION_ID, builder.build());
+                        return;
+                    }
+                    Double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                    builder.setProgress(100, progress.intValue(), false);
+                    notificationManager.notify(NOTIFICATION_ID, builder.build());
+                }
+            });
+        }).start();
     }
 
-    private void onAddVideo(View view){
-        if(marker == null){
-            Toast.makeText(getContext(),getContext().getText(R.string.addMarker),Toast.LENGTH_LONG).show();
+    private void createNotificationChannel(String CHANNEL_ID) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.notification_chanel_name);
+            String description = getString(R.string.notification_chanel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void onAddVideo(View view) {
+        if (marker == null) {
+            Toast.makeText(getContext(), getContext().getText(R.string.addMarker), Toast.LENGTH_LONG).show();
             return;
         }
         LayoutInflater inflater = getLayoutInflater();
-        builderView = inflater.inflate(R.layout.dialog_custom_add_video,null);
+        View builderView = inflater.inflate(R.layout.dialog_custom_add_video, null);
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
+        builder.setView(builderView);
+        AlertDialog alertDialog = builder.create();
+
         Button selectVideoButton = builderView.findViewById(R.id.selectVideo_btn);
         selectVideoButton.setOnClickListener(v -> {
             startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*"), "Choose Video"), VIDEO_FILE_REQUEST_CODE);
+            alertDialog.dismiss();
         });
         loadVideoName = builderView.findViewById(R.id.videoName);
-        builder.setView(builderView);
-        builder.create();
-        builder.show();
+        alertDialog.show();
     }
 
     @Override
@@ -118,7 +183,7 @@ public class LoadVideoMapsFragment extends Fragment{
         if (requestCode != 1 || marker == null) {
             super.onActivityResult(requestCode, resultCode, data);
         }
-        viewModel.uploadSelectedVideo(data,marker,loadVideoName.getText().toString());
+        showNotification(data, marker, loadVideoName.getText().toString());
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -128,5 +193,4 @@ public class LoadVideoMapsFragment extends Fragment{
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(callback);
     }
-
 }

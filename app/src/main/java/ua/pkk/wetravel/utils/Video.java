@@ -15,11 +15,13 @@ public class Video implements Parcelable {
     private StorageReference reference;
     private String name;
     private String uploadingTime;
+    private String upload_user_id;
 
-    public Video(StorageReference reference, String name, String uploadingTime) {
+    public Video(StorageReference reference, String name, String uploadingTime, String upload_user_id) {
         this.reference = reference;
         this.name = name;
         this.uploadingTime = uploadingTime;
+        this.upload_user_id = upload_user_id;
     }
 
     protected Video(Parcel in) {
@@ -38,6 +40,9 @@ public class Video implements Parcelable {
         return uploadingTime;
     }
 
+    public String getUpload_user_id() {
+        return upload_user_id;
+    }
 
     @Override
     public int hashCode() {

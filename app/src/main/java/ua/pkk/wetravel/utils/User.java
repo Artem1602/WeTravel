@@ -71,5 +71,11 @@ public class User {
         }
         return user;
     }
+    public void cleanData(){
+        this.user_img = null;
+        this.name = "User";
+        this.info = "Empty";
+        this.id = null;
+    }
 
 }

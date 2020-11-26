@@ -21,11 +21,15 @@
     <string name="delete_video">Delete video</string>
     <string name="my_account">My account</string>
 
-
-    <string name="buf">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid asperiores distinctio ex harum itaque maiores maxime minima nesciunt nostrum nulla, possimus repellendus tempore ut! Aliquid aperiam consectetur consequatur cumque deleniti dolorum earum, eos et eum illo impedit, laborum nemo nulla officiis placeat quae quaerat qui repellat sint sunt tempore veniam.</string>
     <string name="about_me">About me:</string>
     <string name="for_changing_hold_down_element">For changing hold down element</string>
     <string name="save">save</string>
     <string name="cancel">cancel</string>
     <string name="make_changes_and_save">Make changes and save</string>
+    <string name="uploaded_by">Uploaded by:</string>
+    <string name="enter_video_name_here">Enter video name here</string>
+    <string name="you_earn_a_notification_after_success_uploading">You earn a notification after success uploading.</string>
+
+    <string name="notification_chanel_name">Uploading video</string>
+    <string name="notification_chanel_description">Shows the success of the video upload.</string>
 </resources>

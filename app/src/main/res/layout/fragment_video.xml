@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="video"
             type="ua.pkk.wetravel.utils.Video" />
+
         <variable
             name="videoViewModel"
             type="ua.pkk.wetravel.fragments.videoItem.VideoFragmentViewModel" />
@@ -26,16 +28,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
                 android:layout_marginTop="6dp"
+                android:layout_marginEnd="6dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/video_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@{video.name}"/>
+                    android:text="@{video.name}"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/video_metadata"
@@ -47,19 +49,13 @@
                 <VideoView
                     android:id="@+id/videoView"
                     android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_height="400dp" />
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:layout_height="400dp"
+                    android:layout_gravity="center" />
 
                 <LinearLayout
+                    android:id="@+id/video_actions"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/video_actions"
                     android:orientation="vertical">
 
                     <Button
@@ -69,13 +65,64 @@
                         android:onClick="@{() -> videoViewModel.deleteVideo()}"
                         android:text="@string/delete_video" />
 
-                    <Button
-                        android:id="@+id/button3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Rename" />
 
                 </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/loader_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp">
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:text="@string/uploaded_by"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="38dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="37dp"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/uplodet_user_img"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/uplodet_user_img"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginBottom="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ProgressBar
+                        android:id="@+id/user_image_pb"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginBottom="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
         </ScrollView>

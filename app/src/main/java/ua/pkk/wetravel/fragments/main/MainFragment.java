@@ -23,6 +23,8 @@ import java.io.File;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentMainBinding;
+import ua.pkk.wetravel.fragments.userAccount.UserAccountViewModel;
+import ua.pkk.wetravel.utils.User;
 
 
 public class MainFragment extends Fragment {
@@ -59,6 +61,7 @@ public class MainFragment extends Fragment {
         editor.apply();
         File user_img = new File(getContext().getFilesDir(), "profile_img");
         user_img.delete();
+        User.getInstance().cleanData();
         navController.navigate(MainFragmentDirections.actionMainFragmentToLoginPageFragment());
     }
 
