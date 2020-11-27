@@ -18,10 +18,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentUserAccountBinding;
+import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
 
@@ -36,39 +35,34 @@ public class UserAccountFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user_account, container, false);
         viewModel = new ViewModelProvider(this).get(UserAccountViewModel.class);
 
-        if (User.getInstance().getUser_img() != null)
-            binding.userImg.setImageBitmap(User.getInstance().getUser_img());
-
-        binding.aboutUser.setText(User.getInstance().getInfo());
-        binding.userName.setText(User.getInstance().getName());
-
-        binding.aboutUser.setOnLongClickListener(v -> {
-            onLongAboutUserClick(v);
-            return true;
-        });
-        binding.userName.setOnLongClickListener(v -> {
-            onLongAboutUserClick(v);
-            return true;
-        });
-        binding.userImg.setOnLongClickListener(v -> {
-            addUserImg();
-            return true;
-        });
-        binding.setUser(User.getInstance());
-
-        load_img();
+        initUI(UserAccountFragmentArgs.fromBundle(getArguments()));
 
         return binding.getRoot();
     }
 
-    private void load_img() {
-        File user_img = new File(getContext().getFilesDir(), "profile_img");
-        if (user_img.length() > 0)
-            binding.userImg.setImageBitmap(BitmapFactory.decodeFile(user_img.getAbsolutePath()));
-    }
+    private void initUI(UserAccountFragmentArgs args) {
+        if (args.getUserImg() != null)
+        binding.userImg.setImageBitmap(BitmapFactory.decodeFile(args.getUserImg()));
+        binding.userName.setText(args.getUserName());
+        binding.aboutUser.setText(args.getUserInfo());
 
-    private void addUserImg() {
-        startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), "Choose image"), IMAGE_FILE_REQUEST_CODE);
+        if (args.getSourceKey() == Keys.OWNER_ACCOUNT.getValue()) {
+            binding.aboutUser.setOnLongClickListener(v -> {
+                viewModel.onDataChange();
+                onLongAboutUserClick(v);
+                return true;
+            });
+            binding.userName.setOnLongClickListener(v -> {
+                viewModel.onDataChange();
+                onLongAboutUserClick(v);
+                return true;
+            });
+            binding.userImg.setOnLongClickListener(v -> {
+                viewModel.onDataChange();
+                startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), "Choose image"), IMAGE_FILE_REQUEST_CODE);
+                return true;
+            });
+        }
     }
 
     @Override
@@ -108,9 +102,11 @@ public class UserAccountFragment extends Fragment {
         dialog.show();
     }
 
+    //TODO Not Tested
     @Override
     public void onStop() {
-        viewModel.uploadUserData(binding.userName.getText().toString(), binding.aboutUser.getText().toString());
+        if (viewModel.isDataChange.getValue())
+            viewModel.uploadUserData(binding.userName.getText().toString(), binding.aboutUser.getText().toString());
         super.onStop();
     }
 }

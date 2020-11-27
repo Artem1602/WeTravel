@@ -1,10 +1,7 @@
 package ua.pkk.wetravel.fragments.videoItem;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +10,9 @@ import android.widget.MediaController;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,10 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 
 import ua.pkk.wetravel.R;
@@ -92,7 +83,7 @@ public class VideoFragment extends Fragment {
         if (args.getSourceKey() == Keys.VIDEO_FROM_MAP.getValue()) {
             binding.videoActions.setVisibility(View.GONE);
             viewModel.img.observe(getViewLifecycleOwner(), bitmap -> {
-                if (bitmap != null){
+                if (bitmap != null) {
                     binding.userImagePb.setVisibility(View.GONE);
                     binding.uplodetUserImg.setImageBitmap(bitmap);
                     binding.uplodetUserImg.setOnClickListener(this::goToRootUser);
@@ -105,7 +96,7 @@ public class VideoFragment extends Fragment {
     }
 
     private void goToRootUser(View v) {
-
+        //TODO path from temp file, name, info
     }
 
     private void loadUserData() {

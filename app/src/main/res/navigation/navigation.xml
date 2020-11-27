@@ -84,5 +84,19 @@
     <fragment
         android:id="@+id/userAccountFragment"
         android:name="ua.pkk.wetravel.fragments.userAccount.UserAccountFragment"
-        android:label="UserAccountFragment" />
+        android:label="UserAccountFragment" >
+        <argument
+            android:name="user_img"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="user_name"
+            app:argType="string" />
+        <argument
+            android:name="user_info"
+            app:argType="string" />
+        <argument
+            android:name="source_key"
+            app:argType="integer" />
+    </fragment>
 </navigation>

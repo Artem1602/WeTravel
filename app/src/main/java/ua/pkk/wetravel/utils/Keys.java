@@ -1,7 +1,7 @@
 package ua.pkk.wetravel.utils;
 
 public enum Keys {
-    VIDEO_FROM_MAP(1),VIDEO_FROM_ADAPTER(2);
+    VIDEO_FROM_MAP(1),VIDEO_FROM_ADAPTER(2),OWNER_ACCOUNT(3),LOADER_ACCOUNT(4);
 
     private final int value;
 

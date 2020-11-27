@@ -2,6 +2,9 @@ package ua.pkk.wetravel.fragments.main;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,10 +23,12 @@ import androidx.navigation.Navigation;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
+import java.net.URI;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentMainBinding;
 import ua.pkk.wetravel.fragments.userAccount.UserAccountViewModel;
+import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
 
@@ -51,6 +56,7 @@ public class MainFragment extends Fragment {
         FirebaseAuth.getInstance().signInAnonymously();
 
         viewModel.load_user_info(getContext());
+
         return binding.getRoot();
     }
 
@@ -66,7 +72,14 @@ public class MainFragment extends Fragment {
     }
 
     private void goToMyAccount() {
-        navController.navigate(MainFragmentDirections.actionMainFragmentToUserAccountFragment());
+        File user_img = new File(getContext().getFilesDir(),"profile_img");
+        String path = null;
+        if (user_img.length() != 0){
+            path = user_img.getAbsolutePath();
+        }
+        navController.navigate(MainFragmentDirections
+                .actionMainFragmentToUserAccountFragment(path,
+                        User.getInstance().getName(),User.getInstance().getInfo(), Keys.OWNER_ACCOUNT.getValue()));
     }
 
     private void goToShowMap() {
