@@ -1,5 +1,6 @@
 package ua.pkk.wetravel.fragments.videoItem;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +21,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 import ua.pkk.wetravel.R;
@@ -32,6 +36,11 @@ public class VideoFragment extends Fragment {
     private FragmentVideoBinding binding;
     private VideoFragmentViewModel viewModel;
     private Video video;
+
+    private String name;
+    private String info;
+    private String file;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +55,7 @@ public class VideoFragment extends Fragment {
         viewModel = new ViewModelProvider(this, factory).get(VideoFragmentViewModel.class);
         binding.setVideoViewModel(viewModel);
 
-        changeUIbbyKey(args);
+        changeUIbbyKey(args.getSourceKey());
 
         //TODO Add play btn or else...
         viewModel.getVideoUri();
@@ -79,14 +88,14 @@ public class VideoFragment extends Fragment {
         binding.videoView.start();
     }
 
-    private void changeUIbbyKey(VideoFragmentArgs args) {
-        if (args.getSourceKey() == Keys.VIDEO_FROM_MAP.getValue()) {
+    private void changeUIbbyKey(int source) {
+        if (source == Keys.VIDEO_FROM_MAP.getValue()) {
             binding.videoActions.setVisibility(View.GONE);
             viewModel.img.observe(getViewLifecycleOwner(), bitmap -> {
                 if (bitmap != null) {
                     binding.userImagePb.setVisibility(View.GONE);
                     binding.uplodetUserImg.setImageBitmap(bitmap);
-                    binding.uplodetUserImg.setOnClickListener(this::goToRootUser);
+                    binding.uplodetUserImg.setOnClickListener(v -> goToRootUser());
                 }
             });
             loadUserData();
@@ -95,22 +104,27 @@ public class VideoFragment extends Fragment {
         }
     }
 
-    private void goToRootUser(View v) {
-        //TODO path from temp file, name, info
+    private void goToRootUser() {
+        //TODO refactor it
+        File file = new File(getContext().getFilesDir(), "temp_img");
+        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(VideoFragmentDirections
+                .actionVideoFragmentToUserAccountFragment(file.getAbsolutePath(),name,info,Keys.LOADER_ACCOUNT.getValue()));
     }
 
     private void loadUserData() {
         StorageReference reference = FirebaseStorage.getInstance().getReference();
 
         reference.child(video.getUpload_user_id()).child("profile_img").getDownloadUrl().addOnSuccessListener(uri -> {
-            viewModel.getBitmapFromURL(uri.toString());
+            viewModel.getBitmapFromURL(uri.toString(),getContext().getFilesDir());
         });
         FirebaseDatabase.getInstance().getReference().child("user_data").child(video.getUpload_user_id()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HashMap<String, String> map = (HashMap<String, String>) snapshot.getValue();
                 if (map == null) return;
-                binding.userName.setText(map.get("user_name"));
+                name = map.get("user_name");
+                info = map.get("user_info");
+                binding.userName.setText(name);
             }
 
             @Override

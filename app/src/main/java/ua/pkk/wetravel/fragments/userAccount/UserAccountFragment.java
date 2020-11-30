@@ -1,22 +1,32 @@
 package ua.pkk.wetravel.fragments.userAccount;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentUserAccountBinding;
@@ -62,6 +72,8 @@ public class UserAccountFragment extends Fragment {
                 startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), "Choose image"), IMAGE_FILE_REQUEST_CODE);
                 return true;
             });
+        }else {
+
         }
     }
 
@@ -71,8 +83,19 @@ public class UserAccountFragment extends Fragment {
             super.onActivityResult(requestCode, resultCode, data);
         }
         binding.userImg.setImageURI(data.getData());
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        storageReference.child(User.getInstance().getId()).child("profile_img").putFile(data.getData());
+        StorageReference reference =  FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child("profile_img");
+
+        new Thread(() -> {
+            try( ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+                Bitmap bmp= MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                bmp.compress(Bitmap.CompressFormat.JPEG,25,stream);
+                byte[] output = stream.toByteArray();
+
+                reference.putBytes(output); //TODO addOnSuccessListener
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
         super.onActivityResult(requestCode, resultCode, data);
     }
 

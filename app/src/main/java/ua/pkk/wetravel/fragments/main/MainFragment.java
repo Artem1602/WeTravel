@@ -55,7 +55,7 @@ public class MainFragment extends Fragment {
         //TODO DO SOMETHING WITH IT
         FirebaseAuth.getInstance().signInAnonymously();
 
-        viewModel.load_user_info(getContext());
+        viewModel.load_user_info(getContext().getFilesDir());
 
         return binding.getRoot();
     }

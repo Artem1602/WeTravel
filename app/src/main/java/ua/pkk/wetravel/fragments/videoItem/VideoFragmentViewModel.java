@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -51,17 +53,26 @@ public class VideoFragmentViewModel extends ViewModel {
         successDelete.setValue(true);
     }
 
-    public void getBitmapFromURL(String src) {
+    public void getBitmapFromURL(String src,File filesDir) {
         new Thread(() -> {
             try {
                 URL url = new URL(src);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();
+
                 InputStream input = connection.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                input.close();
+
+                File temp_img = new File(filesDir, "temp_img");
+                FileOutputStream stream = new FileOutputStream(temp_img);
+                myBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+                stream.close();
+
                 img.postValue(myBitmap);
             } catch (IOException e) {
+                e.printStackTrace();
                 // Log exception
             }
         }).start();
