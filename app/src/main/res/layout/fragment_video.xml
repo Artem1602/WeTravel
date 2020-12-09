@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="height"
+            type="String" />
         <variable
             name="video"
             type="ua.pkk.wetravel.utils.Video" />
@@ -27,10 +29,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="6dp"
+
                 android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.exoplayer2.ui.PlayerView
+                        android:id="@+id/videoView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="270dp"
+                        android:layout_gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:use_controller="true"
+                        app:resize_mode="fit"
+                        />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/video_title"
@@ -46,12 +64,6 @@
                     android:text="@{video.uploadingTime}"
                     android:textSize="20sp" />
 
-                <VideoView
-                    android:id="@+id/videoView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="400dp"
-                    android:layout_gravity="center" />
-
                 <LinearLayout
                     android:id="@+id/video_actions"
                     android:layout_width="match_parent"
@@ -64,8 +76,6 @@
                         android:layout_height="wrap_content"
                         android:onClick="@{() -> videoViewModel.deleteVideo()}"
                         android:text="@string/delete_video" />
-
-
                 </LinearLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout

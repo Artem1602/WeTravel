@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/textColorPrimary"
         tools:context=".fragments.allUserVideo.ShowVideoFragment">
 
         <TextView
@@ -18,12 +16,6 @@
             android:layout_height="85dp"
             android:text="Some data"
             android:textSize="50sp" />
-
-        <ProgressBar
-            android:id="@+id/loadVideo_pb"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/videos"

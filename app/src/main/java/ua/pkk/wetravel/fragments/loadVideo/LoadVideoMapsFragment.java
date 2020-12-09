@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
@@ -28,7 +29,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.storage.FirebaseStorage;
@@ -43,14 +43,12 @@ import java.util.Locale;
 import java.util.Random;
 
 import ua.pkk.wetravel.R;
-import ua.pkk.wetravel.databinding.FragmentLoadvideoMapsBinding;
+import ua.pkk.wetravel.databinding.FragmentLoadVideoMapsBinding;
 import ua.pkk.wetravel.utils.User;
 
 
 public class LoadVideoMapsFragment extends Fragment {
-    //TODO Permissions
-
-    private FragmentLoadvideoMapsBinding binding;
+    private FragmentLoadVideoMapsBinding binding;
     private LatLng marker;
     public int VIDEO_FILE_REQUEST_CODE = 1;
     private EditText loadVideoName;
@@ -64,26 +62,10 @@ public class LoadVideoMapsFragment extends Fragment {
                 googleMap.setMyLocationEnabled(true);
             }
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(50.33, 30.53)));
-            googleMap.setOnMyLocationButtonClickListener(this::onMyLocationButtonClick);
-            googleMap.setOnMarkerClickListener(this::onMarkerClick);
-            googleMap.setOnInfoWindowClickListener(this::onInfoWindowClick);
             googleMap.setOnMapLongClickListener(this::onMapLongClick);
             map = googleMap;
         }
 
-        public void onInfoWindowClick(Marker marker) {
-            Toast.makeText(getContext(), "onInfoWindowClick", Toast.LENGTH_LONG).show();
-        }
-
-        public boolean onMarkerClick(Marker marker) {
-            Toast.makeText(getContext(), "onMarkerClick", Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        public boolean onMyLocationButtonClick() {
-            Toast.makeText(getContext(), "onMyLocationButtonClick", Toast.LENGTH_LONG).show();
-            return false;
-        }
 
         public void onMapLongClick(LatLng latLng) {
             marker = latLng;
@@ -93,15 +75,28 @@ public class LoadVideoMapsFragment extends Fragment {
         }
     };
 
+    private void checkMapPermissions() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+        }
+    }
+
+    private void checkVideoPermissions() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_loadvideo_maps, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_load_video_maps, container, false);
         binding.addVideo.setOnClickListener(this::onAddVideo);
+        checkMapPermissions();
+        checkVideoPermissions();
         return binding.getRoot();
     }
 
-    //TODO Look on it and may be fix it)
     private void showNotification(Intent data, LatLng marker, String s) {
         String CHANNEL_ID = "SuccessUpload";
         int NOTIFICATION_ID = new Random().nextInt(256);
@@ -159,6 +154,11 @@ public class LoadVideoMapsFragment extends Fragment {
     }
 
     private void onAddVideo(View view) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), "Without read storage permission app won't work", Toast.LENGTH_LONG).show();
+            checkVideoPermissions();
+            return;
+        }
         if (marker == null) {
             Toast.makeText(getContext(), getContext().getText(R.string.addMarker), Toast.LENGTH_LONG).show();
             return;

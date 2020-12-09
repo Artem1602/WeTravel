@@ -48,6 +48,7 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
 
         public void bind(Video item) {
             binding.setVideoItem(item);
+            binding.imageItem.setImageBitmap(item.getThumbnail());
             binding.executePendingBindings();
         }
 

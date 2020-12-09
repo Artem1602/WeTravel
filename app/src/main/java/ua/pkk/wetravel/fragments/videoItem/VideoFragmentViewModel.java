@@ -3,12 +3,12 @@ package ua.pkk.wetravel.fragments.videoItem;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,23 +20,25 @@ import java.net.URL;
 import ua.pkk.wetravel.utils.Video;
 
 public class VideoFragmentViewModel extends ViewModel {
-    private Video video;
+    private final Video video;
+
     //TODO encapsulate it
-    public MutableLiveData<Uri> videoUri = new MutableLiveData<>();
     public MutableLiveData<Boolean> successDelete = new MutableLiveData<>();
     public MutableLiveData<Bitmap> img = new MutableLiveData<>();
 
+    private SimpleExoPlayer player;
 
-    public VideoFragmentViewModel(Video video) {
+    public VideoFragmentViewModel(Video video, SimpleExoPlayer player) {
         this.video = video;
+        this.player = player;
     }
 
     public void getVideoUri() {
-        video.getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                videoUri.setValue(uri);
-            }
+        video.getReference().getDownloadUrl().addOnSuccessListener(uri -> {
+            MediaItem mediaItem = MediaItem.fromUri(uri);
+            player.setMediaItem(mediaItem);
+            player.prepare();
+            player.play();
         });
     }
 
@@ -45,7 +47,7 @@ public class VideoFragmentViewModel extends ViewModel {
         onDelete();
     }
 
-    public void renameVideo(){
+    public void renameVideo() {
         //TODO Rename
     }
 
@@ -53,7 +55,7 @@ public class VideoFragmentViewModel extends ViewModel {
         successDelete.setValue(true);
     }
 
-    public void getBitmapFromURL(String src,File filesDir) {
+    public void getBitmapFromURL(String src, File filesDir) {
         new Thread(() -> {
             try {
                 URL url = new URL(src);

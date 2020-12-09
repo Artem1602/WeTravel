@@ -16,20 +16,18 @@ import java.util.Map;
 import ua.pkk.wetravel.utils.User;
 
 public class LoginFragmentViewModel extends ViewModel {
-    private MutableLiveData<Boolean> _eventIsLogin = new MutableLiveData<>();
-    public LiveData<Boolean> eventIsLogin;
+    private MutableLiveData<Boolean> _eventIsLogin = new MutableLiveData<>(false);
+    public LiveData<Boolean> eventIsLogin = _eventIsLogin;
+    private MutableLiveData<Boolean> _wrongPasswordKey = new MutableLiveData<>(false);
+    public LiveData<Boolean> wrongPasswordKey = _wrongPasswordKey;
 
-    {
-        _eventIsLogin.setValue(false);
-        eventIsLogin = _eventIsLogin;
-    }
+    private MutableLiveData<Boolean> _wrongMailKey = new MutableLiveData<>(false);
+    public LiveData<Boolean> wrongMailKey = _wrongMailKey;
 
     private void onLogin(Map<String, String> user) {
         User.getInstance().setId(user.get("id"));
         _eventIsLogin.setValue(true);
     }
-
-
 
     public void sign_in(final String email, final String password) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -40,14 +38,19 @@ public class LoginFragmentViewModel extends ViewModel {
                 for (DataSnapshot i : snapshot.getChildren()) {
                     Map<String, String> user = (Map<String, String>) i.getValue();
                     if (user.get("email") == null) {
-                        //TODO Wrong data
+                        //TODO Delete this if
                         continue;
                     }
-                    if (user.get("email").equals(email) && user.get("password").equals(password)) {
-                        user.put("id", i.getKey());
-                        onLogin(user);
+                    if (user.get("email").equals(email)) {
+                        if (user.get("password").equals(password)) {
+                            user.put("id", i.getKey());
+                            onLogin(user);
+                        } else {
+                            _wrongPasswordKey.setValue(true);
+                        }
                     }
                 }
+                _wrongMailKey.setValue(true);
             }
 
             @Override
@@ -55,6 +58,11 @@ public class LoginFragmentViewModel extends ViewModel {
                 //TODO maybe Toast or something else...
             }
         });
+    }
+
+    public void renewKey(){
+        _wrongPasswordKey.setValue(false);
+        _wrongMailKey.setValue(false);
     }
 
     public boolean isValidEmail(CharSequence target) {

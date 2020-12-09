@@ -14,9 +14,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="70dp"
-            android:src="@drawable/ic_video_icon"
+            android:id="@+id/image_item"
+            android:layout_width="100dp"
             android:layout_height="70dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
@@ -31,12 +30,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="180dp"
             android:layout_marginBottom="8dp"
-            android:textSize="24sp"
             android:text="@{videoItem.name}"
+            android:textColor="@color/primaryColor"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_item"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -10,20 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -52,7 +47,7 @@ public class UserAccountFragment extends Fragment {
 
     private void initUI(UserAccountFragmentArgs args) {
         if (args.getUserImg() != null)
-        binding.userImg.setImageBitmap(BitmapFactory.decodeFile(args.getUserImg()));
+            binding.userImg.setImageBitmap(BitmapFactory.decodeFile(args.getUserImg()));
         binding.userName.setText(args.getUserName());
         binding.aboutUser.setText(args.getUserInfo());
 
@@ -72,7 +67,7 @@ public class UserAccountFragment extends Fragment {
                 startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), "Choose image"), IMAGE_FILE_REQUEST_CODE);
                 return true;
             });
-        }else {
+        } else {
 
         }
     }
@@ -83,12 +78,12 @@ public class UserAccountFragment extends Fragment {
             super.onActivityResult(requestCode, resultCode, data);
         }
         binding.userImg.setImageURI(data.getData());
-        StorageReference reference =  FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child("profile_img");
+        StorageReference reference = FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child("profile_img");
 
         new Thread(() -> {
-            try( ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-                Bitmap bmp= MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-                bmp.compress(Bitmap.CompressFormat.JPEG,25,stream);
+            try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                bmp.compress(Bitmap.CompressFormat.JPEG, 25, stream);
                 byte[] output = stream.toByteArray();
 
                 reference.putBytes(output); //TODO addOnSuccessListener
@@ -125,7 +120,6 @@ public class UserAccountFragment extends Fragment {
         dialog.show();
     }
 
-    //TODO Not Tested
     @Override
     public void onStop() {
         if (viewModel.isDataChange.getValue())

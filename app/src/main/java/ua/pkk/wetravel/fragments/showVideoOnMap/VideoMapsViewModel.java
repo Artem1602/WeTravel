@@ -18,6 +18,7 @@ import java.util.List;
 import ua.pkk.wetravel.utils.Video;
 
 public class VideoMapsViewModel extends ViewModel {
+    //TODO incapsulate
     public MutableLiveData<Pair<MarkerOptions, Video>> markers = new MutableLiveData<>();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
 

@@ -1,5 +1,8 @@
 package ua.pkk.wetravel.utils;
 
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,12 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class Video implements Parcelable {
     private StorageReference reference;
+    private Bitmap thumbnail;
     private String name;
     private String uploadingTime;
     private String upload_user_id;
@@ -22,6 +29,7 @@ public class Video implements Parcelable {
         this.name = name;
         this.uploadingTime = uploadingTime;
         this.upload_user_id = upload_user_id;
+        load_thumbnail();
     }
 
     protected Video(Parcel in) {
@@ -43,6 +51,42 @@ public class Video implements Parcelable {
     public String getUpload_user_id() {
         return upload_user_id;
     }
+
+    public Bitmap getThumbnail() {
+        return thumbnail;
+    }
+
+    private void load_thumbnail() {
+        new Thread(() -> reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                try {
+                    thumbnail = retrieveThumbnail(task.getResult().toString());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        })).start();
+    }
+
+    private Bitmap retrieveThumbnail(String videoPath) throws Throwable {
+        Bitmap bitmap;
+        MediaMetadataRetriever mediaMetadataRetriever = null;
+        try {
+            mediaMetadataRetriever = new MediaMetadataRetriever();
+            mediaMetadataRetriever.setDataSource(videoPath, new HashMap<>());
+            bitmap = mediaMetadataRetriever.getFrameAtTime(1, MediaMetadataRetriever.OPTION_CLOSEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Throwable("Exception in retrieveVideoFrame()" + e.getMessage());
+        } finally {
+            if (mediaMetadataRetriever != null) {
+                mediaMetadataRetriever.release();
+            }
+        }
+        return bitmap;
+    }
+
 
     @Override
     public int hashCode() {
@@ -91,5 +135,8 @@ public class Video implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeValue(reference);
+        dest.writeValue(thumbnail);
+        dest.writeString(upload_user_id);
+        dest.writeString(uploadingTime);
     }
 }

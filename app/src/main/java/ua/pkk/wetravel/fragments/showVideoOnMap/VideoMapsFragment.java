@@ -37,8 +37,9 @@ public class VideoMapsFragment extends Fragment {
             LatLng ukraine = new LatLng(33, 32);
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(ukraine));
         }
+
         public void onInfoWindowClick(Marker marker) {
-            Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(VideoMapsFragmentDirections.actionVideoMapsFragmentToVideoFragment((Video) marker.getTag(), Keys.VIDEO_FROM_MAP.getValue()));
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoMapsFragmentDirections.actionVideoMapsFragmentToVideoFragment((Video) marker.getTag(), Keys.VIDEO_FROM_MAP.getValue()));
         }
     };
 

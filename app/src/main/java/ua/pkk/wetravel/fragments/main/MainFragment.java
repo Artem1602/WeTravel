@@ -10,12 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,38 +27,46 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentMainBinding;
 import ua.pkk.wetravel.fragments.userAccount.UserAccountViewModel;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
+import ua.pkk.wetravel.utils.Video;
 
 
 public class MainFragment extends Fragment {
     private FragmentMainBinding binding;
     private NavController navController;
     private MainFragmentViewModel viewModel;
+    private ArrayList<Video> userVideo;
 
-    //TODO sign up anonymously
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("TAG","onCreateView");
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
         viewModel = new ViewModelProvider(this).get(MainFragmentViewModel.class);
+        viewModel.load_user_info(getContext().getFilesDir());
+        viewModel.preLoadUserVideo();
 
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         binding.loadVideo.setOnClickListener(v -> goToLoadVideoMap());
         binding.showMyVideo.setOnClickListener(v -> goToShowVideo());
         binding.logout.setOnClickListener(v -> logOut());
         binding.showMap.setOnClickListener(v -> goToShowMap());
-
         binding.myAccountBtn.setOnClickListener(v -> goToMyAccount());
 
-        //TODO DO SOMETHING WITH IT
         FirebaseAuth.getInstance().signInAnonymously();
 
-        viewModel.load_user_info(getContext().getFilesDir());
+
+        userVideo = new ArrayList<>();
+        viewModel.preLoadVideo.observe(getViewLifecycleOwner(), video -> {
+            if (video != null){
+                userVideo.add(video);
+            }
+        });
+
 
         return binding.getRoot();
     }
@@ -91,48 +102,7 @@ public class MainFragment extends Fragment {
     }
 
     private void goToShowVideo() {
-        navController.navigate(MainFragmentDirections.actionMainFragmentToShowVideoFragment());
+        navController.navigate(MainFragmentDirections.actionMainFragmentToShowVideoFragment(userVideo.toArray(new Video[userVideo.size()])));
     }
 
-    @Override
-    public void onPause() {
-        Log.d("TAG","onPause");
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        Log.d("TAG","onResume");
-        super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        Log.d("TAG","onStop");
-        super.onStop();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Log.d("TAG","onViewCreated");
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d("TAG","onCreate");
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        Log.d("TAG","onAttach");
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        Log.d("TAG","onDetach");
-        super.onDetach();
-    }
 }

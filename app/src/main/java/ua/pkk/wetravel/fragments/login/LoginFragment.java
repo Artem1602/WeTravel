@@ -27,7 +27,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(LoginFragmentViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
-        binding.acceptBtnLog.setOnClickListener(v -> onAccept());
+        binding.acceptBtnLog.setOnClickListener(v -> onLogin());
         binding.restorePasswordLog.setOnClickListener(v -> onRestore());
 
         viewModel.eventIsLogin.observe(getViewLifecycleOwner(), aBoolean -> {
@@ -35,6 +35,19 @@ public class LoginFragment extends Fragment {
                 userIsLogIn();
             }
         });
+        viewModel.wrongPasswordKey.observe(getViewLifecycleOwner(),aBoolean -> {
+            if (aBoolean){
+                binding.passwEdLog.setError(getString(R.string.wrong_pas));
+                viewModel.renewKey();
+            }
+        });
+        viewModel.wrongMailKey.observe(getViewLifecycleOwner(),aBoolean -> {
+            if (aBoolean){
+                binding.mailEdLog.setError(getString(R.string.wrong_mail));
+                viewModel.renewKey();
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -42,12 +55,13 @@ public class LoginFragment extends Fragment {
         reset_password();
     }
 
-    private void onAccept() {
+    private void onLogin() {
         if (!viewModel.isValidEmail(binding.mailEdLog.getText())) {
             binding.mailEdLog.setError(getContext().getResources().getString(R.string.isnt_valid_mail));
             return;
         } else if (binding.passwEdLog.getText().toString().isEmpty()) {
             binding.passwEdLog.setError(getContext().getResources().getString(R.string.empty_password));
+            return;
         }
         viewModel.sign_in(binding.mailEdLog.getText().toString(), binding.passwEdLog.getText().toString());
     }
