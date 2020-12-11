@@ -3,22 +3,31 @@ package ua.pkk.wetravel.activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.utils.User;
 
 public class MainActivity extends AppCompatActivity {
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkSharedPreferences(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void checkSharedPreferences(Bundle savedInstanceState) {
@@ -38,5 +47,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean("isCreated", true);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            signInAnonymously();
+        }
+        super.onStart();
+    }
+
+    private void signInAnonymously() {
+        mAuth.signInAnonymously()
+                .addOnFailureListener(this,
+                        exception -> Log.e("TAG", "signInAnonymously:FAILURE", exception));
     }
 }

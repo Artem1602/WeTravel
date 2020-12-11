@@ -1,5 +1,8 @@
 package ua.pkk.wetravel.fragments.showVideoOnMap;
 
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -20,6 +23,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.Video;
@@ -38,7 +45,7 @@ public class VideoMapsFragment extends Fragment {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(ukraine));
         }
 
-        public void onInfoWindowClick(Marker marker) {
+        public void onInfoWindowClick(@NotNull Marker marker) {
             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoMapsFragmentDirections.actionVideoMapsFragmentToVideoFragment((Video) marker.getTag(), Keys.VIDEO_FROM_MAP.getValue()));
         }
     };
@@ -53,7 +60,6 @@ public class VideoMapsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(VideoMapsViewModel.class);
-        viewModel.getMarkers();
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
@@ -65,10 +71,12 @@ public class VideoMapsFragment extends Fragment {
                 setMarkers(markerOptionsVideoPair);
             }
         });
+        viewModel.getMarkers();
     }
 
     private void setMarkers(Pair<MarkerOptions, Video> markerVideoHashMap) {
         Marker marker = map.addMarker(markerVideoHashMap.first);
         marker.setTag(markerVideoHashMap.second);
     }
+
 }

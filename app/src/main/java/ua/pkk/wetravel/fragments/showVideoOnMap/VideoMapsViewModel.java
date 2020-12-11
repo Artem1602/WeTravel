@@ -2,6 +2,7 @@ package ua.pkk.wetravel.fragments.showVideoOnMap;
 
 import android.util.Pair;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -18,13 +19,15 @@ import java.util.List;
 import ua.pkk.wetravel.utils.Video;
 
 public class VideoMapsViewModel extends ViewModel {
-    //TODO incapsulate
-    public MutableLiveData<Pair<MarkerOptions, Video>> markers = new MutableLiveData<>();
+
+    private MutableLiveData<Pair<MarkerOptions, Video>> _markers = new MutableLiveData<>();
+    public LiveData<Pair<MarkerOptions, Video>> markers = _markers;
+
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private void markers(List<StorageReference> id) {
         for (StorageReference i : id) {
-            storage.getReference(i.getName()).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+            i.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
                 @Override
                 public void onSuccess(ListResult listResult) {
                     for (StorageReference reference : listResult.getItems()) {
@@ -32,14 +35,16 @@ public class VideoMapsViewModel extends ViewModel {
                             @Override
                             public void onSuccess(StorageMetadata storageMetadata) {
                                 if (reference.getName().equals("profile_img")) return;
-                                String[] i = storageMetadata.getCustomMetadata("position").split("/");
-                                LatLng latLng = new LatLng(Double.parseDouble(i[0]), Double.parseDouble(i[1]));
+
+                                String[] meta = storageMetadata.getCustomMetadata("position").split("/");
+                                LatLng latLng = new LatLng(Double.parseDouble(meta[0]), Double.parseDouble(meta[1]));
                                 MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(reference.getName());
-                                markers.setValue(new Pair<>(markerOptions,
+
+                                _markers.postValue(new Pair<>(markerOptions,
                                         new Video(reference,
                                                 reference.getName()
-                                                ,storageMetadata.getCustomMetadata("uploadingTime")
-                                                ,storageMetadata.getCustomMetadata("user_id"))));
+                                                , storageMetadata.getCustomMetadata("uploadingTime")
+                                                , storageMetadata.getCustomMetadata("user_id"))));
                             }
                         });
                     }
@@ -49,6 +54,8 @@ public class VideoMapsViewModel extends ViewModel {
     }
 
     public void getMarkers() {
-        storage.getReference().listAll().addOnSuccessListener(listResult -> markers(listResult.getPrefixes()));
+        storage.getReference().listAll().addOnSuccessListener(listResult ->
+                markers(listResult.getPrefixes())
+        );
     }
 }

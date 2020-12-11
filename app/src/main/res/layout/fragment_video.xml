@@ -20,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/textColorPrimary"
         tools:context=".fragments.videoItem.VideoFragment">
 
         <ScrollView
@@ -91,6 +92,7 @@
                         android:layout_marginTop="24dp"
                         android:layout_marginBottom="24dp"
                         android:text="@string/uploaded_by"
+                        android:textColor="@color/primaryColor"
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -103,6 +105,7 @@
                         android:layout_marginTop="38dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="37dp"
+                        android:textColor="@color/primaryColor"
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/uplodet_user_img"

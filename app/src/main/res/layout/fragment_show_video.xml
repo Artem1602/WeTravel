@@ -14,8 +14,16 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="85dp"
-            android:text="Some data"
+            android:text="@string/your_video"
+            android:textAlignment="center"
+            android:textColor="@color/primaryColor"
             android:textSize="50sp" />
+
+        <ProgressBar
+            android:id="@+id/showVideos_pb"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/videos"

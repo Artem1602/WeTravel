@@ -2,13 +2,17 @@ package ua.pkk.wetravel.fragments.allUserVideo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.ItemVideoBinding;
@@ -18,9 +22,11 @@ import ua.pkk.wetravel.utils.Video;
 import static ua.pkk.wetravel.utils.Video.DIFF_CALLBACK;
 
 public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
+    private static Context context;
 
-    protected VideoAdapter() {
+    protected VideoAdapter(Context context) {
         super(DIFF_CALLBACK);
+        VideoAdapter.context = context;
     }
 
     @NonNull
@@ -48,7 +54,8 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
 
         public void bind(Video item) {
             binding.setVideoItem(item);
-            binding.imageItem.setImageBitmap(item.getThumbnail());
+            Glide.with(context).load(item.getUri()).into(binding.imageItem);
+            binding.videoItemPb.setVisibility(View.GONE);
             binding.executePendingBindings();
         }
 

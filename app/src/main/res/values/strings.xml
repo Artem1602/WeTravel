@@ -34,4 +34,5 @@
     <string name="notification_chanel_description">Shows the success of the video upload.</string>
     <string name="wrong_pas">Wrong password</string>
     <string name="wrong_mail">Wrong mail</string>
+    <string name="your_video">Your video</string>
 </resources>
