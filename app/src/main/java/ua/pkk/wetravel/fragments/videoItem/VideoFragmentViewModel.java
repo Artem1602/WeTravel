@@ -3,6 +3,7 @@ package ua.pkk.wetravel.fragments.videoItem;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -32,6 +33,7 @@ public class VideoFragmentViewModel extends ViewModel {
     private SimpleExoPlayer player;
 
     public long previousDuration;
+    private Uri videoUri;
 
     public VideoFragmentViewModel(Video video, SimpleExoPlayer player) {
         this.video = video;
@@ -40,6 +42,7 @@ public class VideoFragmentViewModel extends ViewModel {
 
     public void playVideoFromUri() {
         video.getReference().getDownloadUrl().addOnSuccessListener(uri -> {
+            this.videoUri = uri;
             MediaItem mediaItem = MediaItem.fromUri(uri);
             player.setMediaItem(mediaItem);
             player.prepare();
@@ -49,14 +52,12 @@ public class VideoFragmentViewModel extends ViewModel {
 
     public void reCreatePlayerAndPlay(SimpleExoPlayer player) {
         this.player = player;
-        video.getReference().getDownloadUrl().addOnSuccessListener(uri -> {
-            MediaItem mediaItem = MediaItem.fromUri(uri);
-            player.setMediaItem(mediaItem);
-            player.seekTo(previousDuration);
-            player.prepare();
-            player.setPlayWhenReady(true);
-            player.play();
-        });
+        MediaItem mediaItem = MediaItem.fromUri(videoUri);
+        player.setMediaItem(mediaItem);
+        player.seekTo(previousDuration);
+        player.prepare();
+        player.setPlayWhenReady(true);
+        player.play();
     }
 
     public void deleteVideo() {

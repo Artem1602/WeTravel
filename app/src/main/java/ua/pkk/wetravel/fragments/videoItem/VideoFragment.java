@@ -1,5 +1,7 @@
 package ua.pkk.wetravel.fragments.videoItem;
 
+import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,12 +55,13 @@ public class VideoFragment extends Fragment {
         viewModel = new ViewModelProvider(this, factory).get(VideoFragmentViewModel.class);
         binding.setVideoViewModel(viewModel);
 
-        changeUIbbyKey(args.getSourceKey());
-
         if (viewModel.previousDuration <= 0) {
             viewModel.playVideoFromUri();
         } else viewModel.reCreatePlayerAndPlay(player);
 
+        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            changeUIbbyKey(args.getSourceKey());
+        }
 
         viewModel.successDelete.observe(getViewLifecycleOwner(), aBoolean -> {
             if (aBoolean) {
