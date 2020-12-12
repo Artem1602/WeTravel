@@ -47,17 +47,18 @@ public class VideoFragment extends Fragment {
         binding.setVideo(args.getVideo());
 
         video = args.getVideo();
-
         initPlayer();
+
         VideoFragmentViewModelFactory factory = new VideoFragmentViewModelFactory(video, player);
         viewModel = new ViewModelProvider(this, factory).get(VideoFragmentViewModel.class);
         binding.setVideoViewModel(viewModel);
 
-
         changeUIbbyKey(args.getSourceKey());
 
-        //TODO Add play btn or else...
-        viewModel.getVideoUri();
+        if (viewModel.previousDuration <= 0) {
+            viewModel.playVideoFromUri();
+        } else viewModel.reCreatePlayerAndPlay(player);
+
 
         viewModel.successDelete.observe(getViewLifecycleOwner(), aBoolean -> {
             if (aBoolean) {
@@ -76,7 +77,7 @@ public class VideoFragment extends Fragment {
     }
 
     private void closeFragment() {
-       Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections.actionVideoFragmentToMainFragment());
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections.actionVideoFragmentToMainFragment());
     }
 
 
@@ -93,7 +94,6 @@ public class VideoFragment extends Fragment {
             loadUserData();
         } else {
             binding.loaderInfo.setVisibility(View.GONE);
-            //Do nothing
         }
     }
 
@@ -130,13 +130,15 @@ public class VideoFragment extends Fragment {
     @Override
     public void onStop() {
         //TODO
+        viewModel.previousDuration = player.getCurrentPosition();
         player.stop();
+        player.clearMediaItems();
         super.onStop();
     }
 
     @Override
     public void onDestroy() {
-        player.release();
+        //player.release();
         super.onDestroy();
     }
 }

@@ -48,13 +48,17 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:use_controller="true"
                         app:resize_mode="fit"
+                        android:background="@color/exo_black_opacity_70"
                         />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/video_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/primaryColor"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center"
                     android:text="@{video.name}"
                     android:textSize="20sp" />
 
@@ -62,6 +66,10 @@
                     android:id="@+id/video_metadata"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/primaryColor"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:text="@{video.uploadingTime}"
                     android:textSize="20sp" />
 
@@ -75,6 +83,8 @@
                         android:id="@+id/delete_btn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/textColorPrimary"
+                        android:layout_margin="16dp"
                         android:onClick="@{() -> videoViewModel.deleteVideo()}"
                         android:text="@string/delete_video" />
                 </LinearLayout>

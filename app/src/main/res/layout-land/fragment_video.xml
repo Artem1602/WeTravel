@@ -15,6 +15,7 @@
             android:layout_height="fill_parent"
             android:layout_gravity="center"
             app:use_controller="true"
+            android:background="@color/exo_black_opacity_70"
             app:resize_mode="fit"
             />
 

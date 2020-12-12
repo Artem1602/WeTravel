@@ -4,6 +4,7 @@ package ua.pkk.wetravel.fragments.videoItem;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -22,22 +23,38 @@ import ua.pkk.wetravel.utils.Video;
 public class VideoFragmentViewModel extends ViewModel {
     private final Video video;
 
-    //TODO encapsulate it
-    public MutableLiveData<Boolean> successDelete = new MutableLiveData<>();
-    public MutableLiveData<Bitmap> img = new MutableLiveData<>();
+    private MutableLiveData<Boolean> _successDelete = new MutableLiveData<>();
+    public LiveData<Boolean> successDelete = _successDelete;
+
+    private MutableLiveData<Bitmap> _img = new MutableLiveData<>();
+    public LiveData<Bitmap> img = _img;
 
     private SimpleExoPlayer player;
+
+    public long previousDuration;
 
     public VideoFragmentViewModel(Video video, SimpleExoPlayer player) {
         this.video = video;
         this.player = player;
     }
 
-    public void getVideoUri() {
+    public void playVideoFromUri() {
         video.getReference().getDownloadUrl().addOnSuccessListener(uri -> {
             MediaItem mediaItem = MediaItem.fromUri(uri);
             player.setMediaItem(mediaItem);
             player.prepare();
+            player.play();
+        });
+    }
+
+    public void reCreatePlayerAndPlay(SimpleExoPlayer player) {
+        this.player = player;
+        video.getReference().getDownloadUrl().addOnSuccessListener(uri -> {
+            MediaItem mediaItem = MediaItem.fromUri(uri);
+            player.setMediaItem(mediaItem);
+            player.seekTo(previousDuration);
+            player.prepare();
+            player.setPlayWhenReady(true);
             player.play();
         });
     }
@@ -52,7 +69,7 @@ public class VideoFragmentViewModel extends ViewModel {
     }
 
     private void onDelete() {
-        successDelete.setValue(true);
+        _successDelete.setValue(true);
     }
 
     public void getBitmapFromURL(String src, File filesDir) {
@@ -69,13 +86,12 @@ public class VideoFragmentViewModel extends ViewModel {
 
                 File temp_img = new File(filesDir, "temp_img");
                 FileOutputStream stream = new FileOutputStream(temp_img);
-                myBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+                myBitmap.compress(Bitmap.CompressFormat.PNG, 40, stream);
                 stream.close();
 
-                img.postValue(myBitmap);
+                _img.postValue(myBitmap);
             } catch (IOException e) {
                 e.printStackTrace();
-                // Log exception
             }
         }).start();
     }
