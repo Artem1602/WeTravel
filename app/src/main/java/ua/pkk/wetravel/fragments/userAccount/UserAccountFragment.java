@@ -68,7 +68,8 @@ public class UserAccountFragment extends Fragment {
                 return true;
             });
         } else {
-
+            if (args.getUserImg() != null)
+                binding.userImg.setImageBitmap(BitmapFactory.decodeFile(args.getUserImg()));
         }
     }
 

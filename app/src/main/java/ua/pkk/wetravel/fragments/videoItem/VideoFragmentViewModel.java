@@ -27,9 +27,6 @@ public class VideoFragmentViewModel extends ViewModel {
     private MutableLiveData<Boolean> _successDelete = new MutableLiveData<>();
     public LiveData<Boolean> successDelete = _successDelete;
 
-    private MutableLiveData<Bitmap> _img = new MutableLiveData<>();
-    public LiveData<Bitmap> img = _img;
-
     private SimpleExoPlayer player;
 
     public long previousDuration;
@@ -73,7 +70,7 @@ public class VideoFragmentViewModel extends ViewModel {
         _successDelete.setValue(true);
     }
 
-    public void getBitmapFromURL(String src, File filesDir) {
+    public void loadBitmapToTempFile(String src, File filesDir) {
         new Thread(() -> {
             try {
                 URL url = new URL(src);
@@ -89,8 +86,6 @@ public class VideoFragmentViewModel extends ViewModel {
                 FileOutputStream stream = new FileOutputStream(temp_img);
                 myBitmap.compress(Bitmap.CompressFormat.PNG, 40, stream);
                 stream.close();
-
-                _img.postValue(myBitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }

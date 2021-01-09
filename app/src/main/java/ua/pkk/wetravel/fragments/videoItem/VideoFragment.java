@@ -2,17 +2,24 @@ package ua.pkk.wetravel.fragments.videoItem;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.firebase.database.DataSnapshot;
@@ -87,14 +94,9 @@ public class VideoFragment extends Fragment {
     private void changeUIbbyKey(int source) {
         if (source == Keys.VIDEO_FROM_MAP.getValue()) {
             binding.videoActions.setVisibility(View.GONE);
-            viewModel.img.observe(getViewLifecycleOwner(), bitmap -> {
-                if (bitmap != null) {
-                    binding.userImagePb.setVisibility(View.GONE);
-                    binding.uplodetUserImg.setImageBitmap(bitmap);
-                    binding.uplodetUserImg.setOnClickListener(v -> goToRootUser());
-                }
-            });
+
             loadUserData();
+
         } else {
             binding.loaderInfo.setVisibility(View.GONE);
         }
@@ -111,7 +113,20 @@ public class VideoFragment extends Fragment {
         StorageReference reference = FirebaseStorage.getInstance().getReference();
 
         reference.child(video.getUpload_user_id()).child("profile_img").getDownloadUrl().addOnSuccessListener(uri -> {
-            viewModel.getBitmapFromURL(uri.toString(), getContext().getFilesDir());
+            viewModel.loadBitmapToTempFile(uri.toString(), getContext().getFilesDir());
+            Glide.with(getContext()).load(uri.toString()).listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    binding.userImagePb.setVisibility(View.GONE);
+                    binding.uplodetUserImg.setOnClickListener(v -> goToRootUser());
+                    return false;
+                }
+            }).into(binding.uplodetUserImg);
         });
         FirebaseDatabase.getInstance().getReference().child("user_data").child(video.getUpload_user_id()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -141,7 +156,6 @@ public class VideoFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        //player.release();
         super.onDestroy();
     }
 }

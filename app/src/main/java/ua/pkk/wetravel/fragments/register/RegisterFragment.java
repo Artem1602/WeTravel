@@ -29,9 +29,10 @@ public class RegisterFragment extends Fragment {
         binding.acceptBtnReg.setOnClickListener(v -> onAccept());
 
         viewModel.isSuccessRegister.observe(getViewLifecycleOwner(), aBoolean -> {
-            if (aBoolean) {
+            if (aBoolean)
                 successRegistration();
-            }
+            else
+                Toast.makeText(getContext(),"Error, please try again",Toast.LENGTH_SHORT).show();
         });
 
         return binding.getRoot();
@@ -44,15 +45,16 @@ public class RegisterFragment extends Fragment {
             return;
         }
         viewModel.create_account(binding.mailEdReg.getText().toString(),
-                binding.passwEdReg.getText().toString(),
-                binding.passwAgainEdReg.getText().toString());
+                binding.passwEdReg.getText().toString());
 
     }
 
     private void successRegistration() {
         Toast.makeText(this.getContext(), "Success registration", Toast.LENGTH_SHORT).show();
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentSelf());
-        viewModel.successRegisterComplete();
+        for (Fragment fragment :  getParentFragmentManager().getFragments()) {
+            getParentFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 
     @Override

@@ -10,13 +10,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ua.pkk.wetravel.R;
+import ua.pkk.wetravel.retrofit.UserAPI;
+import ua.pkk.wetravel.retrofit.UserData;
+import ua.pkk.wetravel.retrofit.UserProperty;
 import ua.pkk.wetravel.utils.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,8 +31,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         checkSharedPreferences(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+
     }
 
     private void checkSharedPreferences(Bundle savedInstanceState) {
