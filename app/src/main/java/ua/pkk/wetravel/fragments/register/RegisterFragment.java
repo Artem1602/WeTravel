@@ -32,7 +32,7 @@ public class RegisterFragment extends Fragment {
             if (aBoolean)
                 successRegistration();
             else
-                Toast.makeText(getContext(),"Error, please try again",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.error_try_again),Toast.LENGTH_SHORT).show();
         });
 
         return binding.getRoot();
@@ -50,29 +50,11 @@ public class RegisterFragment extends Fragment {
     }
 
     private void successRegistration() {
-        Toast.makeText(this.getContext(), "Success registration", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getContext(), getString(R.string.success_registration), Toast.LENGTH_SHORT).show();
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentSelf());
         for (Fragment fragment :  getParentFragmentManager().getFragments()) {
             getParentFragmentManager().beginTransaction().remove(fragment).commit();
         }
-    }
-
-    @Override
-    public void onStart() {
-        Log.d("TAG", "onStart");
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        Log.d("TAG", "onResume");
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        Log.d("TAG", "onPause");
-        super.onPause();
     }
 
 }

@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+
+
+
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
             signInAnonymously();

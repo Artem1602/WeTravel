@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.ItemVideoBinding;
@@ -54,8 +55,11 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
 
         public void bind(Video item) {
             binding.setVideoItem(item);
-            Glide.with(context).load(item.getUri()).into(binding.imageItem);
-            binding.videoItemPb.setVisibility(View.GONE);
+            Glide.with(context)
+                    .load(item.getUri())
+                    .apply(new RequestOptions().placeholder(R.drawable.progress_bar_animation).error(R.drawable.video_editor))
+                    .into(binding.imageItem);
+
             binding.executePendingBindings();
         }
 

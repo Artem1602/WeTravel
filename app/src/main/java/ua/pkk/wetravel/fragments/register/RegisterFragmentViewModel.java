@@ -69,14 +69,3 @@ public class RegisterFragmentViewModel extends ViewModel {
         }).start();
     }
 }
-//.enqueue(new Callback<Map<String, String>>() {
-//            @Override
-//            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-//                _isSuccessRegister.setValue(response.isSuccessful());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Map<String, String>> call, Throwable t) {
-//                _isSuccessRegister.setValue(false);
-//            }
-//        })).start();

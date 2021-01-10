@@ -50,11 +50,4 @@ public class ShowVideoFragment extends Fragment {
 
         return binding.getRoot();
     }
-
-
 }
-//private void initVideoList(ShowVideoFragmentArgs args) {
-//        List<Video> videos = Arrays.asList(args.getVideos());
-//        adapter.submitList(videos);
-//        adapter.notifyDataSetChanged();
-//    }

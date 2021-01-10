@@ -30,7 +30,13 @@
         android:id="@+id/loadVideoMapsFragment"
         android:name="ua.pkk.wetravel.fragments.loadVideo.LoadVideoMapsFragment"
         android:label="fragment_maps"
-        tools:layout="@layout/fragment_load_video_maps" />
+        tools:layout="@layout/fragment_load_video_maps" >
+        <action
+            android:id="@+id/action_loadVideoMapsFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/loadVideoMapsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/loginPageFragment"
         android:name="ua.pkk.wetravel.fragments.loginPage.LoginPageFragment"

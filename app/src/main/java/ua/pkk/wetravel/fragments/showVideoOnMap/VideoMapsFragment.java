@@ -1,8 +1,5 @@
 package ua.pkk.wetravel.fragments.showVideoOnMap;
 
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -24,8 +21,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.utils.Keys;

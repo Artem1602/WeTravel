@@ -23,6 +23,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -102,8 +103,8 @@ public class LoadVideoMapsFragment extends Fragment {
         int NOTIFICATION_ID = new Random().nextInt(256);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID);
-        builder.setContentTitle("Video upload")
-                .setContentText("Upload in progress")
+        builder.setContentTitle(getString(R.string.video_upload))
+                .setContentText(getString(R.string.upload_in_process))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSmallIcon(R.drawable.ic_notification_icon)
                 .setOnlyAlertOnce(true);
@@ -129,7 +130,7 @@ public class LoadVideoMapsFragment extends Fragment {
                 public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
                     if (snapshot.getBytesTransferred() == snapshot.getTotalByteCount()) {
                         builder.setProgress(0, 0, false);
-                        builder.setContentText("Upload complete");
+                        builder.setContentText(getString(R.string.upload_complete));
                         notificationManager.notify(NOTIFICATION_ID, builder.build());
                         return;
                     }
@@ -139,6 +140,7 @@ public class LoadVideoMapsFragment extends Fragment {
                 }
             });
         }).start();
+//        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate();
     }
 
     private void createNotificationChannel(String CHANNEL_ID) {
@@ -155,7 +157,7 @@ public class LoadVideoMapsFragment extends Fragment {
 
     private void onAddVideo(View view) {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getContext(), "Without read storage permission app won't work", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.storage_permission), Toast.LENGTH_LONG).show();
             checkVideoPermissions();
             return;
         }

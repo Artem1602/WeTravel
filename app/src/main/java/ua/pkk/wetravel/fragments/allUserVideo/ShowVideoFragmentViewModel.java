@@ -22,7 +22,6 @@ import ua.pkk.wetravel.utils.User;
 import ua.pkk.wetravel.utils.Video;
 
 public class ShowVideoFragmentViewModel extends ViewModel {
-    //TODO read about incapsulation in LiveDATA
     private MutableLiveData<List<Video>> _videos = new MutableLiveData<>();
     public LiveData<List<Video>> videos = _videos;
 
