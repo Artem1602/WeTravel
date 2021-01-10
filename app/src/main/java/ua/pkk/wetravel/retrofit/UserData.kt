@@ -1,7 +1,9 @@
 package ua.pkk.wetravel.retrofit
 
+import com.squareup.moshi.Json
+
 data class UserData(
-        val user_name:String,
-        val user_info:String
+        @Json(name = "user_name") val userName:String,
+        @Json(name = "user_info") val userInfo:String
 )
 

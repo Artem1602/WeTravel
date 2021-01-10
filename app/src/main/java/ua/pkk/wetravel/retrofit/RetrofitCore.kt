@@ -28,7 +28,7 @@ interface UserApiService {
     fun getUserData(@Path("id") id: String): Call<UserData>
 
     @PUT("user_data.json")
-    fun createNewUserData(@Body data: Map<String, UserData>): Call<Map<String, String>>
+    fun createNewUserData(@Body data: Map<String, UserData>): Call<Map<String, UserData>>
 
     //users
     @GET("users.json")
@@ -38,7 +38,7 @@ interface UserApiService {
     fun getUser(@Path("id") id: String): Call<UserProperty>
 
     @PUT("users.json")
-    fun createNewUser(@Body user: Map<String, UserProperty>): Call<Map<String, String>>
+    fun createNewUser(@Body user: Map<String, UserProperty>): Call<Map<String, UserProperty>>
 }
 
 object UserAPI {

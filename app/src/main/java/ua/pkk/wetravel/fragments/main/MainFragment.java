@@ -12,15 +12,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentMainBinding;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
-import ua.pkk.wetravel.utils.Video;
 
 public class MainFragment extends Fragment {
     private FragmentMainBinding binding;

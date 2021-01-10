@@ -1,6 +1,5 @@
 package ua.pkk.wetravel.fragments.videoItem;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -22,18 +20,18 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.util.HashMap;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentVideoBinding;
+import ua.pkk.wetravel.retrofit.UserAPI;
+import ua.pkk.wetravel.retrofit.UserData;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.Video;
 
@@ -66,7 +64,7 @@ public class VideoFragment extends Fragment {
             viewModel.playVideoFromUri();
         } else viewModel.reCreatePlayerAndPlay(player);
 
-        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             changeUIbbyKey(args.getSourceKey());
         }
 
@@ -82,7 +80,7 @@ public class VideoFragment extends Fragment {
 
     private void initPlayer() {
         player = new SimpleExoPlayer.Builder(getContext()).build();
-        playerView = (PlayerView) binding.videoView;
+        playerView = binding.videoView;
         playerView.setPlayer(player);
     }
 
@@ -94,9 +92,7 @@ public class VideoFragment extends Fragment {
     private void changeUIbbyKey(int source) {
         if (source == Keys.VIDEO_FROM_MAP.getValue()) {
             binding.videoActions.setVisibility(View.GONE);
-
             loadUserData();
-
         } else {
             binding.loaderInfo.setVisibility(View.GONE);
         }
@@ -128,26 +124,26 @@ public class VideoFragment extends Fragment {
                 }
             }).into(binding.uplodetUserImg);
         });
-        FirebaseDatabase.getInstance().getReference().child("user_data").child(video.getUpload_user_id()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                HashMap<String, String> map = (HashMap<String, String>) snapshot.getValue();
-                if (map == null) return;
-                name = map.get("user_name");
-                info = map.get("user_info");
-                binding.userName.setText(name);
-            }
+        new Thread(
+                () -> UserAPI.INSTANCE.getRETROFIT_SERVICE().getUserData(video.getUpload_user_id()).enqueue(new Callback<UserData>() {
+                    @Override
+                    public void onResponse(Call<UserData> call, Response<UserData> response) {
+                        if (response.isSuccessful()) {
+                            name = response.body().getUserName();
+                            info = response.body().getUserInfo();
+                            binding.userName.setText(name);
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+                    @Override
+                    public void onFailure(Call<UserData> call, Throwable t) {
+                        //TODO
+                    }
+                })).start();
     }
 
     @Override
     public void onStop() {
-        //TODO
         viewModel.previousDuration = player.getCurrentPosition();
         player.stop();
         player.clearMediaItems();
