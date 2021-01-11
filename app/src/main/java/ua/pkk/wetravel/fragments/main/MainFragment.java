@@ -40,7 +40,7 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onStart() {
-        viewModel.load_user_info(getContext().getFilesDir());
+        viewModel.load_user_img(getContext().getFilesDir());
         super.onStart();
     }
 

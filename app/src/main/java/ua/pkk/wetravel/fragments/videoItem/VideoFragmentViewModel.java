@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,6 +20,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ua.pkk.wetravel.retrofit.UserAPI;
+import ua.pkk.wetravel.utils.User;
 import ua.pkk.wetravel.utils.Video;
 
 public class VideoFragmentViewModel extends ViewModel {
@@ -38,13 +44,11 @@ public class VideoFragmentViewModel extends ViewModel {
     }
 
     public void playVideoFromUri() {
-        video.getReference().getDownloadUrl().addOnSuccessListener(uri -> {
-            this.videoUri = uri;
-            MediaItem mediaItem = MediaItem.fromUri(uri);
-            player.setMediaItem(mediaItem);
-            player.prepare();
-            player.play();
-        });
+        this.videoUri = video.getReference();
+        MediaItem mediaItem = MediaItem.fromUri(video.getReference());
+        player.setMediaItem(mediaItem);
+        player.prepare();
+        player.play();
     }
 
     public void reCreatePlayerAndPlay(SimpleExoPlayer player) {
@@ -58,11 +62,24 @@ public class VideoFragmentViewModel extends ViewModel {
     }
 
     public void deleteVideo() {
-        video.getReference().delete().addOnSuccessListener(aVoid -> onDelete());
+        FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child(video.getName()).delete();
+        new Thread(() -> {
+            UserAPI.INSTANCE.getRETROFIT_SERVICE().deleteAllVideoComments(User.getInstance().getId(),video.getName()).enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    //TODO
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                }
+            });
+        }).start();
         onDelete();
     }
 
-    public void renameVideo() {
+     public void renameVideo() {
         //TODO Rename
     }
 

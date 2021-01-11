@@ -1,5 +1,6 @@
 package ua.pkk.wetravel.utils;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,13 +13,13 @@ import com.google.firebase.storage.StorageReference;
 import java.util.Objects;
 
 public class Video implements Parcelable {
-    private StorageReference reference;
+    private Uri reference;
     private String name;
     private String uploadingTime;
     private String upload_user_id;
     private String uri;
 
-    public Video(StorageReference reference, String name, String uploadingTime, String upload_user_id) {
+    public Video(Uri reference, String name, String uploadingTime, String upload_user_id) {
         this.reference = reference;
         this.name = name;
         this.uploadingTime = uploadingTime;
@@ -29,7 +30,7 @@ public class Video implements Parcelable {
         name = in.readString();
     }
 
-    public StorageReference getReference() {
+    public Uri getReference() {
         return reference;
     }
 

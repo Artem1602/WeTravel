@@ -23,7 +23,6 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -140,7 +139,6 @@ public class LoadVideoMapsFragment extends Fragment {
                 }
             });
         }).start();
-//        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate();
     }
 
     private void createNotificationChannel(String CHANNEL_ID) {
@@ -155,6 +153,7 @@ public class LoadVideoMapsFragment extends Fragment {
         }
     }
 
+    //TODO don`t allow load video with same names !!! Priority -> MAX
     private void onAddVideo(View view) {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getContext(), getString(R.string.storage_permission), Toast.LENGTH_LONG).show();

@@ -29,10 +29,10 @@
     <string name="uploaded_by">Загружено пользователем:</string>
     <string name="enter_video_name_here">Введите название видео сюда</string>
     <string name="you_earn_a_notification_after_success_uploading">Вы получите оповещение при успехе</string>
-    <string name="notification_chanel_name">Выгрузка видео</string>
+    <string name="notification_chanel_name">Загрузка видео</string>
     <string name="notification_chanel_description">Показывает успешность загрузки видео</string>
     <string name="video_upload">Загрузка видео</string>
-    <string name="upload_in_process">"  Выполняется загрузка на сервер"</string>
+    <string name="upload_in_process">Выполняется загрузка</string>
     <string name="upload_complete">Выдео выгружено</string>
     <string name="wrong_pas">Неправильная  пароль</string>
     <string name="wrong_mail">Неправильная  почта</string>

@@ -1,7 +1,12 @@
 package ua.pkk.wetravel.fragments.main;
 
+import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.File;
@@ -14,23 +19,31 @@ import ua.pkk.wetravel.retrofit.UserData;
 import ua.pkk.wetravel.utils.User;
 
 public class MainFragmentViewModel extends ViewModel {
-    public void load_user_info(File fileDir) {
-
+    public void load_user_img(File fileDir) {
+        //TODO Error handling
         new Thread(
-                () -> UserAPI.INSTANCE.getRETROFIT_SERVICE().getUserData(User.getInstance().getId()).enqueue(new Callback<UserData>() {
-            @Override
-            public void onResponse(Call<UserData> call, Response<UserData> response) {
-                if (response.isSuccessful()) {
-                    User.getInstance().setName(response.body().getUserName());
-                    User.getInstance().setInfo(response.body().getUserInfo());
-                }
-            }
+                () -> {
+                    FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child("profile_img").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                User.getInstance().setImgUri(task.getResult().toString());
+                            }
+                        }
+                    });
+                    UserAPI.INSTANCE.getRETROFIT_SERVICE().getUserData(User.getInstance().getId()).enqueue(new Callback<UserData>() {
+                        @Override
+                        public void onResponse(Call<UserData> call, Response<UserData> response) {
+                            User.getInstance().setName(response.body().getUserName());
+                            User.getInstance().setInfo(response.body().getUserInfo());
+                        }
 
-            @Override
-            public void onFailure(Call<UserData> call, Throwable t) {
-                //TODO
-            }
-        })).start();
+                        @Override
+                        public void onFailure(Call<UserData> call, Throwable t) {
+
+                        }
+                    });
+                }).start();
 
         File user_img = new File(fileDir, "profile_img");
         if (user_img.length() == 0)

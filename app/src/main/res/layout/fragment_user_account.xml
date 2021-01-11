@@ -10,8 +10,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="@color/textColorPrimary"
-            android:background="@color/non_active">
+            android:background="@color/non_active"
+            android:backgroundTint="@color/textColorPrimary">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -62,9 +62,9 @@
                     android:id="@+id/textView6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primaryColor"
                     android:layout_margin="8dp"
                     android:text="@string/about_me"
+                    android:textColor="@color/primaryColor"
                     android:textSize="18sp" />
 
                 <TextView
@@ -79,10 +79,10 @@
                     android:id="@+id/textView4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/for_changing_hold_down_element"
-                    android:textColor="#8A5876"
                     android:layout_margin="8dp"
+                    android:text="@string/for_changing_hold_down_element"
                     android:textAlignment="textEnd"
+                    android:textColor="#8A5876"
                     android:textSize="14sp" />
 
             </LinearLayout>

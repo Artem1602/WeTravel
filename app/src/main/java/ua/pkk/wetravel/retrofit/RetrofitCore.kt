@@ -5,10 +5,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import retrofit2.http.*
 
 private const val BASE_URL = "https://wetravel-1591a.firebaseio.com/"
 
@@ -27,8 +24,8 @@ interface UserApiService {
     @GET("user_data/{id}.json")
     fun getUserData(@Path("id") id: String): Call<UserData>
 
-    @PUT("user_data.json")
-    fun createNewUserData(@Body data: Map<String, UserData>): Call<Map<String, UserData>>
+    @PUT("user_data/{id}.json")
+    fun createNewUserData(@Path("id") id: String, @Body data: UserData): Call<UserData>
 
     //users
     @GET("users.json")
@@ -37,8 +34,15 @@ interface UserApiService {
     @GET("users/{id}.json")
     fun getUser(@Path("id") id: String): Call<UserProperty>
 
-    @PUT("users.json")
-    fun createNewUser(@Body user: Map<String, UserProperty>): Call<Map<String, UserProperty>>
+    @PUT("users/{id}.json")
+    fun createNewUser(@Path("id") id: String, @Body user: UserProperty): Call<UserProperty>
+
+    //comments
+    @PUT("comments/{id}/{video}/{commentID}.json")
+    fun createComment(@Path("id") id: String, @Path("video") video:String, @Path("commentID") commentID:String, @Body comment:Comment):Call<Comment>
+
+    @DELETE("comments/{id}/{video}.json")
+    fun deleteAllVideoComments(@Path("id") id: String,@Path("video") video:String):Call<String>
 }
 
 object UserAPI {

@@ -43,4 +43,6 @@
     <string name="upload_video">Upload video</string>
     <string name="my_video">My video</string>
     <string name="settings">Settings</string>
+    <string name="add">add</string>
+    <string name="write_comment">Write Comment</string>
 </resources>

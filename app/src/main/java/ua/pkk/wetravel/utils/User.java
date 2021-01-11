@@ -4,6 +4,7 @@ public class User {
     private static User user;
     private String id;
     private String name;
+    private String imgUri;
 
     private String info;
 
@@ -36,7 +37,15 @@ public class User {
         return id;
     }
 
-    public static User getInstance() {
+    public String getImgUri() {
+        return imgUri;
+    }
+
+    public void setImgUri(String imgUri) {
+        this.imgUri = imgUri;
+    }
+
+    public static synchronized User getInstance() {
         if (user == null) {
             user = new User();
         }

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -23,8 +25,13 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentUserAccountBinding;
+import ua.pkk.wetravel.retrofit.UserAPI;
+import ua.pkk.wetravel.retrofit.UserData;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
@@ -109,22 +116,22 @@ public class UserAccountFragment extends Fragment {
         cancel.setOnClickListener(v13 -> dialog.dismiss());
         if (v.getId() == binding.aboutUser.getId()) {
             save.setOnClickListener(v1 -> {
-                binding.aboutUser.setText(editableData.getText());
-                dialog.dismiss();
+                if (viewModel.isDataChange.getValue()){
+                    binding.aboutUser.setText(editableData.getText());
+                    viewModel.uploadUserData(binding.userName.getText().toString(), binding.aboutUser.getText().toString());
+                    dialog.dismiss();
+                }else dialog.dismiss();
             });
         } else {
             save.setOnClickListener(v12 -> {
-                binding.userName.setText(editableData.getText());
-                dialog.dismiss();
+                if (viewModel.isDataChange.getValue()){
+                    binding.userName.setText(editableData.getText());
+                    viewModel.uploadUserData(binding.userName.getText().toString(), binding.aboutUser.getText().toString());
+                    dialog.dismiss();
+                }else dialog.dismiss();
             });
         }
         dialog.show();
     }
 
-    @Override
-    public void onStop() {
-        if (viewModel.isDataChange.getValue())
-            viewModel.uploadUserData(binding.userName.getText().toString(), binding.aboutUser.getText().toString());
-        super.onStop();
-    }
 }

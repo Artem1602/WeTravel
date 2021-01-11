@@ -34,14 +34,14 @@ public class RegisterFragmentViewModel extends ViewModel {
             public void run() {
                 HashMap map = new HashMap<String, UserProperty>();
                 map.put(id,new UserProperty(email, password));
-                UserAPI.INSTANCE.getRETROFIT_SERVICE().createNewUser(map).enqueue(new Callback() {
+                UserAPI.INSTANCE.getRETROFIT_SERVICE().createNewUser(id,new UserProperty(email, password)).enqueue(new Callback<UserProperty>() {
                     @Override
-                    public void onResponse(Call call, Response response) {
+                    public void onResponse(Call<UserProperty> call, Response<UserProperty> response) {
                         _isSuccessRegister.setValue(response.isSuccessful());
                     }
 
                     @Override
-                    public void onFailure(Call call, Throwable t) {
+                    public void onFailure(Call<UserProperty> call, Throwable t) {
                         _isSuccessRegister.setValue(false);
                     }
                 });
@@ -51,18 +51,15 @@ public class RegisterFragmentViewModel extends ViewModel {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HashMap map = new HashMap<String, UserData>();
-                map.put(id,new UserData("User", "Empty"));
-
-                UserAPI.INSTANCE.getRETROFIT_SERVICE().createNewUserData(map).enqueue(new Callback<Map<String, String>>() {
+                UserAPI.INSTANCE.getRETROFIT_SERVICE().createNewUserData(id,new UserData("User", "Empty")).enqueue(new Callback<UserData>() {
                     @Override
-                    public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-                        //TODO
+                    public void onResponse(Call<UserData> call, Response<UserData> response) {
+                        int i = 55;
                     }
 
                     @Override
-                    public void onFailure(Call<Map<String, String>> call, Throwable t) {
-
+                    public void onFailure(Call<UserData> call, Throwable t) {
+                        int i = 55;
                     }
                 });
             }

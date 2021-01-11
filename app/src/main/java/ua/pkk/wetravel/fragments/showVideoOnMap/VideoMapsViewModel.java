@@ -1,14 +1,18 @@
 package ua.pkk.wetravel.fragments.showVideoOnMap;
 
+import android.net.Uri;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageMetadata;
@@ -39,12 +43,17 @@ public class VideoMapsViewModel extends ViewModel {
                                 String[] meta = storageMetadata.getCustomMetadata("position").split("/");
                                 LatLng latLng = new LatLng(Double.parseDouble(meta[0]), Double.parseDouble(meta[1]));
                                 MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(reference.getName());
+                                reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        _markers.postValue(new Pair<>(markerOptions,
+                                                new Video(task.getResult(),
+                                                        reference.getName()
+                                                        , storageMetadata.getCustomMetadata("uploadingTime")
+                                                        , storageMetadata.getCustomMetadata("user_id"))));
+                                    }
+                                });
 
-                                _markers.postValue(new Pair<>(markerOptions,
-                                        new Video(reference,
-                                                reference.getName()
-                                                , storageMetadata.getCustomMetadata("uploadingTime")
-                                                , storageMetadata.getCustomMetadata("user_id"))));
                             }
                         });
                     }

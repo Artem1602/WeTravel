@@ -1,13 +1,10 @@
 package ua.pkk.wetravel.fragments.userAccount;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,24 +20,23 @@ public class UserAccountViewModel extends ViewModel {
     public void uploadUserData(String name, String info) {
         new Thread(() -> {
             HashMap<String, UserData> map = new HashMap<>();
-            map.put(User.getInstance().getId(),new UserData(name,info));
+            map.put(User.getInstance().getId(), new UserData(name, info));
 
-            UserAPI.INSTANCE.getRETROFIT_SERVICE().createNewUserData(map).enqueue(new Callback<Map<String, UserData>>() {
+            UserAPI.INSTANCE.getRETROFIT_SERVICE().createNewUserData(User.getInstance().getId(), new UserData(name, info)).enqueue(new Callback<UserData>() {
                 @Override
-                public void onResponse(Call<Map<String, UserData>> call, Response<Map<String, UserData>> response) {
-                    Log.d("TAG",response.body().toString());
+                public void onResponse(Call<UserData> call, Response<UserData> response) {
+                    //TODO
                 }
 
                 @Override
-                public void onFailure(Call<Map<String, UserData>> call, Throwable t) {
-                    Log.d("TAG",t.getMessage());
+                public void onFailure(Call<UserData> call, Throwable t) {
+
                 }
             });
         }).start();
-
     }
 
-    public void onDataChange(){
+    public void onDataChange() {
         _isDataChange.setValue(true);
     }
 }
