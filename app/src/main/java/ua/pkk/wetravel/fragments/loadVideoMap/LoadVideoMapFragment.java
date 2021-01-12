@@ -1,4 +1,4 @@
-package ua.pkk.wetravel.fragments.loadVideo;
+package ua.pkk.wetravel.fragments.loadVideoMap;
 
 import android.Manifest;
 import android.app.NotificationChannel;
@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +22,8 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
@@ -47,11 +49,12 @@ import ua.pkk.wetravel.databinding.FragmentLoadVideoMapsBinding;
 import ua.pkk.wetravel.utils.User;
 
 
-public class LoadVideoMapsFragment extends Fragment {
+public class LoadVideoMapFragment extends Fragment {
     private FragmentLoadVideoMapsBinding binding;
     private LatLng marker;
     public int VIDEO_FILE_REQUEST_CODE = 1;
-    private EditText loadVideoName;
+    private TextInputEditText loadVideoName;
+    private LoadVideoMapViewModel viewModel;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         private GoogleMap map;
@@ -94,6 +97,7 @@ public class LoadVideoMapsFragment extends Fragment {
         binding.addVideo.setOnClickListener(this::onAddVideo);
         checkMapPermissions();
         checkVideoPermissions();
+        viewModel = new ViewModelProvider(this).get(LoadVideoMapViewModel.class);
         return binding.getRoot();
     }
 
@@ -153,7 +157,6 @@ public class LoadVideoMapsFragment extends Fragment {
         }
     }
 
-    //TODO don`t allow load video with same names !!! Priority -> MAX
     private void onAddVideo(View view) {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getContext(), getString(R.string.storage_permission), Toast.LENGTH_LONG).show();
@@ -172,9 +175,21 @@ public class LoadVideoMapsFragment extends Fragment {
 
         Button selectVideoButton = builderView.findViewById(R.id.selectVideo_btn);
         selectVideoButton.setOnClickListener(v -> {
-            startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*"), "Choose Video"), VIDEO_FILE_REQUEST_CODE);
-            alertDialog.dismiss();
+            viewModel.checkNames(loadVideoName.getText().toString());
         });
+
+        viewModel.hasSameNames.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    loadVideoName.setError(getString(R.string.enter_another_name));
+                } else {
+                    startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*"), "Choose Video"), VIDEO_FILE_REQUEST_CODE);
+                    alertDialog.dismiss();
+                }
+            }
+        });
+
         loadVideoName = builderView.findViewById(R.id.videoName);
         alertDialog.show();
     }

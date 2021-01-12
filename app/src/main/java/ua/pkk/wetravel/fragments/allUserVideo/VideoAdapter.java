@@ -1,10 +1,8 @@
 package ua.pkk.wetravel.fragments.allUserVideo;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -23,17 +21,19 @@ import ua.pkk.wetravel.utils.Video;
 import static ua.pkk.wetravel.utils.Video.DIFF_CALLBACK;
 
 public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
-    private static Context context;
+    private final Context context;
 
     protected VideoAdapter(Context context) {
         super(DIFF_CALLBACK);
-        VideoAdapter.context = context;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public VideoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return VideoHolder.from(parent);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        ItemVideoBinding itemView = ItemVideoBinding.inflate(inflater, parent, false);
+        return new VideoHolder(itemView);
     }
 
     @Override
@@ -42,12 +42,12 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
         holder.bind(video);
     }
 
-    static class VideoHolder extends RecyclerView.ViewHolder {
-        @SuppressLint("StaticFieldLeak")
-        private static ItemVideoBinding binding;
+    class VideoHolder extends RecyclerView.ViewHolder {
+        private final ItemVideoBinding binding;
 
         public VideoHolder(@NonNull ItemVideoBinding itemView) {
             super(itemView.getRoot());
+            this.binding = itemView;
             itemView.getRoot().setOnClickListener(v ->
                     Navigation.findNavController((Activity) itemView.getRoot().getContext(), R.id.nav_host_fragment)
                             .navigate(ShowVideoFragmentDirections.actionShowVideoFragmentToVideoFragment(itemView.getVideoItem(), Keys.VIDEO_FROM_ADAPTER.getValue())));
@@ -61,12 +61,6 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
                     .into(binding.imageItem);
 
             binding.executePendingBindings();
-        }
-
-        public static VideoHolder from(ViewGroup parent) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            binding = ItemVideoBinding.inflate(inflater, parent, false);
-            return new VideoHolder(binding);
         }
     }
 }

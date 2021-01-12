@@ -38,6 +38,9 @@ interface UserApiService {
     fun createNewUser(@Path("id") id: String, @Body user: UserProperty): Call<UserProperty>
 
     //comments
+    @GET("comments/{id}/{video}.json")
+    fun getAllVideoComments(@Path("id") id: String, @Path("video") video:String):Call<Map<String,Comment>>
+
     @PUT("comments/{id}/{video}/{commentID}.json")
     fun createComment(@Path("id") id: String, @Path("video") video:String, @Path("commentID") commentID:String, @Body comment:Comment):Call<Comment>
 

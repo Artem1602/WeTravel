@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -28,7 +31,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -54,6 +60,9 @@ public class VideoFragment extends Fragment {
 
     private SimpleExoPlayer player;
     private PlayerView playerView;
+
+    private CommentAdapter adapter;
+    private LinkedHashSet<Comment> comments;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,6 +96,23 @@ public class VideoFragment extends Fragment {
         });
         //TODO Deprecated
         binding.getRoot().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+        adapter = new CommentAdapter(getContext());
+        RecyclerView recyclerView = binding.commentsRv;
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        comments = new LinkedHashSet<>();
+
+        viewModel.comments.observe(getViewLifecycleOwner(), new Observer<Comment>() {
+            @Override
+            public void onChanged(Comment comment) {
+                comments.add(comment);
+                List<Comment> items= new ArrayList<>(comments);
+                adapter.submitList(items);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        viewModel.loadComments(video.getUpload_user_id(),video.getName());
         return binding.getRoot();
     }
 
@@ -170,12 +196,12 @@ public class VideoFragment extends Fragment {
                 User.getInstance().getName()
         );
 
-        //owner id -> video name -> comment id:coment body
-
+        //owner id -> video name -> comment id:comment body
         new Thread(() -> {
             UserAPI.INSTANCE.getRETROFIT_SERVICE().createComment(video.getUpload_user_id(), video.getName(), UUID.randomUUID().toString(), commentBody).enqueue(new Callback<Comment>() {
                 @Override
                 public void onResponse(Call<Comment> call, Response<Comment> response) {
+                    viewModel.loadComments(video.getUpload_user_id(),video.getName());
                     //TODO
                 }
 

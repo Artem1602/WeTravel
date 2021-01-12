@@ -52,6 +52,7 @@ public class UserAccountFragment extends Fragment {
         return binding.getRoot();
     }
 
+    //TODO Use Handler to wait name and info or use if(no info) -> ask to server Priority -> Middle
     private void initUI(UserAccountFragmentArgs args) {
         if (args.getUserImg() != null)
             binding.userImg.setImageBitmap(BitmapFactory.decodeFile(args.getUserImg()));

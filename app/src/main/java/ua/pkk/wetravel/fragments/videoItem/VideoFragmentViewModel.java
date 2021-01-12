@@ -4,6 +4,7 @@ package ua.pkk.wetravel.fragments.videoItem;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -19,10 +20,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
+import kotlin._Assertions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ua.pkk.wetravel.retrofit.Comment;
 import ua.pkk.wetravel.retrofit.UserAPI;
 import ua.pkk.wetravel.utils.User;
 import ua.pkk.wetravel.utils.Video;
@@ -33,10 +38,15 @@ public class VideoFragmentViewModel extends ViewModel {
     private MutableLiveData<Boolean> _successDelete = new MutableLiveData<>();
     public LiveData<Boolean> successDelete = _successDelete;
 
+    private MutableLiveData<Comment> _comments = new MutableLiveData<>();
+    public LiveData<Comment> comments = _comments;
+
     private SimpleExoPlayer player;
 
     public long previousDuration;
     private Uri videoUri;
+
+
 
     public VideoFragmentViewModel(Video video, SimpleExoPlayer player) {
         this.video = video;
@@ -107,5 +117,29 @@ public class VideoFragmentViewModel extends ViewModel {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    public void loadComments(String id, String videoName){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                UserAPI.INSTANCE.getRETROFIT_SERVICE().getAllVideoComments(id,videoName).enqueue(new Callback<Map<String, Comment>>() {
+                    @Override
+                    public void onResponse(Call<Map<String, Comment>> call, Response<Map<String, Comment>> response) {
+                        if (response.isSuccessful()){
+                            for (Map.Entry<String, Comment> i : response.body().entrySet()){
+                                _comments.setValue(i.getValue());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Map<String, Comment>> call, Throwable t) {
+                        Log.d("TAG",t.getMessage());
+                    }
+                });
+            }
+        }).start();
+
     }
 }

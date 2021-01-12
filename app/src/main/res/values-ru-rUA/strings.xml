@@ -44,4 +44,7 @@
     <string name="show_video_on_map">Видео на карте</string>
     <string name="upload_video">Загрузка видео</string>
     <string name="settings">Настройки</string>
+    <string name="add">Добавить</string>
+    <string name="write_comment">Написать коментарий</string>
+    <string name="enter_another_name">Введите другое название</string>
 </resources>

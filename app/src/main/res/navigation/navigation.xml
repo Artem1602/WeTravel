@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/loadVideoMapsFragment"
-        android:name="ua.pkk.wetravel.fragments.loadVideo.LoadVideoMapsFragment"
+        android:name="ua.pkk.wetravel.fragments.loadVideoMap.LoadVideoMapFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_load_video_maps" >
         <action
