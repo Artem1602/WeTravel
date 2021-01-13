@@ -1,8 +1,11 @@
 package ua.pkk.wetravel.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,6 +13,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.firebase.storage.StorageReference;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Video implements Parcelable {
@@ -18,6 +22,7 @@ public class Video implements Parcelable {
     private String uploadingTime;
     private String upload_user_id;
     private String uri;
+    private Drawable thumbNail;
 
     public Video(Uri reference, String name, String uploadingTime, String upload_user_id) {
         this.reference = reference;
@@ -54,6 +59,14 @@ public class Video implements Parcelable {
         this.uri = uri;
     }
 
+    public Drawable getThumbNail() {
+        return thumbNail;
+    }
+
+    public void setThumbNail(Drawable thumbNail) {
+        this.thumbNail = thumbNail;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(name);
@@ -64,7 +77,11 @@ public class Video implements Parcelable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Video buf = (Video) obj;
-        return Objects.equals(name, buf.name) && Objects.equals(reference, buf.reference) && Objects.equals(uploadingTime, buf.uploadingTime);  //TODO more fields
+        return Objects.equals(name, buf.name)
+                && Objects.equals(reference, buf.reference)
+                && Objects.equals(uploadingTime, buf.uploadingTime)
+                && Objects.equals(upload_user_id,buf.upload_user_id)
+                && Objects.equals(uri,buf.uri);  //TODO more fields
     }
 
 

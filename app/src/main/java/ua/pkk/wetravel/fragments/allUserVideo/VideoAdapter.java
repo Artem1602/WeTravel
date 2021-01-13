@@ -2,8 +2,10 @@ package ua.pkk.wetravel.fragments.allUserVideo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
@@ -48,18 +50,16 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
         public VideoHolder(@NonNull ItemVideoBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
-            itemView.getRoot().setOnClickListener(v ->
-                    Navigation.findNavController((Activity) itemView.getRoot().getContext(), R.id.nav_host_fragment)
-                            .navigate(ShowVideoFragmentDirections.actionShowVideoFragmentToVideoFragment(itemView.getVideoItem(), Keys.VIDEO_FROM_ADAPTER.getValue())));
+            itemView.getRoot().setOnClickListener(v -> {
+                        Navigation.findNavController((Activity) itemView.getRoot().getContext(), R.id.nav_host_fragment).navigate(ShowVideoFragmentDirections.actionShowVideoFragmentToVideoFragment(itemView.getVideoItem(), Keys.VIDEO_FROM_ADAPTER.getValue()));
+                    }
+            );
+
         }
 
         public void bind(Video item) {
             binding.setVideoItem(item);
-            Glide.with(context)
-                    .load(item.getUri())
-                    .apply(new RequestOptions().placeholder(R.drawable.progress_bar_animation).error(R.drawable.video_editor))
-                    .into(binding.imageItem);
-
+            binding.imageItem.setImageDrawable(item.getThumbNail());
             binding.executePendingBindings();
         }
     }

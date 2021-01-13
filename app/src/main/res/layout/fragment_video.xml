@@ -165,13 +165,14 @@
                         android:ems="10"
                         android:hint="@string/write_comment"
                         android:textColorHint="#957D8B"
+                        android:textColor="@color/primaryColor"
                         android:inputType="textPersonName"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/add_comment_btn"
                         app:layout_constraintStart_toEndOf="@+id/user_img"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/user_img"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -182,6 +183,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:srcCompat="@tools:sample/avatars" />
+
 
                     <Button
                         android:id="@+id/add_comment_btn"

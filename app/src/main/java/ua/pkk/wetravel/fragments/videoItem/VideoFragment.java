@@ -128,7 +128,7 @@ public class VideoFragment extends Fragment {
     }
 
     private void closeFragment() {
-        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections.actionVideoFragmentToMainFragment());
+//        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections);
     }
 
 

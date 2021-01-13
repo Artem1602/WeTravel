@@ -3,6 +3,7 @@ package ua.pkk.wetravel.fragments.loadVideoMap;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -24,6 +25,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,6 +35,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -115,6 +119,7 @@ public class LoadVideoMapFragment extends Fragment {
         createNotificationChannel(CHANNEL_ID);
 
         new Thread(() -> {
+            Context context = getContext();
             builder.setProgress(100, 0, false);
             notificationManager.notify(NOTIFICATION_ID, builder.build());
 
@@ -133,7 +138,7 @@ public class LoadVideoMapFragment extends Fragment {
                 public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
                     if (snapshot.getBytesTransferred() == snapshot.getTotalByteCount()) {
                         builder.setProgress(0, 0, false);
-                        builder.setContentText(getString(R.string.upload_complete));
+                        builder.setContentText(context.getString(R.string.upload_complete));
                         notificationManager.notify(NOTIFICATION_ID, builder.build());
                         return;
                     }
@@ -143,6 +148,9 @@ public class LoadVideoMapFragment extends Fragment {
                 }
             });
         }).start();
+
+        //Navigate to MainFragment
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoadVideoMapFragmentDirections.actionLoadVideoMapsFragmentToMainFragment());
     }
 
     private void createNotificationChannel(String CHANNEL_ID) {
@@ -159,7 +167,7 @@ public class LoadVideoMapFragment extends Fragment {
 
     private void onAddVideo(View view) {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getContext(), getString(R.string.storage_permission), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getContext().getString(R.string.storage_permission), Toast.LENGTH_LONG).show();
             checkVideoPermissions();
             return;
         }
@@ -182,7 +190,7 @@ public class LoadVideoMapFragment extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    loadVideoName.setError(getString(R.string.enter_another_name));
+                    loadVideoName.setError(getContext().getString(R.string.enter_another_name));
                 } else {
                     startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*"), "Choose Video"), VIDEO_FILE_REQUEST_CODE);
                     alertDialog.dismiss();

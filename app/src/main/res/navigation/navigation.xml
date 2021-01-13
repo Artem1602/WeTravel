@@ -83,9 +83,9 @@
             android:id="@+id/action_videoFragment_to_userAccountFragment"
             app:destination="@id/userAccountFragment" />
         <action
-            android:id="@+id/action_videoFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
+            android:id="@+id/action_videoFragment_to_showVideoFragment"
+            app:destination="@id/showVideoFragment"
+            app:popUpTo="@id/showVideoFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment

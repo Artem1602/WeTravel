@@ -10,15 +10,6 @@
         android:background="@color/textColorPrimary"
         tools:context=".fragments.allUserVideo.ShowVideoFragment">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:text="@string/your_video"
-            android:textAlignment="center"
-            android:textColor="@color/primaryColor"
-            android:textSize="50sp" />
-
         <ProgressBar
             android:id="@+id/showVideos_pb"
             android:indeterminateDrawable="@drawable/progress_bar_animation"

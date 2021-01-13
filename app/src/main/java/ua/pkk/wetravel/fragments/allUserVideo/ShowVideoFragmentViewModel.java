@@ -1,6 +1,7 @@
 package ua.pkk.wetravel.fragments.allUserVideo;
 
 import android.net.Uri;
+import android.util.Log;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -22,8 +23,8 @@ import ua.pkk.wetravel.utils.User;
 import ua.pkk.wetravel.utils.Video;
 
 public class ShowVideoFragmentViewModel extends ViewModel {
-    private MutableLiveData<List<Video>> _videos = new MutableLiveData<>();
-    public LiveData<List<Video>> videos = _videos;
+    private MutableLiveData<Video> _videos = new MutableLiveData<>();
+    public LiveData<Video> videos = _videos;
 
     public void loadVideo() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -34,7 +35,6 @@ public class ShowVideoFragmentViewModel extends ViewModel {
     }
 
     private void addVideo(List<StorageReference> items) {
-        ArrayList<Video> videos = new ArrayList<>();
         for (StorageReference reference : items){
             if (reference.getName().equals("profile_img")) continue;
             reference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
@@ -45,14 +45,18 @@ public class ShowVideoFragmentViewModel extends ViewModel {
                         public void onComplete(@NonNull Task<Uri> task) {
                             Video video = new Video(task.getResult(),reference.getName(),storageMetadata.getCustomMetadata("uploadingTime"),User.getInstance().getId());
                             video.setUri(task.getResult().toString());
-                            videos.add(video);
-                            _videos.setValue(videos);
+                            Log.d("TAG",video.getName());
+                            _videos.setValue(video);
                         }
                     });
 
                 }
             });
         }
+    }
+
+    public void cleanVideo(){
+        _videos.setValue(null);
     }
 
 }

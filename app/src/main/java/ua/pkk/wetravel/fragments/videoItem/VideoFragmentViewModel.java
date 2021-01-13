@@ -20,10 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
-import kotlin._Assertions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,7 +43,6 @@ public class VideoFragmentViewModel extends ViewModel {
 
     public long previousDuration;
     private Uri videoUri;
-
 
 
     public VideoFragmentViewModel(Video video, SimpleExoPlayer player) {
@@ -74,7 +71,7 @@ public class VideoFragmentViewModel extends ViewModel {
     public void deleteVideo() {
         FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child(video.getName()).delete();
         new Thread(() -> {
-            UserAPI.INSTANCE.getRETROFIT_SERVICE().deleteAllVideoComments(User.getInstance().getId(),video.getName()).enqueue(new Callback<String>() {
+            UserAPI.INSTANCE.getRETROFIT_SERVICE().deleteAllVideoComments(User.getInstance().getId(), video.getName()).enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     //TODO
@@ -89,7 +86,7 @@ public class VideoFragmentViewModel extends ViewModel {
         onDelete();
     }
 
-     public void renameVideo() {
+    public void renameVideo() {
         //TODO Rename
     }
 
@@ -119,15 +116,15 @@ public class VideoFragmentViewModel extends ViewModel {
         }).start();
     }
 
-    public void loadComments(String id, String videoName){
+    public void loadComments(String id, String videoName) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UserAPI.INSTANCE.getRETROFIT_SERVICE().getAllVideoComments(id,videoName).enqueue(new Callback<Map<String, Comment>>() {
+                UserAPI.INSTANCE.getRETROFIT_SERVICE().getAllVideoComments(id, videoName).enqueue(new Callback<Map<String, Comment>>() {
                     @Override
                     public void onResponse(Call<Map<String, Comment>> call, Response<Map<String, Comment>> response) {
-                        if (response.isSuccessful()){
-                            for (Map.Entry<String, Comment> i : response.body().entrySet()){
+                        if (response.isSuccessful() && response.body() != null) {
+                            for (Map.Entry<String, Comment> i : response.body().entrySet()) {
                                 _comments.setValue(i.getValue());
                             }
                         }
@@ -135,7 +132,7 @@ public class VideoFragmentViewModel extends ViewModel {
 
                     @Override
                     public void onFailure(Call<Map<String, Comment>> call, Throwable t) {
-                        Log.d("TAG",t.getMessage());
+                        Log.d("TAG", t.getMessage());
                     }
                 });
             }
