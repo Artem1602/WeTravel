@@ -7,6 +7,7 @@ public class User {
     private String imgUri;
 
     private String info;
+    private String status;
 
     private User() {
         name = "User";
@@ -43,6 +44,14 @@ public class User {
 
     public void setImgUri(String imgUri) {
         this.imgUri = imgUri;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public static synchronized User getInstance() {

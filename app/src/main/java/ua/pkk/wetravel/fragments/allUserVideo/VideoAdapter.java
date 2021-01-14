@@ -23,11 +23,9 @@ import ua.pkk.wetravel.utils.Video;
 import static ua.pkk.wetravel.utils.Video.DIFF_CALLBACK;
 
 public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
-    private final Context context;
 
-    protected VideoAdapter(Context context) {
+    protected VideoAdapter() {
         super(DIFF_CALLBACK);
-        this.context = context;
     }
 
     @NonNull

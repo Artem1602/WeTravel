@@ -51,10 +51,9 @@ public class RegisterFragmentViewModel extends ViewModel {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UserAPI.INSTANCE.getRETROFIT_SERVICE().createNewUserData(id,new UserData("User", "Empty")).enqueue(new Callback<UserData>() {
+                UserAPI.INSTANCE.getRETROFIT_SERVICE().createNewUserData(id,new UserData("User", "Empty","no status")).enqueue(new Callback<UserData>() {
                     @Override
                     public void onResponse(Call<UserData> call, Response<UserData> response) {
-                        int i = 55;
                     }
 
                     @Override

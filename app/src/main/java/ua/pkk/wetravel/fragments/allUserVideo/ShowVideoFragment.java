@@ -44,7 +44,7 @@ public class ShowVideoFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ShowVideoFragmentViewModel.class);
         viewModel.cleanVideo();
 
-        adapter = new VideoAdapter(getContext());
+        adapter = new VideoAdapter();
 
         RecyclerView recyclerView = binding.videos;
         recyclerView.setAdapter(adapter);

@@ -57,6 +57,7 @@ public class VideoFragment extends Fragment {
 
     private String name;
     private String info;
+    private String status;
 
     private SimpleExoPlayer player;
     private PlayerView playerView;
@@ -107,12 +108,12 @@ public class VideoFragment extends Fragment {
             @Override
             public void onChanged(Comment comment) {
                 comments.add(comment);
-                List<Comment> items= new ArrayList<>(comments);
+                List<Comment> items = new ArrayList<>(comments);
                 adapter.submitList(items);
                 adapter.notifyDataSetChanged();
             }
         });
-        viewModel.loadComments(video.getUpload_user_id(),video.getName());
+        viewModel.loadComments(video.getUpload_user_id(), video.getName());
         return binding.getRoot();
     }
 
@@ -145,7 +146,7 @@ public class VideoFragment extends Fragment {
         //TODO refactor it
         File file = new File(getContext().getFilesDir(), "temp_img");
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections
-                .actionVideoFragmentToUserAccountFragment(file.getAbsolutePath(), name, info, Keys.LOADER_ACCOUNT.getValue()));
+                .actionVideoFragmentToUserAccountFragment(file.getAbsolutePath(), name, info, status, Keys.LOADER_ACCOUNT.getValue()));
     }
 
     private void loadUserData() {
@@ -174,6 +175,7 @@ public class VideoFragment extends Fragment {
                         if (response.isSuccessful()) {
                             name = response.body().getUserName();
                             info = response.body().getUserInfo();
+                            status = response.body().getStatus();
                             binding.userName.setText(name);
                         }
                     }
@@ -201,7 +203,7 @@ public class VideoFragment extends Fragment {
             UserAPI.INSTANCE.getRETROFIT_SERVICE().createComment(video.getUpload_user_id(), video.getName(), UUID.randomUUID().toString(), commentBody).enqueue(new Callback<Comment>() {
                 @Override
                 public void onResponse(Call<Comment> call, Response<Comment> response) {
-                    viewModel.loadComments(video.getUpload_user_id(),video.getName());
+                    viewModel.loadComments(video.getUpload_user_id(), video.getName());
                     //TODO
                 }
 

@@ -25,17 +25,16 @@
         android:layout_marginEnd="16dp"
         android:hint="@string/enter_video_name_here"
         android:textColorHint="@color/primaryColor"
-        app:boxStrokeColor="@color/primaryDarkColor">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/primaryColor">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/videoName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/textColorPrimary"
+            android:layout_height="match_parent"
             android:fontFamily="@font/rubik"
             android:lines="1"
-            android:textColor="@color/primaryDarkColor"
-
+            android:textColor="@color/primaryColor"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -49,8 +48,8 @@
         android:fontFamily="@font/rubik"
         android:text="@string/you_earn_a_notification_after_success_uploading"
         android:textAlignment="center"
-        android:textColor="@color/primaryColor"
-        android:textSize="20sp" />
+        android:textColor="@color/non_active"
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/selectVideo_btn"
