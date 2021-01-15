@@ -1,5 +1,6 @@
 package ua.pkk.wetravel.fragments.showVideoOnMap;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -22,14 +24,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import ua.pkk.wetravel.R;
+import ua.pkk.wetravel.databinding.FragmentVideoMapsBinding;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.Video;
 
 public class VideoMapsFragment extends Fragment {
     private VideoMapsViewModel viewModel;
     private GoogleMap map;
-
+    private FragmentVideoMapsBinding binding;
+    private ArrayList<Pair<MarkerOptions, Video>> videos;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -45,28 +52,81 @@ public class VideoMapsFragment extends Fragment {
         }
     };
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_video_maps, container, false);
+        viewModel = new ViewModelProvider(this).get(VideoMapsViewModel.class);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_video_maps, container, false);
+        videos = new ArrayList<>();
+
+        viewModel.markers.observe(getViewLifecycleOwner(), markerOptionsVideoPair -> {
+            if (map == null) return;
+            binding.mapLoadPb.setVisibility(View.GONE);
+            binding.mapLoadTv.setVisibility(View.GONE);
+            setMarkers(markerOptionsVideoPair);
+            videos.add(markerOptionsVideoPair);
+        });
+        viewModel.getMarkers();
+        initSearchLayout();
+        return binding.getRoot();
+    }
+
+    private void initSearchLayout() {
+        //TODO AtomicBoolean
+        AtomicBoolean isSearchLayoutOnScreen = new AtomicBoolean(false);
+        binding.searchFab.animate().setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (isSearchLayoutOnScreen.get()) binding.searchFab.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        binding.searchFab.setOnClickListener(v -> {
+            binding.filterLayout.setVisibility(View.VISIBLE);
+            binding.filterLayout.animate().translationY(binding.filterLayout.getHeight() * -1).setDuration(500);
+            isSearchLayoutOnScreen.set(true);
+            binding.searchFab.animate().scaleX(0).scaleY(0).setDuration(500);
+
+        });
+        binding.closeFilterBtn.setOnClickListener(v -> {
+            binding.searchFab.setVisibility(View.VISIBLE);
+            binding.filterLayout.animate().translationY(binding.filterLayout.getHeight()).setDuration(500);
+            isSearchLayoutOnScreen.set(false);
+            binding.searchFab.animate().scaleY(1).scaleX(1).setDuration(500);
+        });
+        //TEST
+        binding.testBtn.setOnClickListener(v -> {
+            for (Pair<MarkerOptions, Video> i : videos) {
+                if (i.second.getName().equals(binding.testEd.getText().toString())) {
+                    map.moveCamera(CameraUpdateFactory.newLatLng(i.first.getPosition()));
+                }
+            }
+        });
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(VideoMapsViewModel.class);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
-        viewModel.markers.observe(getViewLifecycleOwner(), markerOptionsVideoPair -> {
-            if (map != null) {
-                view.findViewById(R.id.map_load_pb).setVisibility(View.GONE);
-                view.findViewById(R.id.map_load_tv).setVisibility(View.GONE);
-                setMarkers(markerOptionsVideoPair);
-            }
-        });
-        viewModel.getMarkers();
     }
 
     private void setMarkers(Pair<MarkerOptions, Video> markerVideoHashMap) {

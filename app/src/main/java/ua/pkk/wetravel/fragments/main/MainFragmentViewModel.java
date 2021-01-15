@@ -1,6 +1,7 @@
 package ua.pkk.wetravel.fragments.main;
 
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import ua.pkk.wetravel.retrofit.UserData;
 import ua.pkk.wetravel.utils.User;
 
 public class MainFragmentViewModel extends ViewModel {
+
     public void load_user_img(File fileDir) {
         //TODO Error handling
         new Thread(() -> {

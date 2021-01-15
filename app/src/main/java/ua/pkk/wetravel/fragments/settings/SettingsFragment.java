@@ -19,21 +19,22 @@ import ua.pkk.wetravel.utils.User;
 
 public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_settings,container,false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
         binding.logout.setOnClickListener(v -> onLogOut());
         return binding.getRoot();
     }
 
-    private void onLogOut(){
-          SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+    private void onLogOut() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("userID", "");
         editor.apply();
         File user_img = new File(getContext().getFilesDir(), "profile_img");
         user_img.delete();
         User.getInstance().cleanData();
-        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(SettingsFragmentDirections.actionSettingsFragmentToLoginPageFragment());
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(SettingsFragmentDirections.actionSettingsFragmentToLoginPageFragment());
     }
 }
