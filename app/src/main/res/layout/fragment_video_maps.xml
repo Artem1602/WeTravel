@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".fragments.showVideoOnMap.VideoMapsFragment"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="16dp" />
+            tools:layout_editor_absoluteX="-87dp"
+            tools:layout_editor_absoluteY="79dp" />
 
         <ProgressBar
             android:id="@+id/map_load_pb"
@@ -46,12 +46,14 @@
             android:id="@+id/search_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:backgroundTint="@color/primaryColor"
+            app:borderWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_search" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_search_24px"
+            app:tint="@color/textColorPrimary" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/filter_layout"
@@ -103,7 +105,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:strokeColor="@color/primaryColor" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

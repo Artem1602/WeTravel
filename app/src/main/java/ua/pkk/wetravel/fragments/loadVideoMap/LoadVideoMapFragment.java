@@ -1,6 +1,7 @@
 package ua.pkk.wetravel.fragments.loadVideoMap;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -11,12 +12,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -25,7 +24,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,9 +32,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
@@ -52,13 +47,14 @@ import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentLoadVideoMapsBinding;
 import ua.pkk.wetravel.utils.User;
 
-
+//TODO Fix problem with keyboard Priority -> CRITICAL
 public class LoadVideoMapFragment extends Fragment {
     private FragmentLoadVideoMapsBinding binding;
     private LatLng marker;
     public int VIDEO_FILE_REQUEST_CODE = 1;
-    private TextInputEditText loadVideoName;
+    private String loadVideoName;
     private LoadVideoMapViewModel viewModel;
+    private boolean is_add_video_show;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         private GoogleMap map;
@@ -98,10 +94,20 @@ public class LoadVideoMapFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_load_video_maps, container, false);
-        binding.addVideo.setOnClickListener(this::onAddVideo);
+        binding.addVideoFab.setOnClickListener(this::onAddVideoFab);
+        binding.selectVideoBtn.setOnClickListener(this::onSelectVideo);
         checkMapPermissions();
         checkVideoPermissions();
         viewModel = new ViewModelProvider(this).get(LoadVideoMapViewModel.class);
+        is_add_video_show = false;
+        //TODO Put in another place
+        binding.cancelBtn.setOnClickListener(v -> {
+            is_add_video_show = false;
+            binding.TEST.animate().scaleX(0).scaleY(0).setDuration(800);
+            binding.addVideoLayout.animate().y(binding.loadVideoMapLayout.getHeight()).setDuration(800);
+            binding.addVideoFab.setVisibility(View.VISIBLE);
+            binding.addVideoFab.animate().scaleX(1).scaleY(1).setDuration(1000);
+        });
         return binding.getRoot();
     }
 
@@ -165,7 +171,7 @@ public class LoadVideoMapFragment extends Fragment {
         }
     }
 
-    private void onAddVideo(View view) {
+    private void onAddVideoFab(View view) {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getContext(), getContext().getString(R.string.storage_permission), Toast.LENGTH_LONG).show();
             checkVideoPermissions();
@@ -175,31 +181,48 @@ public class LoadVideoMapFragment extends Fragment {
             Toast.makeText(getContext(), getContext().getText(R.string.addMarker), Toast.LENGTH_LONG).show();
             return;
         }
-        LayoutInflater inflater = getLayoutInflater();
-        View builderView = inflater.inflate(R.layout.dialog_custom_add_video, null);
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
-        builder.setView(builderView);
-        AlertDialog alertDialog = builder.create();
+        //TODO Replace it
+        binding.addVideoFab.animate().setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
 
-        Button selectVideoButton = builderView.findViewById(R.id.selectVideo_btn);
-        selectVideoButton.setOnClickListener(v -> {
-            viewModel.checkNames(loadVideoName.getText().toString());
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (is_add_video_show) binding.addVideoFab.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
         });
+        if (!is_add_video_show) {
+            is_add_video_show = true;
+            binding.TEST.animate().scaleX(30).scaleY(30).setDuration(800);
+            binding.addVideoFab.animate().scaleX(0).scaleY(0).setDuration(1000);
+            binding.addVideoLayout.animate().y(0).setDuration(800);
+        }
+    }
 
+    public void onSelectVideo(View v) {
+        viewModel.checkNames(binding.videoName.getText().toString());
         viewModel.hasSameNames.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    loadVideoName.setError(getContext().getString(R.string.enter_another_name));
+                    binding.videoName.setError(getContext().getString(R.string.enter_another_name));
                 } else {
                     startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*"), "Choose Video"), VIDEO_FILE_REQUEST_CODE);
-                    alertDialog.dismiss();
                 }
             }
         });
-
-        loadVideoName = builderView.findViewById(R.id.videoName);
-        alertDialog.show();
     }
 
     @Override
@@ -207,7 +230,7 @@ public class LoadVideoMapFragment extends Fragment {
         if (requestCode != 1 || marker == null) {
             super.onActivityResult(requestCode, resultCode, data);
         }
-        showNotification(data, marker, loadVideoName.getText().toString());
+        showNotification(data, marker, binding.videoName.getText().toString());
         super.onActivityResult(requestCode, resultCode, data);
     }
 

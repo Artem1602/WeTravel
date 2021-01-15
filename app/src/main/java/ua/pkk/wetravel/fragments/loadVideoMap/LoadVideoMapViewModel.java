@@ -22,7 +22,6 @@ public class LoadVideoMapViewModel extends ViewModel {
         storage.getReference().child(User.getInstance().getId()).listAll().addOnCompleteListener(new OnCompleteListener<ListResult>() {
             @Override
             public void onComplete(@NonNull Task<ListResult> task) {
-
                 for (StorageReference i : task.getResult().getItems()) {
                     if (i.getName().equals(video_name)) {
                         _hasSameNames.setValue(true);
@@ -30,8 +29,6 @@ public class LoadVideoMapViewModel extends ViewModel {
                     }
                 }
                 _hasSameNames.setValue(false);
-
-
             }
         });
 
