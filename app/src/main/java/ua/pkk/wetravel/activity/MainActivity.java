@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,17 +14,10 @@ import androidx.navigation.Navigation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import ua.pkk.wetravel.R;
-import ua.pkk.wetravel.retrofit.UserAPI;
-import ua.pkk.wetravel.retrofit.UserData;
-import ua.pkk.wetravel.retrofit.UserProperty;
 import ua.pkk.wetravel.utils.User;
 
+//TODO Fix problems with screen orientation Priority -> HIGH
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
@@ -31,10 +25,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         checkSharedPreferences(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-
     }
 
     private void checkSharedPreferences(Bundle savedInstanceState) {
@@ -58,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-
-
-
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
             signInAnonymously();

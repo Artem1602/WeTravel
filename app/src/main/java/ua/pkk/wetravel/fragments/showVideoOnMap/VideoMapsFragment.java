@@ -1,11 +1,14 @@
 package ua.pkk.wetravel.fragments.showVideoOnMap;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,7 +34,7 @@ import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentVideoMapsBinding;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.Video;
-
+// android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
 public class VideoMapsFragment extends Fragment {
     private VideoMapsViewModel viewModel;
     private GoogleMap map;
@@ -118,7 +121,15 @@ public class VideoMapsFragment extends Fragment {
                 }
             }
         });
+        binding.testEd.setOnClickListener(this::showSoftKeyboard);
     }
+    public void showSoftKeyboard(View view) {
+        if (view.requestFocus()) {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

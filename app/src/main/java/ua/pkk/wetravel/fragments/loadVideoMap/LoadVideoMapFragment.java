@@ -2,6 +2,7 @@ package ua.pkk.wetravel.fragments.loadVideoMap;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -9,9 +10,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,16 +46,20 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentLoadVideoMapsBinding;
+import ua.pkk.wetravel.retrofit.UserAPI;
 import ua.pkk.wetravel.utils.User;
+import ua.pkk.wetravel.utils.Video;
 
-//TODO Fix problem with keyboard Priority -> CRITICAL
+//TODO Set focus on marker if cancel  Priority -> LOW
 public class LoadVideoMapFragment extends Fragment {
     private FragmentLoadVideoMapsBinding binding;
     private LatLng marker;
     public int VIDEO_FILE_REQUEST_CODE = 1;
-    private String loadVideoName;
     private LoadVideoMapViewModel viewModel;
     private boolean is_add_video_show;
 
@@ -100,18 +107,11 @@ public class LoadVideoMapFragment extends Fragment {
         checkVideoPermissions();
         viewModel = new ViewModelProvider(this).get(LoadVideoMapViewModel.class);
         is_add_video_show = false;
-        //TODO Put in another place
-        binding.cancelBtn.setOnClickListener(v -> {
-            is_add_video_show = false;
-            binding.TEST.animate().scaleX(0).scaleY(0).setDuration(800);
-            binding.addVideoLayout.animate().y(binding.loadVideoMapLayout.getHeight()).setDuration(800);
-            binding.addVideoFab.setVisibility(View.VISIBLE);
-            binding.addVideoFab.animate().scaleX(1).scaleY(1).setDuration(1000);
-        });
+        initAddVideoLayout();
         return binding.getRoot();
     }
 
-    private void showNotification(Intent data, LatLng marker, String s) {
+    private void showNotification(Intent data, LatLng marker, String name, String description, String tags) {
         String CHANNEL_ID = "SuccessUpload";
         int NOTIFICATION_ID = new Random().nextInt(256);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
@@ -129,7 +129,7 @@ public class LoadVideoMapFragment extends Fragment {
             builder.setProgress(100, 0, false);
             notificationManager.notify(NOTIFICATION_ID, builder.build());
 
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child(s);
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child(name);
             Date date = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
 
@@ -154,7 +154,20 @@ public class LoadVideoMapFragment extends Fragment {
                 }
             });
         }).start();
+        new Thread(() -> {
+            Video video = new Video(description, tags);
+            UserAPI.INSTANCE.getRETROFIT_SERVICE().uploadVideoData(User.getInstance().getId(), name, video).enqueue(new Callback<Video>() {
+                @Override
+                public void onResponse(Call<Video> call, Response<Video> response) {
+                    //TODO
+                }
 
+                @Override
+                public void onFailure(Call<Video> call, Throwable t) {
+                }
+            });
+
+        }).start();
         //Navigate to MainFragment
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoadVideoMapFragmentDirections.actionLoadVideoMapsFragmentToMainFragment());
     }
@@ -171,17 +184,15 @@ public class LoadVideoMapFragment extends Fragment {
         }
     }
 
-    private void onAddVideoFab(View view) {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getContext(), getContext().getString(R.string.storage_permission), Toast.LENGTH_LONG).show();
-            checkVideoPermissions();
-            return;
-        }
-        if (marker == null) {
-            Toast.makeText(getContext(), getContext().getText(R.string.addMarker), Toast.LENGTH_LONG).show();
-            return;
-        }
-        //TODO Replace it
+    private void initAddVideoLayout() {
+        binding.cancelBtn.setOnClickListener(v -> {
+            hideKeyboardFrom(getContext(), binding.videoName);
+            is_add_video_show = false;
+            binding.TEST.animate().scaleX(0).scaleY(0).setDuration(800);
+            binding.addVideoLayout.animate().y(binding.loadVideoMapLayout.getHeight() * 2).setDuration(1300);
+            binding.addVideoFab.setVisibility(View.VISIBLE);
+            binding.addVideoFab.animate().scaleX(1).scaleY(1).setDuration(800);
+        });
         binding.addVideoFab.animate().setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -203,11 +214,30 @@ public class LoadVideoMapFragment extends Fragment {
 
             }
         });
+        binding.videoDescription.setOnClickListener(v -> {
+            Log.d("TAG", Boolean.toString(v.requestFocus()));
+        });
+    }
+
+    private void onAddVideoFab(View view) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), getContext().getString(R.string.storage_permission), Toast.LENGTH_LONG).show();
+            checkVideoPermissions();
+            return;
+        }
+        if (marker == null) {
+            Toast.makeText(getContext(), getContext().getText(R.string.addMarker), Toast.LENGTH_LONG).show();
+            return;
+        }
         if (!is_add_video_show) {
+            ViewGroup.LayoutParams layoutParams = binding.addVideoLayout.getLayoutParams();
+            layoutParams.height = binding.loadVideoMapLayout.getLayoutParams().height;
+            binding.addVideoLayout.setLayoutParams(layoutParams);
+
             is_add_video_show = true;
             binding.TEST.animate().scaleX(30).scaleY(30).setDuration(800);
-            binding.addVideoFab.animate().scaleX(0).scaleY(0).setDuration(1000);
-            binding.addVideoLayout.animate().y(0).setDuration(800);
+            binding.addVideoFab.animate().scaleX(0).scaleY(0).setDuration(800);
+            binding.addVideoLayout.animate().y(0).setDuration(700);
         }
     }
 
@@ -230,7 +260,7 @@ public class LoadVideoMapFragment extends Fragment {
         if (requestCode != 1 || marker == null) {
             super.onActivityResult(requestCode, resultCode, data);
         }
-        showNotification(data, marker, binding.videoName.getText().toString());
+        showNotification(data, marker, binding.videoName.getText().toString(), binding.videoDescription.getText().toString(), binding.videoTags.getText().toString());
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -239,5 +269,10 @@ public class LoadVideoMapFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(callback);
+    }
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

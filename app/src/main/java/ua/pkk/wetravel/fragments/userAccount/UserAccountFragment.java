@@ -51,7 +51,7 @@ public class UserAccountFragment extends Fragment {
             binding.userName.setText(args.getUserName());
             binding.aboutUser.setText(args.getUserInfo());
             binding.userStatusTv.setText(args.getStatus());
-        } else {  //possibly ony for owner account
+        } else {  //possibly only for owner account
             new Thread(() -> {
                 //Wait for info
                 while (User.getInstance().getStatus() == null) {
@@ -68,6 +68,7 @@ public class UserAccountFragment extends Fragment {
             binding.editBtn.setOnClickListener(v -> {
                         if (is_data_ready)
                             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(
+                                    //TODO Go to right animation
                                     UserAccountFragmentDirections.actionUserAccountFragmentToEditUserAccountFragment(
                                             args.getUserImg(),
                                             User.getInstance().getName(),

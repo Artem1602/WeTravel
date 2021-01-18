@@ -15,7 +15,7 @@
         android:background="#f4f4f4"
         android:paddingTop="8dp">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/comment_user_img"
             android:layout_width="42dp"
             android:layout_height="42dp"

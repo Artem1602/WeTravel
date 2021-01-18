@@ -46,4 +46,5 @@
     <string name="add">add</string>
     <string name="write_comment">Write Comment</string>
     <string name="enter_another_name">Enter another name</string>
+    <string name="description">Description</string>
 </resources>

@@ -52,39 +52,43 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/add_video_layout"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="wrap_content"
             android:background="@color/textColorPrimary"
             app:layout_constraintEnd_toEndOf="@id/load_video_map_layout"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/load_video_map_layout"
-            app:layout_constraintTop_toBottomOf="@id/load_video_map_layout"
-            >
+            app:layout_constraintTop_toBottomOf="@id/load_video_map_layout">
 
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/rubik"
                 android:text="@string/select_video"
                 android:textAlignment="center"
                 android:textColor="@color/primaryColor"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout3"
+                android:id="@+id/videoName_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:hint="@string/enter_video_name_here"
                 android:textColorHint="@color/primaryColor"
                 app:boxStrokeColor="@color/primaryColor"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                tools:layout_editor_absoluteX="0dp">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/videoName"
@@ -97,22 +101,80 @@
                     tools:layout_editor_absoluteY="97dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/videoTags_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Enter video tags"
+                android:textColorHint="@color/primaryColor"
+                app:boxStrokeColor="@color/primaryColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/videoName_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/videoTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/rubik"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/primaryColor"
+                    tools:layout_editor_absoluteX="-26dp"
+                    tools:layout_editor_absoluteY="97dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/videoDescription_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Enter video description"
+                android:textColorHint="@color/primaryColor"
+                app:boxStrokeColor="@color/primaryColor"
+                app:helperText="*Optional"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/videoTags_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/videoDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/rubik"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/primaryColor"
+                    tools:layout_editor_absoluteX="-26dp"
+                    tools:layout_editor_absoluteY="97dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/rubik"
                 android:text="@string/you_earn_a_notification_after_success_uploading"
                 android:textAlignment="center"
                 android:textColor="@color/non_active"
                 android:textSize="12sp"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
-                tools:layout_editor_absoluteX="0dp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/videoDescription_layout" />
 
             <Button
                 android:id="@+id/selectVideo_btn"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
@@ -128,7 +190,7 @@
                 android:id="@+id/cancel_btn"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="8dp"

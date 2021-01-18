@@ -64,6 +64,7 @@ public class VideoFragment extends Fragment {
 
     private CommentAdapter adapter;
     private LinkedHashSet<Comment> comments;
+    private boolean isFirstCommentWasLoad;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,7 +75,6 @@ public class VideoFragment extends Fragment {
 
         video = args.getVideo();
         initPlayer();
-
 
         VideoFragmentViewModelFactory factory = new VideoFragmentViewModelFactory(video, player);
         viewModel = new ViewModelProvider(this, factory).get(VideoFragmentViewModel.class);
@@ -87,6 +87,7 @@ public class VideoFragment extends Fragment {
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             changeUIbbyKey(args.getSourceKey());
             loadCurrentUserImg();
+            initOpenCommentLayout(args.getSourceKey());
             binding.addCommentBtn.setOnClickListener(this::createComment);
         }
 
@@ -97,29 +98,65 @@ public class VideoFragment extends Fragment {
         });
         //TODO Deprecated
         binding.getRoot().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-
+        return binding.getRoot();
+    }
+    private void loadCurrentUserImg() {
+        Bitmap bitmap = BitmapFactory.decodeFile(new File(getContext().getFilesDir(), "profile_img").getAbsolutePath());
+        binding.userImg.setImageBitmap(bitmap);
+    }
+    private void initOpenCommentLayout(int sourceKey) {
         adapter = new CommentAdapter(getContext());
         RecyclerView recyclerView = binding.commentsRv;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         comments = new LinkedHashSet<>();
+        isFirstCommentWasLoad = false;
 
         viewModel.comments.observe(getViewLifecycleOwner(), new Observer<Comment>() {
             @Override
             public void onChanged(Comment comment) {
+                if (!isFirstCommentWasLoad) loadFirstComment(comment);
                 comments.add(comment);
                 List<Comment> items = new ArrayList<>(comments);
                 adapter.submitList(items);
                 adapter.notifyDataSetChanged();
+                binding.commentCount.setText(Integer.toString(comments.size()));
+                binding.commentCount2.setText(Integer.toString(comments.size()));
             }
         });
         viewModel.loadComments(video.getUpload_user_id(), video.getName());
-        return binding.getRoot();
+        binding.openCommentLayout.setOnClickListener(v -> {
+            binding.videoContentLayout.animate().alpha(0).setDuration(500);
+            binding.openCommentLayout.animate().alpha(0).setDuration(500);   binding.openCommentLayout.setClickable(false);
+
+            binding.deleteBtn.animate().alpha(0).setDuration(500);
+            binding.deleteBtn.setClickable(false);
+
+            ViewGroup.LayoutParams layoutParams = binding.commentLayout.getLayoutParams();
+            layoutParams.height = (int) (binding.pointDown.getY() - binding.pointUp.getY());
+            binding.commentLayout.setLayoutParams(layoutParams);
+
+            binding.commentLayout.animate().y(binding.pointUp.getY()).setDuration(500).start();
+        });
+        binding.closeCommentLayout.setOnClickListener(v -> {
+            if (sourceKey == Keys.VIDEO_FROM_ADAPTER.getValue()) {
+                binding.deleteBtn.setClickable(true);
+                binding.deleteBtn.animate().alpha(1).setDuration(500);
+            }
+            binding.videoContentLayout.animate().alpha(1).setDuration(500);
+            binding.openCommentLayout.animate().alpha(1).setDuration(500);   binding.openCommentLayout.setClickable(true);
+            binding.commentLayout.animate().y(binding.pointDown.getY()).setDuration(500).start();
+        });
     }
 
-    private void loadCurrentUserImg() {
-        Bitmap bitmap = BitmapFactory.decodeFile(new File(getContext().getFilesDir(), "profile_img").getAbsolutePath());
-        binding.userImg.setImageBitmap(bitmap);
+    private void loadFirstComment(Comment comment) {
+        isFirstCommentWasLoad = true;
+        Glide.with(getContext()).load(comment.getUimg())
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.progress_bar_animation)
+                        .error(R.drawable.video_editor))
+                .into(binding.firstCommentImg);
+        binding.firstCommentContent.setText(comment.getContent());
     }
 
     private void initPlayer() {
@@ -138,7 +175,7 @@ public class VideoFragment extends Fragment {
             binding.deleteBtn.setVisibility(View.GONE);
             loadUserData();
         } else {
-            binding.loaderInfo.setVisibility(View.GONE);
+            binding.textView7.setVisibility(View.GONE);
         }
     }
 

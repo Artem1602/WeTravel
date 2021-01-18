@@ -6,6 +6,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
+import ua.pkk.wetravel.utils.Video
 
 private const val BASE_URL = "https://wetravel-1591a.firebaseio.com/"
 
@@ -46,6 +47,13 @@ interface UserApiService {
 
     @DELETE("comments/{id}/{video}.json")
     fun deleteAllVideoComments(@Path("id") id: String,@Path("video") video:String):Call<String>
+
+    //video
+    @GET("video_data/{id}/{video}.json")
+    fun getVideoData(@Path("id") id: String, @Path("video") video:String):Call<Video>
+
+    @PUT("video_data/{id}/{video}.json")
+    fun uploadVideoData(@Path("id") id: String, @Path("video") video:String, @Body video_data: Video):Call<Video>
 }
 
 object UserAPI {

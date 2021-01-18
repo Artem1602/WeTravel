@@ -20,7 +20,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".activity.MainActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+           >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
