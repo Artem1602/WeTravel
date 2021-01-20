@@ -17,6 +17,10 @@ public class LoadVideoMapViewModel extends ViewModel {
     private MutableLiveData<Boolean> _hasSameNames = new MutableLiveData<>();
     public LiveData<Boolean> hasSameNames = _hasSameNames;
 
+    public boolean is_add_video_show;
+
+    {is_add_video_show = false;}
+
     public void checkNames(String video_name) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storage.getReference().child(User.getInstance().getId()).listAll().addOnCompleteListener(new OnCompleteListener<ListResult>() {

@@ -1,14 +1,16 @@
 package ua.pkk.wetravel.fragments.showVideoOnMap;
 
 import android.animation.Animator;
-import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +36,7 @@ import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentVideoMapsBinding;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.Video;
-// android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+
 public class VideoMapsFragment extends Fragment {
     private VideoMapsViewModel viewModel;
     private GoogleMap map;
@@ -75,6 +77,24 @@ public class VideoMapsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private TextWatcher tagListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //TODO java.lang.IndexOutOfBoundsException: charAt: 0 >= length 0
+            if (s.charAt(before) == '#') binding.filterValue.setSelection(s.length());
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.charAt(s.length() - 1) == ' ')
+                binding.filterValue.setText(binding.filterValue.getText().toString() + "#");
+        }
+    };
+
     private void initSearchLayout() {
         //TODO AtomicBoolean
         AtomicBoolean isSearchLayoutOnScreen = new AtomicBoolean(false);
@@ -113,20 +133,50 @@ public class VideoMapsFragment extends Fragment {
             isSearchLayoutOnScreen.set(false);
             binding.searchFab.animate().scaleY(1).scaleX(1).setDuration(500);
         });
-        //TEST
-        binding.testBtn.setOnClickListener(v -> {
-            for (Pair<MarkerOptions, Video> i : videos) {
-                if (i.second.getName().equals(binding.testEd.getText().toString())) {
-                    map.moveCamera(CameraUpdateFactory.newLatLng(i.first.getPosition()));
+
+        binding.filterList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch ((String) parent.getSelectedItem()) {
+                    case "Find by video name":
+                        binding.filterValueLayout.setHint("Enter video name");
+                        binding.filterValueLayout.setPrefixText("");
+                        binding.filterValue.removeTextChangedListener(tagListener);
+                        break;
+                    case "Find by Tags":
+                        binding.filterValueLayout.setHint("Enter tags");
+                        binding.filterValueLayout.setPrefixText("#");
+                        binding.filterValueLayout.setPrefixTextColor(ColorStateList.valueOf(getResources().getColor(R.color.primaryColor)));
+                        binding.filterValue.addTextChangedListener(tagListener);
+                        break;
                 }
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
-        binding.testEd.setOnClickListener(this::showSoftKeyboard);
+        binding.findBtn.setOnClickListener(v -> {
+            switch ((String) binding.filterList.getSelectedItem()) {
+                case "Find by video name":
+                    focusOnVideoName(binding.filterValue.getText().toString());
+                    break;
+                case "Find by Tags":
+                    showVideosWithTags(binding.filterValue.getText().toString());
+                    break;
+            }
+        });
     }
-    public void showSoftKeyboard(View view) {
-        if (view.requestFocus()) {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+
+    private void showVideosWithTags(String tags) {
+        Log.d("TAG",tags); //TODO Filter by tags
+    }
+
+    private void focusOnVideoName(String name) {
+        for (Pair<MarkerOptions, Video> i : videos) {
+            if (i.second.getName().equals(name)) {
+                map.moveCamera(CameraUpdateFactory.newLatLng(i.first.getPosition()));
+            }
         }
     }
 

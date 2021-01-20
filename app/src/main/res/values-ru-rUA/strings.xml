@@ -47,4 +47,5 @@
     <string name="add">Добавить</string>
     <string name="write_comment">Написать коментарий</string>
     <string name="enter_another_name">Введите другое название</string>
+    <string name="description">Описание</string>
 </resources>

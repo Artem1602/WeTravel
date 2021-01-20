@@ -26,7 +26,6 @@
                 android:fontFamily="@font/rubik"
                 android:lines="1"
                 android:textColor="@color/primaryDarkColor"
-
                 />
 
         </com.google.android.material.textfield.TextInputLayout>

@@ -1,9 +1,13 @@
 package ua.pkk.wetravel.fragments.allUserVideo;
 
+import android.net.Uri;
+import android.util.Pair;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -34,11 +38,34 @@ public class ShowVideoFragmentViewModel extends ViewModel {
             reference.getMetadata().addOnSuccessListener(storageMetadata ->
                     //TODO constructors
                     reference.getDownloadUrl().addOnCompleteListener(task -> {
-                        Video video = new Video(task.getResult(), reference.getName(), storageMetadata.getCustomMetadata("uploadingTime"), User.getInstance().getId());
-                        video.setUri(task.getResult().toString());
-                        _videos.setValue(video);
+                        String id = storageMetadata.getCustomMetadata("user_id");
+                        String uploadingTime = storageMetadata.getCustomMetadata("uploadingTime");
+                        String name = reference.getName();
+                        getVideoData(id, name, uploadingTime, task.getResult());
                     }));
         }
+    }
+
+    private void getVideoData(String id, String name, String uploadingTime, Uri reference) {
+        new Thread(() ->
+                UserAPI.INSTANCE.getRETROFIT_SERVICE().getVideoData(id, name).enqueue(new Callback<Video>() {
+                    @Override
+                    public void onResponse(Call<Video> call, Response<Video> response) {
+                        Video video = new Video(reference,
+                                name,
+                                uploadingTime,
+                                id,
+                                response.body().description,
+                                response.body().tags);
+                        video.setUri(reference.toString());
+                        _videos.postValue(video);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Video> call, Throwable t) {
+
+                    }
+                })).start();
     }
 
     public void cleanVideo() {

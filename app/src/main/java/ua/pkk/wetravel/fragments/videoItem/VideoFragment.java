@@ -85,6 +85,8 @@ public class VideoFragment extends Fragment {
         } else viewModel.reCreatePlayerAndPlay(player);
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            binding.videoTags.setText(args.getVideo().tags);
+            binding.videoDescription.setText(args.getVideo().description);
             changeUIbbyKey(args.getSourceKey());
             loadCurrentUserImg();
             initOpenCommentLayout(args.getSourceKey());

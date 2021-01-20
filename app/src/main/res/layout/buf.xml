@@ -1,56 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout android:id="@+id/filter_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="82dp">
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_weight="8"
+        android:orientation="horizontal"
+        android:background="@drawable/drop_down_shape"
+        tools:ignore="UselessParent">
 
-        <EditText
-            android:id="@+id/video_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/edittext_button_style_rounded"
-            android:ems="10"
-            android:hint="@string/write_comment"
-            android:inputType="textPersonName"
-            android:textColor="@color/primaryColor"
-            android:textColorHint="#957D8B"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/add_comment_btn"
-            app:layout_constraintStart_toEndOf="@+id/user_img" />
+        <Spinner
+            android:id="@+id/spnGift"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overlapAnchor="false"
+            android:spinnerMode="dropdown" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+    </LinearLayout>
 
-
-        <Button
-            android:id="@+id/add_comment_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/add"
-            android:textColor="@color/textColorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="-5dp"
+        android:background="@color/primaryColor"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:text="dcasc"
+        android:textColor="@color/primaryColor" />
+</RelativeLayout>

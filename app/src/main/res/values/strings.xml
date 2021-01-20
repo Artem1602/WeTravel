@@ -47,4 +47,10 @@
     <string name="write_comment">Write Comment</string>
     <string name="enter_another_name">Enter another name</string>
     <string name="description">Description</string>
+    <string name="find">Find</string>
+    <string name="enter_video_tags">Enter video tags</string>
+    <string-array name="filters">
+        <item>Find by video name</item>
+        <item>Find by Tags</item>
+    </string-array>
 </resources>

@@ -8,8 +8,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +30,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +44,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,7 +68,6 @@ public class LoadVideoMapFragment extends Fragment {
     private LatLng marker;
     public int VIDEO_FILE_REQUEST_CODE = 1;
     private LoadVideoMapViewModel viewModel;
-    private boolean is_add_video_show;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         private GoogleMap map;
@@ -75,7 +81,6 @@ public class LoadVideoMapFragment extends Fragment {
             googleMap.setOnMapLongClickListener(this::onMapLongClick);
             map = googleMap;
         }
-
 
         public void onMapLongClick(LatLng latLng) {
             marker = latLng;
@@ -103,12 +108,26 @@ public class LoadVideoMapFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_load_video_maps, container, false);
         binding.addVideoFab.setOnClickListener(this::onAddVideoFab);
         binding.selectVideoBtn.setOnClickListener(this::onSelectVideo);
+        viewModel = new ViewModelProvider(this).get(LoadVideoMapViewModel.class);
+
         checkMapPermissions();
         checkVideoPermissions();
-        viewModel = new ViewModelProvider(this).get(LoadVideoMapViewModel.class);
-        is_add_video_show = false;
         initAddVideoLayout();
+        checkIsVideoLayoutWasShow();
+
         return binding.getRoot();
+    }
+
+    private void checkIsVideoLayoutWasShow() {
+        if (viewModel.is_add_video_show) {
+            ViewGroup.LayoutParams layoutParams = binding.addVideoLayout.getLayoutParams();
+            layoutParams.height = binding.loadVideoMapLayout.getLayoutParams().height;
+            binding.addVideoLayout.setLayoutParams(layoutParams);
+            viewModel.is_add_video_show = true;
+            binding.TEST.animate().scaleX(30).scaleY(30);
+            binding.addVideoFab.animate().scaleX(0).scaleY(0);
+            binding.addVideoLayout.animate().y(0);
+        }
     }
 
     private void showNotification(Intent data, LatLng marker, String name, String description, String tags) {
@@ -148,14 +167,14 @@ public class LoadVideoMapFragment extends Fragment {
                         notificationManager.notify(NOTIFICATION_ID, builder.build());
                         return;
                     }
-                    Double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                    builder.setProgress(100, progress.intValue(), false);
+                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                    builder.setProgress(100, (int) progress, false);
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
                 }
             });
         }).start();
         new Thread(() -> {
-            Video video = new Video(description, tags);
+            Video video = new Video(description, "#" + tags);
             UserAPI.INSTANCE.getRETROFIT_SERVICE().uploadVideoData(User.getInstance().getId(), name, video).enqueue(new Callback<Video>() {
                 @Override
                 public void onResponse(Call<Video> call, Response<Video> response) {
@@ -187,7 +206,7 @@ public class LoadVideoMapFragment extends Fragment {
     private void initAddVideoLayout() {
         binding.cancelBtn.setOnClickListener(v -> {
             hideKeyboardFrom(getContext(), binding.videoName);
-            is_add_video_show = false;
+            viewModel.is_add_video_show = false;
             binding.TEST.animate().scaleX(0).scaleY(0).setDuration(800);
             binding.addVideoLayout.animate().y(binding.loadVideoMapLayout.getHeight() * 2).setDuration(1300);
             binding.addVideoFab.setVisibility(View.VISIBLE);
@@ -201,7 +220,7 @@ public class LoadVideoMapFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (is_add_video_show) binding.addVideoFab.setVisibility(View.GONE);
+                if (viewModel.is_add_video_show) binding.addVideoFab.setVisibility(View.GONE);
             }
 
             @Override
@@ -215,8 +234,36 @@ public class LoadVideoMapFragment extends Fragment {
             }
         });
         binding.videoDescription.setOnClickListener(v -> {
-            Log.d("TAG", Boolean.toString(v.requestFocus()));
+            Boolean.toString(v.requestFocus());
         });
+        binding.videoTags.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //TODO java.lang.IndexOutOfBoundsException: charAt: 0 >= length 0
+                if (s.charAt(before) == '#') binding.videoTags.setSelection(s.length());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.charAt(s.length() - 1) == ' ')
+                    binding.videoTags.setText(binding.videoTags.getText().toString() + "#");
+            }
+        });
+
+        KeyboardVisibilityEvent.setEventListener(getActivity(), b -> {
+            if (b){
+                binding.cancelBtn.setVisibility(View.GONE);
+                binding.selectVideoBtn.setVisibility(View.GONE);
+            }else {
+                binding.cancelBtn.setVisibility(View.VISIBLE);
+                binding.selectVideoBtn.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     private void onAddVideoFab(View view) {
@@ -229,12 +276,11 @@ public class LoadVideoMapFragment extends Fragment {
             Toast.makeText(getContext(), getContext().getText(R.string.addMarker), Toast.LENGTH_LONG).show();
             return;
         }
-        if (!is_add_video_show) {
+        if (!viewModel.is_add_video_show) {
             ViewGroup.LayoutParams layoutParams = binding.addVideoLayout.getLayoutParams();
             layoutParams.height = binding.loadVideoMapLayout.getLayoutParams().height;
             binding.addVideoLayout.setLayoutParams(layoutParams);
-
-            is_add_video_show = true;
+            viewModel.is_add_video_show = true;
             binding.TEST.animate().scaleX(30).scaleY(30).setDuration(800);
             binding.addVideoFab.animate().scaleX(0).scaleY(0).setDuration(800);
             binding.addVideoLayout.animate().y(0).setDuration(700);

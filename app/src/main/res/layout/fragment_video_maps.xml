@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--TODO Fix keyboard -> HIGH-->
+<?xml version="1.0" encoding="utf-8"?><!--TODO Fix keyboard -> HIGH-->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -59,39 +58,58 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/filter_layout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="300dp"
             android:background="@color/textColorPrimary"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@id/show_all_video"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@id/show_all_video"
-            app:layout_constraintTop_toBottomOf="@id/show_all_video">
+            app:layout_constraintTop_toBottomOf="parent">
 
-
-            <EditText
-                android:id="@+id/test_ed"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/filter_list_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textColor="@color/primaryColor"
+                android:background="@drawable/drop_down_shape"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/test_btn"
-                android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/filter_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:entries="@array/filters"
+                    android:spinnerMode="dropdown"
+                    android:theme="@style/ThemeOverlay.AppCompat.Light" />
+            </LinearLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filter_value_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:text="Button"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:textColorHint="@color/primaryColor"
+                app:boxStrokeColor="@color/primaryColor"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/test_ed" />
+                app:layout_constraintTop_toBottomOf="@+id/filter_list_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/filter_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rubik"
+                    android:lines="1"
+                    android:textColor="@color/primaryColor" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/close_filter_btn"
@@ -105,6 +123,19 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:strokeColor="@color/primaryColor" />
+
+            <Button
+                android:id="@+id/find_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/textColorPrimary"
+                android:text="@string/find"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filter_value_layout" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -49,7 +49,8 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
             super(itemView.getRoot());
             this.binding = itemView;
             itemView.getRoot().setOnClickListener(v -> {
-                        Navigation.findNavController((Activity) itemView.getRoot().getContext(), R.id.nav_host_fragment).navigate(ShowVideoFragmentDirections.actionShowVideoFragmentToVideoFragment(itemView.getVideoItem(), Keys.VIDEO_FROM_ADAPTER.getValue()));
+                        Navigation.findNavController((Activity) itemView.getRoot().getContext(), R.id.nav_host_fragment)
+                                .navigate(ShowVideoFragmentDirections.actionShowVideoFragmentToVideoFragment(itemView.getVideoItem(), Keys.VIDEO_FROM_ADAPTER.getValue()));
                     }
             );
 

@@ -52,12 +52,12 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/add_video_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:background="@color/textColorPrimary"
             app:layout_constraintEnd_toEndOf="@id/load_video_map_layout"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@id/load_video_map_layout"
-            app:layout_constraintTop_toBottomOf="@id/load_video_map_layout">
+            app:layout_constraintTop_toBottomOf="parent">
 
 
             <TextView
@@ -114,7 +114,9 @@
                 app:boxStrokeColor="@color/primaryColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/videoName_layout">
+                app:layout_constraintTop_toBottomOf="@+id/videoName_layout"
+                app:prefixText="#"
+                app:prefixTextColor="@color/primaryColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/videoTags"
@@ -174,17 +176,18 @@
             <Button
                 android:id="@+id/selectVideo_btn"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:fontFamily="@font/rubik"
                 android:text="@string/select_video"
                 android:textColor="@color/textColorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/cancel_btn" />
+                app:layout_constraintStart_toEndOf="@+id/cancel_btn"
+                app:layout_constraintTop_toBottomOf="@+id/textView3"
+                app:layout_constraintVertical_bias="1.0" />
 
             <Button
                 android:id="@+id/cancel_btn"
@@ -193,13 +196,14 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="8dp"
                 android:text="@string/cancel"
                 android:textColor="@color/primaryColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/selectVideo_btn"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3"
+                app:layout_constraintVertical_bias="1.0"
                 app:strokeColor="@color/primaryColor" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

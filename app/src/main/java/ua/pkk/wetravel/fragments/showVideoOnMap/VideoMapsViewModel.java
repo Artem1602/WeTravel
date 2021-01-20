@@ -3,18 +3,13 @@ package ua.pkk.wetravel.fragments.showVideoOnMap;
 import android.net.Uri;
 import android.util.Pair;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
@@ -68,24 +63,26 @@ public class VideoMapsViewModel extends ViewModel {
         });
     }
 
-    //last callback step
+    //last callback step //TODO Threads
     private void getVideoData(String id, String name, String uploadingTime, Uri reference, MarkerOptions markerOptions) {
-        UserAPI.INSTANCE.getRETROFIT_SERVICE().getVideoData(id, name).enqueue(new Callback<Video>() {
-            @Override
-            public void onResponse(Call<Video> call, Response<Video> response) {
-                _markers.postValue(new Pair<>(markerOptions,
-                        new Video(reference,
-                                name,
-                                uploadingTime,
-                                id,
-                                response.body().description,
-                                response.body().tags)));
-            }
+        new Thread(() -> {
+            UserAPI.INSTANCE.getRETROFIT_SERVICE().getVideoData(id, name).enqueue(new Callback<Video>() {
+                @Override
+                public void onResponse(Call<Video> call, Response<Video> response) {
+                    _markers.postValue(new Pair<>(markerOptions,
+                            new Video(reference,
+                                    name,
+                                    uploadingTime,
+                                    id,
+                                    response.body().description,
+                                    response.body().tags)));
+                }
 
-            @Override
-            public void onFailure(Call<Video> call, Throwable t) {
+                @Override
+                public void onFailure(Call<Video> call, Throwable t) {
 
-            }
-        });
+                }
+            });
+        }).start();
     }
 }

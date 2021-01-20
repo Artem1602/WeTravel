@@ -1,16 +1,10 @@
 package ua.pkk.wetravel.fragments.allUserVideo;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,7 +54,6 @@ public class ShowVideoFragment extends Fragment {
                 binding.showVideosPb.setVisibility(View.GONE);
 
                 Glide.with(getContext()).load(video.getUri()).into(new CustomTarget<Drawable>() {
-
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                         video.setThumbNail(resource);
