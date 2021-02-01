@@ -26,6 +26,11 @@ public class VideoMapsViewModel extends ViewModel {
     private MutableLiveData<Pair<MarkerOptions, Video>> _markers = new MutableLiveData<>();
     public LiveData<Pair<MarkerOptions, Video>> markers = _markers;
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
+    public boolean isFilterLayoutWasShown;
+
+    {
+        isFilterLayoutWasShown = false;
+    }
 
     //TODO CALLBACK HELL. try to fix it or Kotlin
     public void getMarkers() {

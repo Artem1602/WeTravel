@@ -101,7 +101,7 @@
             android:layout_height="200dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:hint="About me"
+            android:hint="@string/about_me"
             android:textColorHint="@color/primaryColor"
             app:boxStrokeColor="@color/primaryColor"
             app:layout_constraintEnd_toEndOf="parent"

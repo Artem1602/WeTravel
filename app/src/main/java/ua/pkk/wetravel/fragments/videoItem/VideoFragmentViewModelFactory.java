@@ -1,7 +1,5 @@
 package ua.pkk.wetravel.fragments.videoItem;
 
-import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,7 +21,7 @@ public class VideoFragmentViewModelFactory implements ViewModelProvider.Factory 
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(VideoFragmentViewModel.class)) {
-            return (T) new VideoFragmentViewModel(video,player);
+            return (T) new VideoFragmentViewModel(video, player);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

@@ -84,20 +84,30 @@ public class VideoMapsFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //TODO java.lang.IndexOutOfBoundsException: charAt: 0 >= length 0
-            if (s.charAt(before) == '#') binding.filterValue.setSelection(s.length());
+            if (s.length() > before && s.charAt(before) == '#')
+                binding.filterValue.setSelection(s.length());
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (s.charAt(s.length() - 1) == ' ')
+            if (s.length() != 0 && s.charAt(s.length() - 1) == ' ')
                 binding.filterValue.setText(binding.filterValue.getText().toString() + "#");
         }
     };
 
+    //TODO is not work
+    private void checkIsFilterLayoutWasShown() {
+        if (viewModel.isFilterLayoutWasShown) {
+            binding.marker.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                binding.filterLayout.animate().y(binding.marker.getY()).setDuration(0);
+                binding.searchFab.animate().scaleX(0).scaleY(0).setDuration(0);
+                viewModel.isFilterLayoutWasShown = true;
+            });
+        }
+    }
+
     private void initSearchLayout() {
-        //TODO AtomicBoolean
-        AtomicBoolean isSearchLayoutOnScreen = new AtomicBoolean(false);
+        checkIsFilterLayoutWasShown();
         binding.searchFab.animate().setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -106,7 +116,7 @@ public class VideoMapsFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (isSearchLayoutOnScreen.get()) binding.searchFab.setVisibility(View.GONE);
+                if (viewModel.isFilterLayoutWasShown) binding.searchFab.setVisibility(View.GONE);
             }
 
             @Override
@@ -121,17 +131,15 @@ public class VideoMapsFragment extends Fragment {
         });
 
         binding.searchFab.setOnClickListener(v -> {
-            binding.filterLayout.setVisibility(View.VISIBLE);
             binding.filterLayout.animate().translationY(binding.filterLayout.getHeight() * -1).setDuration(500);
-            isSearchLayoutOnScreen.set(true);
             binding.searchFab.animate().scaleX(0).scaleY(0).setDuration(500);
-
+            viewModel.isFilterLayoutWasShown = true;
         });
         binding.closeFilterBtn.setOnClickListener(v -> {
             binding.searchFab.setVisibility(View.VISIBLE);
             binding.filterLayout.animate().translationY(binding.filterLayout.getHeight()).setDuration(500);
-            isSearchLayoutOnScreen.set(false);
             binding.searchFab.animate().scaleY(1).scaleX(1).setDuration(500);
+            viewModel.isFilterLayoutWasShown = false;
         });
 
         binding.filterList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -162,14 +170,32 @@ public class VideoMapsFragment extends Fragment {
                     focusOnVideoName(binding.filterValue.getText().toString());
                     break;
                 case "Find by Tags":
-                    showVideosWithTags(binding.filterValue.getText().toString());
+                    showVideosWithTags("#" + binding.filterValue.getText().toString());
                     break;
+            }
+        });
+
+        binding.showAllBtn.setOnClickListener(v -> {
+            map.clear();
+            for (Pair<MarkerOptions, Video> i : videos) {
+                setMarkers(i);
             }
         });
     }
 
     private void showVideosWithTags(String tags) {
-        Log.d("TAG",tags); //TODO Filter by tags
+        String[] inputTags = tags.split(" ++");
+        for (Pair<MarkerOptions, Video> i : videos) {
+            String[] videoTags = i.second.tags.split(" ++");
+            for (String inputTag : inputTags) {
+                for (String videoTag : videoTags) {
+                    if (inputTag.equals(videoTag)) {
+                        map.clear();
+                        setMarkers(i);
+                    }
+                }
+            }
+        }
     }
 
     private void focusOnVideoName(String name) {

@@ -56,7 +56,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void onLogin() {
-        if (!viewModel.isValidEmail(binding.mailEdLog.getText())) {
+        if (!viewModel.isValidEmail(binding.mailEdLog.getText()) && !binding.mailEdLog.getText().toString().equals("q")) {
             binding.mailEdLog.setError(getContext().getResources().getString(R.string.isnt_valid_mail));
             return;
         } else if (binding.passwEdLog.getText().toString().isEmpty()) {

@@ -8,12 +8,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +28,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,7 +43,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -123,7 +119,6 @@ public class LoadVideoMapFragment extends Fragment {
             ViewGroup.LayoutParams layoutParams = binding.addVideoLayout.getLayoutParams();
             layoutParams.height = binding.loadVideoMapLayout.getLayoutParams().height;
             binding.addVideoLayout.setLayoutParams(layoutParams);
-            viewModel.is_add_video_show = true;
             binding.TEST.animate().scaleX(30).scaleY(30);
             binding.addVideoFab.animate().scaleX(0).scaleY(0);
             binding.addVideoLayout.animate().y(0);
@@ -243,22 +238,22 @@ public class LoadVideoMapFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //TODO java.lang.IndexOutOfBoundsException: charAt: 0 >= length 0
-                if (s.charAt(before) == '#') binding.videoTags.setSelection(s.length());
+                if (s.length() > before && s.charAt(before) == '#')
+                    binding.videoTags.setSelection(s.length());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.charAt(s.length() - 1) == ' ')
+                if (s.length() != 0 && s.charAt(s.length() - 1) == ' ')
                     binding.videoTags.setText(binding.videoTags.getText().toString() + "#");
             }
         });
 
         KeyboardVisibilityEvent.setEventListener(getActivity(), b -> {
-            if (b){
+            if (b) {
                 binding.cancelBtn.setVisibility(View.GONE);
                 binding.selectVideoBtn.setVisibility(View.GONE);
-            }else {
+            } else {
                 binding.cancelBtn.setVisibility(View.VISIBLE);
                 binding.selectVideoBtn.setVisibility(View.VISIBLE);
             }

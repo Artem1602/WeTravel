@@ -102,10 +102,12 @@ public class VideoFragment extends Fragment {
         binding.getRoot().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         return binding.getRoot();
     }
+
     private void loadCurrentUserImg() {
         Bitmap bitmap = BitmapFactory.decodeFile(new File(getContext().getFilesDir(), "profile_img").getAbsolutePath());
         binding.userImg.setImageBitmap(bitmap);
     }
+
     private void initOpenCommentLayout(int sourceKey) {
         adapter = new CommentAdapter(getContext());
         RecyclerView recyclerView = binding.commentsRv;
@@ -129,7 +131,8 @@ public class VideoFragment extends Fragment {
         viewModel.loadComments(video.getUpload_user_id(), video.getName());
         binding.openCommentLayout.setOnClickListener(v -> {
             binding.videoContentLayout.animate().alpha(0).setDuration(500);
-            binding.openCommentLayout.animate().alpha(0).setDuration(500);   binding.openCommentLayout.setClickable(false);
+            binding.openCommentLayout.animate().alpha(0).setDuration(500);
+            binding.openCommentLayout.setClickable(false);
 
             binding.deleteBtn.animate().alpha(0).setDuration(500);
             binding.deleteBtn.setClickable(false);
@@ -146,7 +149,8 @@ public class VideoFragment extends Fragment {
                 binding.deleteBtn.animate().alpha(1).setDuration(500);
             }
             binding.videoContentLayout.animate().alpha(1).setDuration(500);
-            binding.openCommentLayout.animate().alpha(1).setDuration(500);   binding.openCommentLayout.setClickable(true);
+            binding.openCommentLayout.animate().alpha(1).setDuration(500);
+            binding.openCommentLayout.setClickable(true);
             binding.commentLayout.animate().y(binding.pointDown.getY()).setDuration(500).start();
         });
     }
@@ -168,7 +172,7 @@ public class VideoFragment extends Fragment {
     }
 
     private void closeFragment() {
-//        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections);
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections.actionVideoFragmentToShowVideoFragment());
     }
 
 
