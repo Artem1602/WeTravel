@@ -37,7 +37,22 @@ public class EditUserAccountFragment extends Fragment {
     private EditUserAccountFragmentViewModel viewModel;
     private final int IMAGE_FILE_REQUEST_CODE = 2;
     private String imgUri;
-    private EditUserAccountFragmentArgs args;
+
+    private String userImg;
+    private String userName;
+    private String userInfo;
+    private String userStatus;
+
+    public EditUserAccountFragment(String userImg, String userName, String userInfo, String userStatus) {
+        this.userImg = userImg;
+        this.userName = userName;
+        this.userInfo = userInfo;
+        this.userStatus = userStatus;
+    }
+
+    public static EditUserAccountFragment getInstance(String userImg, String userName, String userInfo, String userStatus) {
+        return new EditUserAccountFragment(userImg, userName, userInfo, userStatus);
+    }
 
     @Nullable
     @Override
@@ -45,8 +60,14 @@ public class EditUserAccountFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_user_account, container, false);
         viewModel = new ViewModelProvider(this).get(EditUserAccountFragmentViewModel.class);
 
-        args = EditUserAccountFragmentArgs.fromBundle(getArguments());
-        initUI(args);
+        if (getArguments() != null) {
+            EditUserAccountFragmentArgs args = EditUserAccountFragmentArgs.fromBundle(getArguments());
+            userImg = args.getUserImg();
+            userName = args.getUserName();
+            userInfo = args.getUserInfo();
+            userStatus = args.getStatus();
+        }
+        initUI(userImg, userName, userInfo, userStatus);
 
         binding.saveBtn.setOnClickListener(this::onSave);
         binding.cancelBtn.setOnClickListener(this::onCancel);
@@ -54,19 +75,21 @@ public class EditUserAccountFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void initUI(EditUserAccountFragmentArgs args) {
-        if (args.getUserImg() != null){
-            binding.userImg.setImageBitmap(BitmapFactory.decodeFile(args.getUserImg()));
-            imgUri = args.getUserImg();
-        } else {imgUri = null;}
+    private void initUI(String userImg, String userName, String userInfo, String userStatus) {
+        if (userImg != null) {
+            binding.userImg.setImageBitmap(BitmapFactory.decodeFile(userImg));
+            imgUri = userImg;
+        } else {
+            imgUri = null;
+        }
 
-        binding.editedUserAbout.setText(args.getUserInfo());
-        binding.editedUserName.setText(args.getUserName());
-        binding.editedUserStatus.setText(args.getStatus());
+        binding.editedUserAbout.setText(userInfo);
+        binding.editedUserName.setText(userName);
+        binding.editedUserStatus.setText(userStatus);
 
     }
 
-    public void onImgChange(View v){
+    public void onImgChange(View v) {
         startActivityForResult(Intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), "Choose image"), IMAGE_FILE_REQUEST_CODE);
     }
 
@@ -76,11 +99,13 @@ public class EditUserAccountFragment extends Fragment {
         String status = binding.editedUserStatus.getText().toString();
 
         viewModel.uploadUserData(name, about_me, status);
-        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri,name,about_me,status, Keys.OWNER_ACCOUNT.getValue()));
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri, name, about_me, status, Keys.OWNER_ACCOUNT.getValue()));
     }
 
     public void onCancel(View v) {
-        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri,args.getUserName(),args.getUserInfo(),args.getStatus(), Keys.OWNER_ACCOUNT.getValue()));
+        //TODO NEXT TASK
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment)
+                .navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri, userName, userInfo, userStatus, Keys.OWNER_ACCOUNT.getValue()));
     }
 
     @Override
@@ -98,7 +123,7 @@ public class EditUserAccountFragment extends Fragment {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
                 bmp.compress(Bitmap.CompressFormat.JPEG, 25, stream);
 
-                try(OutputStream outputStream = new FileOutputStream(user_img.getAbsolutePath())) {
+                try (OutputStream outputStream = new FileOutputStream(user_img.getAbsolutePath())) {
                     stream.writeTo(outputStream);
                 }
 

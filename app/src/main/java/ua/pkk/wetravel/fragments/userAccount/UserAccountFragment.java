@@ -16,6 +16,8 @@ import androidx.navigation.Navigation;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentUserAccountBinding;
+import ua.pkk.wetravel.fragments.editUserAccount.EditUserAccountFragment;
+import ua.pkk.wetravel.fragments.editUserAccount.EditUserAccountFragmentArgs;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
@@ -24,6 +26,24 @@ public class UserAccountFragment extends Fragment {
     private FragmentUserAccountBinding binding;
     private Handler userInfoHandler;
     private boolean is_data_ready;
+    private String userName;
+    private String userInfo;
+    private String userImg;
+    private String status;
+    private int sourceKey;
+    private boolean isFromNewDesign = true;
+
+    public UserAccountFragment(String userName, String userInfo, String userImg, String status, int sourceKey) {
+        this.userImg = userImg;
+        this.status = status;
+        this.sourceKey = sourceKey;
+        this.userName = userName;
+        this.userInfo = userInfo;
+    }
+
+    public static UserAccountFragment newInstance(String userName, String userInfo, String userImg, String status, int sourceKey) {
+        return new UserAccountFragment(userName, userInfo, userImg, status, sourceKey);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,18 +59,25 @@ public class UserAccountFragment extends Fragment {
                 is_data_ready = true;
             }
         };
-        initUI(UserAccountFragmentArgs.fromBundle(getArguments()));
+        if (getArguments() != null) {
+            UserAccountFragmentArgs accountFragmentArgs = UserAccountFragmentArgs.fromBundle(getArguments());
+            initUI(accountFragmentArgs.getUserName(), accountFragmentArgs.getUserInfo(), accountFragmentArgs.getUserImg(), accountFragmentArgs.getStatus(), accountFragmentArgs.getSourceKey());
+            isFromNewDesign = false;
+        } else {
+            isFromNewDesign = true;
+            initUI(userName, userInfo, userImg, status, sourceKey);
+        }
         return binding.getRoot();
     }
 
-    private void initUI(UserAccountFragmentArgs args) {
-        if (args.getUserImg() != null)
-            binding.userImg.setImageBitmap(BitmapFactory.decodeFile(args.getUserImg()));
-        if (args.getStatus() != null) {
+    private void initUI(String userName, String userInfo, String userImg, String status, int sourceKey) {
+        if (userImg != null)
+            binding.userImg.setImageBitmap(BitmapFactory.decodeFile(userImg));
+        if (status != null) {
             is_data_ready = true;
-            binding.userName.setText(args.getUserName());
-            binding.aboutUser.setText(args.getUserInfo());
-            binding.userStatusTv.setText(args.getStatus());
+            binding.userName.setText(userName);
+            binding.aboutUser.setText(userInfo);
+            binding.userStatusTv.setText(status);
         } else {  //possibly only for owner account
             new Thread(() -> {
                 //Wait for info
@@ -64,18 +91,22 @@ public class UserAccountFragment extends Fragment {
                 userInfoHandler.sendEmptyMessage(1);
             }).start();
         }
-        if (args.getSourceKey() == Keys.OWNER_ACCOUNT.getValue()) {
+        if (sourceKey == Keys.OWNER_ACCOUNT.getValue()) {
             binding.editBtn.setOnClickListener(v -> {
-                        if (is_data_ready)
+                        //TODO Remove old pattern
+                        if (is_data_ready && !isFromNewDesign) {
                             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(
-                                    //TODO Go to right animation
                                     UserAccountFragmentDirections.actionUserAccountFragmentToEditUserAccountFragment(
-                                            args.getUserImg(),
+                                            userImg,
                                             User.getInstance().getName(),
                                             User.getInstance().getInfo(),
                                             User.getInstance().getStatus()
                                     )
                             );
+                        } else {
+                            getParentFragmentManager().beginTransaction()
+                                    .replace(R.id.main_fragments_container, EditUserAccountFragment.getInstance(userImg, userName, userInfo, status)).commit();
+                        }
                     }
             );
         } else {

@@ -35,6 +35,9 @@ public class MainFragment extends Fragment {
         binding.settings.setOnClickListener(v -> goToSettings());
         binding.showMap.setOnClickListener(v -> goToShowMap());
         binding.myAccountBtn.setOnClickListener(v -> goToMyAccount());
+        binding.button.setOnClickListener(v -> {
+            navController.navigate(MainFragmentDirections.actionMainFragmentToMainFragment2());
+        });
 
         return binding.getRoot();
     }
