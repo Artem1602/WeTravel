@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +29,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentVideoMapsBinding;
@@ -53,7 +51,7 @@ public class VideoMapsFragment extends Fragment {
         }
 
         public void onInfoWindowClick(@NotNull Marker marker) {
-            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoMapsFragmentDirections.actionVideoMapsFragmentToVideoFragment((Video) marker.getTag(), Keys.VIDEO_FROM_MAP.getValue()));
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoMapsFragmentDirections.actionVideoMapsFragmentToVideoFragment((Video) marker.getTag(), Keys.VIDEO_FROM_MAP.getIntValue()));
         }
     };
 

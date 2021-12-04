@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +24,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentEditUserAccountBinding;
+import ua.pkk.wetravel.fragments.userAccount.UserAccountFragment;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
@@ -99,13 +98,18 @@ public class EditUserAccountFragment extends Fragment {
         String status = binding.editedUserStatus.getText().toString();
 
         viewModel.uploadUserData(name, about_me, status);
-        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri, name, about_me, status, Keys.OWNER_ACCOUNT.getValue()));
+
+        if (Keys.isNewDesign())
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.main_fragments_container, UserAccountFragment.getInstance(name,about_me, imgUri, status, Keys.OWNER_ACCOUNT.getIntValue())).commit();
+        else
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri, name, about_me, status, Keys.OWNER_ACCOUNT.getIntValue()));
     }
 
     public void onCancel(View v) {
         //TODO NEXT TASK
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment)
-                .navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri, userName, userInfo, userStatus, Keys.OWNER_ACCOUNT.getValue()));
+                .navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri, userName, userInfo, userStatus, Keys.OWNER_ACCOUNT.getIntValue()));
     }
 
     @Override

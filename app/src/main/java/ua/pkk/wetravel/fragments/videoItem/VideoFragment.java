@@ -144,7 +144,7 @@ public class VideoFragment extends Fragment {
             binding.commentLayout.animate().y(binding.pointUp.getY()).setDuration(500).start();
         });
         binding.closeCommentLayout.setOnClickListener(v -> {
-            if (sourceKey == Keys.VIDEO_FROM_ADAPTER.getValue()) {
+            if (sourceKey == Keys.VIDEO_FROM_ADAPTER.getIntValue()) {
                 binding.deleteBtn.setClickable(true);
                 binding.deleteBtn.animate().alpha(1).setDuration(500);
             }
@@ -177,7 +177,7 @@ public class VideoFragment extends Fragment {
 
 
     private void changeUIbbyKey(int source) {
-        if (source == Keys.VIDEO_FROM_MAP.getValue()) {
+        if (source == Keys.VIDEO_FROM_MAP.getIntValue()) {
             binding.deleteBtn.setVisibility(View.GONE);
             loadUserData();
         } else {
@@ -189,7 +189,7 @@ public class VideoFragment extends Fragment {
         //TODO refactor it
         File file = new File(getContext().getFilesDir(), "temp_img");
         Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections
-                .actionVideoFragmentToUserAccountFragment(file.getAbsolutePath(), name, info, status, Keys.LOADER_ACCOUNT.getValue()));
+                .actionVideoFragmentToUserAccountFragment(file.getAbsolutePath(), name, info, status, Keys.LOADER_ACCOUNT.getIntValue()));
     }
 
     private void loadUserData() {

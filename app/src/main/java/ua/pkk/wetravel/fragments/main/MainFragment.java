@@ -54,7 +54,7 @@ public class MainFragment extends Fragment {
         }
         navController.navigate(MainFragmentDirections
                 .actionMainFragmentToUserAccountFragment(path,
-                        User.getInstance().getName(), User.getInstance().getInfo(), User.getInstance().getStatus(), Keys.OWNER_ACCOUNT.getValue()));
+                        User.getInstance().getName(), User.getInstance().getInfo(), User.getInstance().getStatus(), Keys.OWNER_ACCOUNT.getIntValue()));
     }
 
     private void goToShowMap() {

@@ -17,7 +17,6 @@ import androidx.navigation.Navigation;
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentUserAccountBinding;
 import ua.pkk.wetravel.fragments.editUserAccount.EditUserAccountFragment;
-import ua.pkk.wetravel.fragments.editUserAccount.EditUserAccountFragmentArgs;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
@@ -31,7 +30,6 @@ public class UserAccountFragment extends Fragment {
     private String userImg;
     private String status;
     private int sourceKey;
-    private boolean isFromNewDesign = true;
 
     public UserAccountFragment(String userName, String userInfo, String userImg, String status, int sourceKey) {
         this.userImg = userImg;
@@ -41,7 +39,7 @@ public class UserAccountFragment extends Fragment {
         this.userInfo = userInfo;
     }
 
-    public static UserAccountFragment newInstance(String userName, String userInfo, String userImg, String status, int sourceKey) {
+    public static UserAccountFragment getInstance(String userName, String userInfo, String userImg, String status, int sourceKey) {
         return new UserAccountFragment(userName, userInfo, userImg, status, sourceKey);
     }
 
@@ -62,9 +60,7 @@ public class UserAccountFragment extends Fragment {
         if (getArguments() != null) {
             UserAccountFragmentArgs accountFragmentArgs = UserAccountFragmentArgs.fromBundle(getArguments());
             initUI(accountFragmentArgs.getUserName(), accountFragmentArgs.getUserInfo(), accountFragmentArgs.getUserImg(), accountFragmentArgs.getStatus(), accountFragmentArgs.getSourceKey());
-            isFromNewDesign = false;
         } else {
-            isFromNewDesign = true;
             initUI(userName, userInfo, userImg, status, sourceKey);
         }
         return binding.getRoot();
@@ -91,10 +87,10 @@ public class UserAccountFragment extends Fragment {
                 userInfoHandler.sendEmptyMessage(1);
             }).start();
         }
-        if (sourceKey == Keys.OWNER_ACCOUNT.getValue()) {
+        if (sourceKey == Keys.OWNER_ACCOUNT.getIntValue()) {
             binding.editBtn.setOnClickListener(v -> {
                         //TODO Remove old pattern
-                        if (is_data_ready && !isFromNewDesign) {
+                        if (is_data_ready && !Keys.isNewDesign()) {
                             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(
                                     UserAccountFragmentDirections.actionUserAccountFragmentToEditUserAccountFragment(
                                             userImg,

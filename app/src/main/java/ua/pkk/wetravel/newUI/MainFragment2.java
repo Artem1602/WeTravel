@@ -1,0 +1,78 @@
+package ua.pkk.wetravel.newUI;
+
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
+
+import java.io.File;
+
+import ua.pkk.wetravel.R;
+import ua.pkk.wetravel.databinding.FragmentMain2Binding;
+import ua.pkk.wetravel.fragments.allUserVideo.ShowVideoFragment;
+import ua.pkk.wetravel.fragments.userAccount.UserAccountFragment;
+import ua.pkk.wetravel.utils.Keys;
+import ua.pkk.wetravel.utils.User;
+
+public class MainFragment2 extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
+    private FragmentMain2Binding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main2, container, false);
+        binding.bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
+        switchToAccountTab();
+        return binding.getRoot();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.accountTab:
+                   switchToAccountTab();
+                return true;
+            case R.id.videoUploadTab:
+                return false;
+            case  R.id.myVideoTab:
+                getParentFragmentManager().beginTransaction()
+                        .replace(binding.mainFragmentsContainer.getId(), ShowVideoFragment.getInstance()).commit();
+                return true;
+            case R.id.allVideoTab:
+                return false;
+            case R.id.settingsTab:
+                return false;
+
+        }
+        return false;
+    }
+
+    private void switchToAccountTab() {
+        String userName = User.getInstance().getName();
+        String userInfo = User.getInstance().getInfo();
+        String userStatus = User.getInstance().getStatus();
+        File user_img = new File(getContext().getFilesDir(), "profile_img");
+        String path = null;
+        if (user_img.length() != 0) {
+            path = user_img.getAbsolutePath();
+        }
+        getParentFragmentManager().beginTransaction()
+                .replace(binding.mainFragmentsContainer.getId(), UserAccountFragment.getInstance(userName, userInfo, path ,userStatus,Keys.OWNER_ACCOUNT.getIntValue())).commit();
+
+    }
+
+}

@@ -31,6 +31,13 @@ public class ShowVideoFragment extends Fragment {
     private ArrayList<Video> videos;
     private VideoAdapter adapter;
 
+    public ShowVideoFragment(){
+
+    }
+
+    public static ShowVideoFragment getInstance(){
+        return new ShowVideoFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
