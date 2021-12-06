@@ -64,6 +64,14 @@ public class LoadVideoMapFragment extends Fragment {
     private LatLng marker;
     public int VIDEO_FILE_REQUEST_CODE = 1;
     private LoadVideoMapViewModel viewModel;
+    private static LoadVideoMapFragment fragment;
+
+    public static LoadVideoMapFragment getInstance(){
+        if (fragment == null){
+            fragment = new LoadVideoMapFragment();
+        }
+        return fragment;
+    }
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         private GoogleMap map;

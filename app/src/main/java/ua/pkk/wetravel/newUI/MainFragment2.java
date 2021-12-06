@@ -19,6 +19,9 @@ import java.io.File;
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentMain2Binding;
 import ua.pkk.wetravel.fragments.allUserVideo.ShowVideoFragment;
+import ua.pkk.wetravel.fragments.loadVideoMap.LoadVideoMapFragment;
+import ua.pkk.wetravel.fragments.settings.SettingsFragment;
+import ua.pkk.wetravel.fragments.showVideoOnMap.VideoMapsFragment;
 import ua.pkk.wetravel.fragments.userAccount.UserAccountFragment;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
@@ -47,15 +50,21 @@ public class MainFragment2 extends Fragment implements NavigationView.OnNavigati
                    switchToAccountTab();
                 return true;
             case R.id.videoUploadTab:
-                return false;
+                getParentFragmentManager().beginTransaction()
+                        .replace(binding.mainFragmentsContainer.getId(), LoadVideoMapFragment.getInstance()).commit();
+                return true;
             case  R.id.myVideoTab:
                 getParentFragmentManager().beginTransaction()
                         .replace(binding.mainFragmentsContainer.getId(), ShowVideoFragment.getInstance()).commit();
                 return true;
             case R.id.allVideoTab:
-                return false;
+                getParentFragmentManager().beginTransaction()
+                        .replace(binding.mainFragmentsContainer.getId(), VideoMapsFragment.getInstance()).commit();
+                return true;
             case R.id.settingsTab:
-                return false;
+                getParentFragmentManager().beginTransaction()
+                        .replace(binding.mainFragmentsContainer.getId(), SettingsFragment.getInstance()).commit();
+                return true;
 
         }
         return false;

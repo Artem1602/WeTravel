@@ -70,19 +70,18 @@ public class VideoFragmentViewModel extends ViewModel {
 
     public void deleteVideo() {
         FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child(video.getName()).delete();
-        new Thread(() -> {
-            UserAPI.INSTANCE.getRETROFIT_SERVICE().deleteAllVideoComments(User.getInstance().getId(), video.getName()).enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    //TODO
-                }
+        new Thread(() ->
+                UserAPI.INSTANCE.getRETROFIT_SERVICE().deleteAllVideoComments(User.getInstance().getId(), video.getName()).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                //TODO
+            }
 
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
 
-                }
-            });
-        }).start();
+            }
+        })).start();
         onDelete();
     }
 
@@ -117,26 +116,22 @@ public class VideoFragmentViewModel extends ViewModel {
     }
 
     public void loadComments(String id, String videoName) {
-        new Thread(new Runnable() {
+        new Thread(
+                () -> UserAPI.INSTANCE.getRETROFIT_SERVICE().getAllVideoComments(id, videoName).enqueue(new Callback<Map<String, Comment>>() {
             @Override
-            public void run() {
-                UserAPI.INSTANCE.getRETROFIT_SERVICE().getAllVideoComments(id, videoName).enqueue(new Callback<Map<String, Comment>>() {
-                    @Override
-                    public void onResponse(Call<Map<String, Comment>> call, Response<Map<String, Comment>> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            for (Map.Entry<String, Comment> i : response.body().entrySet()) {
-                                _comments.setValue(i.getValue());
-                            }
-                        }
+            public void onResponse(Call<Map<String, Comment>> call, Response<Map<String, Comment>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Map.Entry<String, Comment> i : response.body().entrySet()) {
+                        _comments.setValue(i.getValue());
                     }
-
-                    @Override
-                    public void onFailure(Call<Map<String, Comment>> call, Throwable t) {
-                        Log.d("TAG", t.getMessage());
-                    }
-                });
+                }
             }
-        }).start();
+
+            @Override
+            public void onFailure(Call<Map<String, Comment>> call, Throwable t) {
+                Log.d("TAG", t.getMessage());
+            }
+        })).start();
 
     }
 }

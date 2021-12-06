@@ -30,13 +30,13 @@ public class ShowVideoFragment extends Fragment {
     private ShowVideoFragmentViewModel viewModel;
     private ArrayList<Video> videos;
     private VideoAdapter adapter;
-
-    public ShowVideoFragment(){
-
-    }
+    private static ShowVideoFragment fragment = null;
 
     public static ShowVideoFragment getInstance(){
-        return new ShowVideoFragment();
+        if (fragment == null){
+            fragment = new ShowVideoFragment();
+        }
+        return fragment;
     }
 
     @Override

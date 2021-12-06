@@ -25,6 +25,14 @@ import ua.pkk.wetravel.utils.User;
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private SettingsViewModel viewModel;
+    private static SettingsFragment fragment;
+
+    public static SettingsFragment getInstance(){
+        if (fragment == null){
+            fragment = new SettingsFragment();
+        }
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

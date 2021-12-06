@@ -54,6 +54,7 @@ public class VideoFragment extends Fragment {
     private FragmentVideoBinding binding;
     private VideoFragmentViewModel viewModel;
     private Video video;
+    private int sourceKey;
 
     private String name;
     private String info;
@@ -66,17 +67,26 @@ public class VideoFragment extends Fragment {
     private LinkedHashSet<Comment> comments;
     private boolean isFirstCommentWasLoad;
 
+    public VideoFragment(Video video, int sourceKey){
+        this.video = video;
+        this.sourceKey = sourceKey;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_video, container, false);
-        VideoFragmentArgs args = VideoFragmentArgs.fromBundle(getArguments());
-        binding.setVideo(args.getVideo());
 
-        video = args.getVideo();
+        if (getArguments() != null){
+            VideoFragmentArgs args = VideoFragmentArgs.fromBundle(getArguments());
+            video = args.getVideo();
+            sourceKey = args.getSourceKey();
+        }
         initPlayer();
 
         VideoFragmentViewModelFactory factory = new VideoFragmentViewModelFactory(video, player);
+        binding.setVideo(video);
+
         viewModel = new ViewModelProvider(this, factory).get(VideoFragmentViewModel.class);
         binding.setVideoViewModel(viewModel);
 
@@ -85,11 +95,11 @@ public class VideoFragment extends Fragment {
         } else viewModel.reCreatePlayerAndPlay(player);
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            binding.videoTags.setText(args.getVideo().tags);
-            binding.videoDescription.setText(args.getVideo().description);
-            changeUIbbyKey(args.getSourceKey());
+            binding.videoTags.setText(video.tags);
+            binding.videoDescription.setText(video.description);
+            changeUIbyKey(sourceKey);
             loadCurrentUserImg();
-            initOpenCommentLayout(args.getSourceKey());
+            initOpenCommentLayout(sourceKey);
             binding.addCommentBtn.setOnClickListener(this::createComment);
         }
 
@@ -98,7 +108,6 @@ public class VideoFragment extends Fragment {
                 closeFragment();
             }
         });
-        //TODO Deprecated
         binding.getRoot().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         return binding.getRoot();
     }
@@ -176,7 +185,7 @@ public class VideoFragment extends Fragment {
     }
 
 
-    private void changeUIbbyKey(int source) {
+    private void changeUIbyKey(int source) {
         if (source == Keys.VIDEO_FROM_MAP.getIntValue()) {
             binding.deleteBtn.setVisibility(View.GONE);
             loadUserData();

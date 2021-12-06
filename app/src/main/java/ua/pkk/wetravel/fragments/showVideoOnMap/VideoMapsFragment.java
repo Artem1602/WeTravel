@@ -32,6 +32,8 @@ import java.util.ArrayList;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentVideoMapsBinding;
+import ua.pkk.wetravel.fragments.editUserAccount.EditUserAccountFragment;
+import ua.pkk.wetravel.fragments.videoItem.VideoFragment;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.Video;
 
@@ -40,6 +42,14 @@ public class VideoMapsFragment extends Fragment {
     private GoogleMap map;
     private FragmentVideoMapsBinding binding;
     private ArrayList<Pair<MarkerOptions, Video>> videos;
+    private static VideoMapsFragment fragment;
+
+    public static VideoMapsFragment getInstance(){
+        if (fragment == null){
+            fragment = new VideoMapsFragment();
+        }
+        return fragment;
+    }
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -51,7 +61,12 @@ public class VideoMapsFragment extends Fragment {
         }
 
         public void onInfoWindowClick(@NotNull Marker marker) {
-            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoMapsFragmentDirections.actionVideoMapsFragmentToVideoFragment((Video) marker.getTag(), Keys.VIDEO_FROM_MAP.getIntValue()));
+            if (!Keys.isNewDesign()){
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoMapsFragmentDirections.actionVideoMapsFragmentToVideoFragment((Video) marker.getTag(), Keys.VIDEO_FROM_MAP.getIntValue()));
+            } else {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.main_fragments_container, new VideoFragment((Video) marker.getTag(), Keys.VIDEO_FROM_MAP.getIntValue())).commit();
+            }
         }
     };
 
