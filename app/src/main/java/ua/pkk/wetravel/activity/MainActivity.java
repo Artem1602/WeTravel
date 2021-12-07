@@ -61,4 +61,10 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(this,
                         exception -> Log.e("TAG", "signInAnonymously:FAILURE", exception));
     }
+
+    @Override
+    public void onBackPressed() {
+        //TODO Do something with this
+        return;
+    }
 }

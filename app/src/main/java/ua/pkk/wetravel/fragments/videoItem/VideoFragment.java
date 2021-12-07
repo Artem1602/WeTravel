@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.Key;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
@@ -43,6 +44,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentVideoBinding;
+import ua.pkk.wetravel.fragments.allUserVideo.ShowVideoFragment;
 import ua.pkk.wetravel.retrofit.Comment;
 import ua.pkk.wetravel.retrofit.UserAPI;
 import ua.pkk.wetravel.retrofit.UserData;
@@ -67,7 +69,7 @@ public class VideoFragment extends Fragment {
     private LinkedHashSet<Comment> comments;
     private boolean isFirstCommentWasLoad;
 
-    public VideoFragment(Video video, int sourceKey){
+    public VideoFragment(Video video, int sourceKey) {
         this.video = video;
         this.sourceKey = sourceKey;
     }
@@ -77,7 +79,7 @@ public class VideoFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_video, container, false);
 
-        if (getArguments() != null){
+        if (getArguments() != null) {
             VideoFragmentArgs args = VideoFragmentArgs.fromBundle(getArguments());
             video = args.getVideo();
             sourceKey = args.getSourceKey();
@@ -125,17 +127,14 @@ public class VideoFragment extends Fragment {
         comments = new LinkedHashSet<>();
         isFirstCommentWasLoad = false;
 
-        viewModel.comments.observe(getViewLifecycleOwner(), new Observer<Comment>() {
-            @Override
-            public void onChanged(Comment comment) {
-                if (!isFirstCommentWasLoad) loadFirstComment(comment);
-                comments.add(comment);
-                List<Comment> items = new ArrayList<>(comments);
-                adapter.submitList(items);
-                adapter.notifyDataSetChanged();
-                binding.commentCount.setText(Integer.toString(comments.size()));
-                binding.commentCount2.setText(Integer.toString(comments.size()));
-            }
+        viewModel.comments.observe(getViewLifecycleOwner(), comment -> {
+            if (!isFirstCommentWasLoad) loadFirstComment(comment);
+            comments.add(comment);
+            List<Comment> items = new ArrayList<>(comments);
+            adapter.submitList(items);
+            adapter.notifyDataSetChanged();
+            binding.commentCount.setText(Integer.toString(comments.size()));
+            binding.commentCount2.setText(Integer.toString(comments.size()));
         });
         viewModel.loadComments(video.getUpload_user_id(), video.getName());
         binding.openCommentLayout.setOnClickListener(v -> {
@@ -149,7 +148,6 @@ public class VideoFragment extends Fragment {
             ViewGroup.LayoutParams layoutParams = binding.commentLayout.getLayoutParams();
             layoutParams.height = (int) (binding.pointDown.getY() - binding.pointUp.getY());
             binding.commentLayout.setLayoutParams(layoutParams);
-
             binding.commentLayout.animate().y(binding.pointUp.getY()).setDuration(500).start();
         });
         binding.closeCommentLayout.setOnClickListener(v -> {
@@ -181,7 +179,12 @@ public class VideoFragment extends Fragment {
     }
 
     private void closeFragment() {
-        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections.actionVideoFragmentToShowVideoFragment());
+        if (!Keys.isNewDesign()) {
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(VideoFragmentDirections.actionVideoFragmentToShowVideoFragment());
+        } else {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.main_fragments_container, ShowVideoFragment.getInstance()).commit();
+        }
     }
 
 

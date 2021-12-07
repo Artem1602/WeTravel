@@ -1,16 +1,20 @@
 package ua.pkk.wetravel.fragments.allUserVideo;
 
 import android.app.Activity;
+import android.content.Context;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.ItemVideoBinding;
+import ua.pkk.wetravel.fragments.videoItem.VideoFragment;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.Video;
 
@@ -18,8 +22,11 @@ import static ua.pkk.wetravel.utils.Video.DIFF_CALLBACK;
 
 public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
 
-    protected VideoAdapter() {
+    private Context context;
+
+    protected VideoAdapter(Context context) {
         super(DIFF_CALLBACK);
+        this.context = context;
     }
 
     @NonNull
@@ -43,8 +50,13 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
             super(itemView.getRoot());
             this.binding = itemView;
             itemView.getRoot().setOnClickListener(v -> {
-                        Navigation.findNavController((Activity) itemView.getRoot().getContext(), R.id.nav_host_fragment)
-                                .navigate(ShowVideoFragmentDirections.actionShowVideoFragmentToVideoFragment(itemView.getVideoItem(), Keys.VIDEO_FROM_ADAPTER.getIntValue()));
+                        if (!Keys.isNewDesign()) {
+                            Navigation.findNavController((Activity) itemView.getRoot().getContext(), R.id.nav_host_fragment)
+                                    .navigate(ShowVideoFragmentDirections.actionShowVideoFragmentToVideoFragment(itemView.getVideoItem(), Keys.VIDEO_FROM_ADAPTER.getIntValue()));
+                        } else {
+                            ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.main_fragments_container, new VideoFragment(itemView.getVideoItem(), Keys.VIDEO_FROM_ADAPTER.getIntValue())).commit();
+                        }
                     }
             );
 

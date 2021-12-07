@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,5 +84,6 @@ public class MainFragment2 extends Fragment implements NavigationView.OnNavigati
                 .replace(binding.mainFragmentsContainer.getId(), UserAccountFragment.getInstance(userName, userInfo, path ,userStatus,Keys.OWNER_ACCOUNT.getIntValue())).commit();
 
     }
+
 
 }

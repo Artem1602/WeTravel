@@ -55,6 +55,7 @@ import retrofit2.Response;
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentLoadVideoMapsBinding;
 import ua.pkk.wetravel.retrofit.UserAPI;
+import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 import ua.pkk.wetravel.utils.Video;
 
@@ -191,7 +192,13 @@ public class LoadVideoMapFragment extends Fragment {
 
         }).start();
         //Navigate to MainFragment
-        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoadVideoMapFragmentDirections.actionLoadVideoMapsFragmentToMainFragment());
+        if (!Keys.isNewDesign()){
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoadVideoMapFragmentDirections.actionLoadVideoMapsFragmentToMainFragment());
+        } else {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.main_fragments_container, LoadVideoMapFragment.getInstance()).commit();
+            binding.cancelBtn.performClick();
+        }
     }
 
     private void createNotificationChannel(String CHANNEL_ID) {
@@ -214,6 +221,9 @@ public class LoadVideoMapFragment extends Fragment {
             binding.addVideoLayout.animate().y(binding.loadVideoMapLayout.getHeight() * 2).setDuration(1300);
             binding.addVideoFab.setVisibility(View.VISIBLE);
             binding.addVideoFab.animate().scaleX(1).scaleY(1).setDuration(800);
+            binding.videoName.setText("");
+            binding.videoTags.setText("");
+            binding.videoDescription.setText("");
         });
         binding.addVideoFab.animate().setListener(new Animator.AnimatorListener() {
             @Override

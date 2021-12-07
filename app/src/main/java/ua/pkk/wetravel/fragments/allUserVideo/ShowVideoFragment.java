@@ -30,13 +30,9 @@ public class ShowVideoFragment extends Fragment {
     private ShowVideoFragmentViewModel viewModel;
     private ArrayList<Video> videos;
     private VideoAdapter adapter;
-    private static ShowVideoFragment fragment = null;
 
     public static ShowVideoFragment getInstance(){
-        if (fragment == null){
-            fragment = new ShowVideoFragment();
-        }
-        return fragment;
+        return new ShowVideoFragment();
     }
 
     @Override
@@ -45,7 +41,7 @@ public class ShowVideoFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ShowVideoFragmentViewModel.class);
         viewModel.cleanVideo();
 
-        adapter = new VideoAdapter();
+        adapter = new VideoAdapter(getContext());
 
         RecyclerView recyclerView = binding.videos;
         recyclerView.setAdapter(adapter);
@@ -54,26 +50,23 @@ public class ShowVideoFragment extends Fragment {
         videos = new ArrayList<>();
         adapter.submitList(videos);
 
-        viewModel.videos.observe(getViewLifecycleOwner(), new Observer<Video>() {
-            @Override
-            public void onChanged(Video video) {
-                if (video == null) return;
-                binding.showVideosPb.setVisibility(View.GONE);
+        viewModel.videos.observe(getViewLifecycleOwner(), video -> {
+            if (video == null) return;
+            binding.showVideosPb.setVisibility(View.GONE);
 
-                Glide.with(getContext()).load(video.getUri()).into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        video.setThumbNail(resource);
-                        videos.add(video);
-                        adapter.notifyDataSetChanged();
-                    }
+            Glide.with(getContext()).load(video.getUri()).into(new CustomTarget<Drawable>() {
+                @Override
+                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                    video.setThumbNail(resource);
+                    videos.add(video);
+                    adapter.notifyDataSetChanged();
+                }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                @Override
+                public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                    }
-                });
-            }
+                }
+            });
         });
         viewModel.loadVideo();
         return binding.getRoot();
