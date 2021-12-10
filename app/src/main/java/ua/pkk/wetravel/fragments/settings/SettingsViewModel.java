@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ua.pkk.wetravel.utils.CreateNewUserTask;
 import ua.pkk.wetravel.retrofit.UserAPI;
 import ua.pkk.wetravel.retrofit.UserProperty;
 import ua.pkk.wetravel.utils.User;
@@ -39,19 +40,8 @@ public class SettingsViewModel extends ViewModel {
     }
 
     public void changePassword(String password) {
-        new Thread(() -> {
-            userProperty.setPassword(password);
-            UserAPI.INSTANCE.getRETROFIT_SERVICE().createNewUser(User.getInstance().getId(), userProperty).enqueue(new Callback<UserProperty>() {
-                @Override
-                public void onResponse(Call<UserProperty> call, Response<UserProperty> response) {
-                    //TODO
-                }
-
-                @Override
-                public void onFailure(Call<UserProperty> call, Throwable t) {
-
-                }
-            });
-        }).start();
+        userProperty.setPassword(password);
+        CreateNewUserTask createNewUserTask = new CreateNewUserTask(userProperty,User.getInstance().getId());
+        new Thread(createNewUserTask).start();
     }
 }

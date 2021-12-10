@@ -147,50 +147,11 @@ public class LoadVideoMapFragment extends Fragment {
 
         createNotificationChannel(CHANNEL_ID);
 
-        new Thread(() -> {
-            Context context = getContext();
-            builder.setProgress(100, 0, false);
-            notificationManager.notify(NOTIFICATION_ID, builder.build());
+        UploadListenerTask uploadListenerTask = new UploadListenerTask(getContext(),builder,notificationManager,marker,data,NOTIFICATION_ID,name);
+        UploadVideoDataTask uploadVideoDataTask = new UploadVideoDataTask(description,tags,name);
+        viewModel.executeTask(uploadListenerTask);
+        viewModel.executeTask(uploadVideoDataTask);
 
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(User.getInstance().getId()).child(name);
-            Date date = new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
-
-            StorageMetadata.Builder metadata = new StorageMetadata.Builder()
-                    .setCustomMetadata("position", marker.latitude + "/" + marker.longitude);
-            metadata.setCustomMetadata("uploadingTime", formatter.format(date));
-            metadata.setCustomMetadata("user_id", User.getInstance().getId());
-
-            UploadTask uploadTask = storageReference.putFile(data.getData(), metadata.build());
-            uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                    if (snapshot.getBytesTransferred() == snapshot.getTotalByteCount()) {
-                        builder.setProgress(0, 0, false);
-                        builder.setContentText(context.getString(R.string.upload_complete));
-                        notificationManager.notify(NOTIFICATION_ID, builder.build());
-                        return;
-                    }
-                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                    builder.setProgress(100, (int) progress, false);
-                    notificationManager.notify(NOTIFICATION_ID, builder.build());
-                }
-            });
-        }).start();
-        new Thread(() -> {
-            Video video = new Video(description, "#" + tags);
-            UserAPI.INSTANCE.getRETROFIT_SERVICE().uploadVideoData(User.getInstance().getId(), name, video).enqueue(new Callback<Video>() {
-                @Override
-                public void onResponse(Call<Video> call, Response<Video> response) {
-                    //TODO
-                }
-
-                @Override
-                public void onFailure(Call<Video> call, Throwable t) {
-                }
-            });
-
-        }).start();
         //Navigate to MainFragment
         if (!Keys.isNewDesign()){
             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoadVideoMapFragmentDirections.actionLoadVideoMapsFragmentToMainFragment());

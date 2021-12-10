@@ -1,7 +1,6 @@
 package ua.pkk.wetravel.fragments.main;
 
 import android.net.Uri;
-import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -33,6 +32,7 @@ public class MainFragmentViewModel extends ViewModel {
                     }
                 }
             });
+
             UserAPI.INSTANCE.getRETROFIT_SERVICE().getUserData(User.getInstance().getId()).enqueue(new Callback<UserData>() {
                 @Override
                 public void onResponse(Call<UserData> call, Response<UserData> response) {

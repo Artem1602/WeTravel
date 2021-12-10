@@ -59,7 +59,6 @@ public class VideoAdapter extends ListAdapter<Video, VideoAdapter.VideoHolder> {
                         }
                     }
             );
-
         }
 
         public void bind(Video item) {

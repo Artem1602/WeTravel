@@ -11,15 +11,17 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import ua.pkk.wetravel.utils.User;
 
 public class LoadVideoMapViewModel extends ViewModel {
     private MutableLiveData<Boolean> _hasSameNames = new MutableLiveData<>();
     public LiveData<Boolean> hasSameNames = _hasSameNames;
+    public boolean is_add_video_show = false;
 
-    public boolean is_add_video_show;
-
-    {is_add_video_show = false;}
+    private ExecutorService executorService = Executors.newCachedThreadPool();
 
     public void checkNames(String video_name) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -37,4 +39,9 @@ public class LoadVideoMapViewModel extends ViewModel {
         });
 
     }
+
+    public void executeTask(Runnable task){
+        executorService.execute(task);
+    }
+
 }
