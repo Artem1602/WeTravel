@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import ua.pkk.wetravel.R;
+import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
 //TODO Fix problems with screen orientation Priority -> HIGH
@@ -36,9 +37,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         User.getInstance().setId(id);
-
         NavOptions options = new NavOptions.Builder().setPopUpTo(R.id.loginPageFragment, true).build();
-        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.mainFragment, null, options);
+        if(!Keys.isNewDesign()){
+            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.mainFragment, null, options);
+        } else {
+            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.mainFragment2, null, options);
+        }
     }
 
     @Override

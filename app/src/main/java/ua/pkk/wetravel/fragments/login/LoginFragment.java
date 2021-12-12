@@ -17,6 +17,7 @@ import androidx.navigation.Navigation;
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentLoginBinding;
 import ua.pkk.wetravel.fragments.loginPage.LoginPageFragmentDirections;
+import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
 public class LoginFragment extends Fragment {
@@ -75,7 +76,11 @@ public class LoginFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("userID", User.getInstance().getId());
         editor.apply();
-        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentToMainFragment());
+        if(!Keys.isNewDesign()){
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentToMainFragment());
+        } else {
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(LoginPageFragmentDirections.actionLoginPageFragmentToMainFragment2());
+        }
         //May be it a bad idea...
         for (Fragment fragment :  getParentFragmentManager().getFragments()) {
             getParentFragmentManager().beginTransaction().remove(fragment).commit();

@@ -12,7 +12,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.io.File;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentUserAccountBinding;
@@ -23,6 +29,7 @@ import ua.pkk.wetravel.utils.User;
 
 public class UserAccountFragment extends Fragment {
     private FragmentUserAccountBinding binding;
+    private UserAccountViewModel viewModel;
     private Handler userInfoHandler;
     private boolean is_data_ready;
     private String userName;
@@ -46,6 +53,15 @@ public class UserAccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user_account, container, false);
+        viewModel = new ViewModelProvider(this).get(UserAccountViewModel.class);
+
+        viewModel.imgLoadComplete.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                binding.userImg.setImageBitmap(BitmapFactory.decodeFile(s));
+            }
+        });
+
         is_data_ready = false;
         userInfoHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -67,8 +83,11 @@ public class UserAccountFragment extends Fragment {
     }
 
     private void initUI(String userName, String userInfo, String userImg, String status, int sourceKey) {
-        if (userImg != null)
+        if (userImg != null) {
             binding.userImg.setImageBitmap(BitmapFactory.decodeFile(userImg));
+        } else {
+           viewModel.initUserImg(getContext());
+        }
         if (status != null) {
             is_data_ready = true;
             binding.userName.setText(userName);

@@ -27,7 +27,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
         viewModel = new ViewModelProvider(this).get(MainFragmentViewModel.class);
-        viewModel.load_user_img(getContext().getFilesDir());
+        viewModel.load_user_img(getContext());
 
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         binding.loadVideo.setOnClickListener(v -> goToLoadVideoMap());
@@ -35,9 +35,7 @@ public class MainFragment extends Fragment {
         binding.settings.setOnClickListener(v -> goToSettings());
         binding.showMap.setOnClickListener(v -> goToShowMap());
         binding.myAccountBtn.setOnClickListener(v -> goToMyAccount());
-        binding.button.setOnClickListener(v -> {
-            navController.navigate(MainFragmentDirections.actionMainFragmentToMainFragment2());
-        });
+        binding.button.setOnClickListener(v -> navController.navigate(MainFragmentDirections.actionMainFragmentToMainFragment2()));
 
         return binding.getRoot();
     }

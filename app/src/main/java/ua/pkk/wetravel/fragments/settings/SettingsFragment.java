@@ -15,11 +15,11 @@ import androidx.navigation.Navigation;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.google.android.material.textfield.TextInputLayout;
-
 import java.io.File;
 
 import ua.pkk.wetravel.R;
+import ua.pkk.wetravel.fragments.main.MainFragmentNewDesignDirections;
+import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -107,6 +107,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         File user_img = new File(getContext().getFilesDir(), "profile_img");
         user_img.delete();
         User.getInstance().cleanData();
-        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(SettingsFragmentDirections.actionSettingsFragmentToLoginPageFragment());
+        if(!Keys.isNewDesign()){
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(SettingsFragmentDirections.actionSettingsFragmentToLoginPageFragment());
+        } else {
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(MainFragmentNewDesignDirections.actionMainFragment2ToLoginPageFragment());
+        }
     }
 }

@@ -56,6 +56,7 @@ import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentLoadVideoMapsBinding;
 import ua.pkk.wetravel.retrofit.UserAPI;
 import ua.pkk.wetravel.utils.Keys;
+import ua.pkk.wetravel.utils.TaskExecutor;
 import ua.pkk.wetravel.utils.User;
 import ua.pkk.wetravel.utils.Video;
 
@@ -149,8 +150,8 @@ public class LoadVideoMapFragment extends Fragment {
 
         UploadListenerTask uploadListenerTask = new UploadListenerTask(getContext(),builder,notificationManager,marker,data,NOTIFICATION_ID,name);
         UploadVideoDataTask uploadVideoDataTask = new UploadVideoDataTask(description,tags,name);
-        viewModel.executeTask(uploadListenerTask);
-        viewModel.executeTask(uploadVideoDataTask);
+        TaskExecutor.execute(uploadListenerTask);
+        TaskExecutor.execute(uploadVideoDataTask);
 
         //Navigate to MainFragment
         if (!Keys.isNewDesign()){

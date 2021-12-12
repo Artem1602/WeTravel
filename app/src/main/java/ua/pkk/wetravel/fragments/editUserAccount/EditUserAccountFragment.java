@@ -27,6 +27,7 @@ import java.io.OutputStream;
 
 import ua.pkk.wetravel.R;
 import ua.pkk.wetravel.databinding.FragmentEditUserAccountBinding;
+import ua.pkk.wetravel.fragments.allUserVideo.ShowVideoFragment;
 import ua.pkk.wetravel.fragments.userAccount.UserAccountFragment;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
@@ -107,9 +108,13 @@ public class EditUserAccountFragment extends Fragment {
     }
 
     public void onCancel(View v) {
-        //TODO NEXT TASK
-        Navigation.findNavController(getActivity(), R.id.nav_host_fragment)
-                .navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri, userName, userInfo, userStatus, Keys.OWNER_ACCOUNT.getIntValue()));
+        if (!Keys.isNewDesign()){
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment)
+                    .navigate(EditUserAccountFragmentDirections.actionEditUserAccountFragmentToUserAccountFragment(imgUri, userName, userInfo, userStatus, Keys.OWNER_ACCOUNT.getIntValue()));
+        } else {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.main_fragments_container, UserAccountFragment.getInstance(userName,userInfo,null, userStatus, Keys.OWNER_ACCOUNT.getIntValue())).commit();
+        }
     }
 
     @Override

@@ -1,10 +1,11 @@
-package ua.pkk.wetravel.newUI;
+package ua.pkk.wetravel.fragments.main;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,8 +28,9 @@ import ua.pkk.wetravel.fragments.userAccount.UserAccountFragment;
 import ua.pkk.wetravel.utils.Keys;
 import ua.pkk.wetravel.utils.User;
 
-public class MainFragment2 extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
+public class MainFragmentNewDesign extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private FragmentMain2Binding binding;
+    private MainFragmentViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class MainFragment2 extends Fragment implements NavigationView.OnNavigati
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main2, container, false);
         binding.bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
+        viewModel = new ViewModelProvider(this).get(MainFragmentViewModel.class);
+        viewModel.load_user_img(getContext());
+
         switchToAccountTab();
         return binding.getRoot();
     }
